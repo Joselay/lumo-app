@@ -30,7 +30,7 @@ This Flutter app follows Clean Architecture principles with feature-based organi
 
 ```
 lib/
-├── main.dart                 # App entry point using ShadApp (shadcn_ui)
+├── main.dart                 # App entry point using ShadApp.custom with CupertinoApp + shadcn_ui
 ├── core/                     # Shared infrastructure
 │   ├── data/                 # Core data components
 │   ├── domain/               # Core business logic
@@ -54,6 +54,13 @@ lib/
     └── home/                 # Home feature (similar structure)
 ```
 
+#### Localization
+
+- Uses Flutter's built-in `flutter_localizations` package
+- Supported languages: English (en-US) and Khmer (km-KH)
+- Automatic device language detection with English fallback
+- Global localization delegates for comprehensive i18n support
+
 ### Key Dependencies and Patterns
 
 #### State Management (BLoC Pattern)
@@ -75,10 +82,12 @@ lib/
 
 #### UI Framework
 
-- Built with `shadcn_ui` design system (ShadApp as root widget)
+- Built with `shadcn_ui` + Cupertino design system integration
+- Uses `ShadApp.custom` with `CupertinoApp` for iOS-native feel
 - Uses red theme color scheme for both light and dark modes
-- Uses Material Design 3 principles
+- Combines Cupertino Design principles with shadcn components
 - Navigation handled by `go_router`
+- Supports English (en-US) and Khmer (km-KH) localization
 
 #### Dependency Injection
 
@@ -123,5 +132,3 @@ lib/
 4. Use dependency injection for all external dependencies
 5. Run code generation after API or model changes
 6. Run tests and analysis before committing
-
-- Always use shadcn_ui flutter
