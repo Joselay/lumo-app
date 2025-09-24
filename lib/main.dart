@@ -15,6 +15,14 @@ class LumoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShadApp(
+      theme: ShadThemeData(
+        brightness: Brightness.light,
+        colorScheme: ShadColorScheme.fromName('red'),
+      ),
+      darkTheme: ShadThemeData(
+        brightness: Brightness.dark,
+        colorScheme: ShadColorScheme.fromName('red', brightness: Brightness.dark),
+      ),
       home: const HomePage(),
     );
   }
