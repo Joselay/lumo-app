@@ -38,10 +38,7 @@ class LumoApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
-          supportedLocales: const [
-            Locale('en', 'US'), // English (United States)
-            Locale('km', 'KH'), // Khmer (Cambodia)
-          ],
+          supportedLocales: const [Locale('en', 'US'), Locale('km', 'KH')],
           builder: (context, child) {
             return ShadAppBuilder(child: child!);
           },
