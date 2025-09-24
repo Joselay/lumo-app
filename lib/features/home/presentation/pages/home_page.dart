@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class HomePage extends StatelessWidget {
@@ -6,8 +6,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    return CupertinoPageScaffold(
+      child: Center(
         child: ShadButton(child: const Text('Click Me'), onPressed: () {}),
       ),
     );
