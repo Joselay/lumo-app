@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const LumoApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class LumoApp extends StatelessWidget {
+  const LumoApp({super.key});
 
   @override
   Widget build(BuildContext context) {
