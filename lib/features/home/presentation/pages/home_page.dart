@@ -8,10 +8,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ShadButton(
-          child: const Text('Click Me'),
-          onPressed: () {},
-        ),
+        child: ShadButton(child: const Text('Click Me'), onPressed: () {}),
       ),
     );
   }

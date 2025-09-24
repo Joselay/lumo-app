@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'features/home/presentation/pages/home_page.dart';
+import 'core/navigation/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,9 +30,9 @@ class LumoApp extends StatelessWidget {
         ),
       ),
       appBuilder: (context) {
-        return CupertinoApp(
+        return CupertinoApp.router(
           theme: CupertinoTheme.of(context),
-          home: const HomePage(),
+          routerConfig: appRouter,
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
