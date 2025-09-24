@@ -62,8 +62,8 @@ class _SplashPageState extends State<SplashPage>
           opacity: _fadeAnimation,
           child: SvgPicture.asset(
             'assets/icons/logo.svg',
-            width: 80,
-            height: 80,
+            width: 120,
+            height: 120,
             colorFilter: ColorFilter.mode(
               theme.colorScheme.primary,
               BlendMode.srcIn,
