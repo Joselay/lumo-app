@@ -1,11 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/splash/presentation/pages/splash_page.dart';
 
 final GoRouter appRouter = GoRouter(
+  initialLocation: '/',
   routes: <RouteBase>[
     GoRoute(
       path: '/',
+      name: 'splash',
+      builder: (BuildContext context, GoRouterState state) {
+        return const SplashPage();
+      },
+    ),
+    GoRoute(
+      path: '/home',
       name: 'home',
       builder: (BuildContext context, GoRouterState state) {
         return const HomePage();
