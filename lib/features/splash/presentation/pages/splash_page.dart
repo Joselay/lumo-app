@@ -13,9 +13,10 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
-  late AnimationController _rotationController;
+  late AnimationController _progressController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _progressAnimation;
 
   @override
   void initState() {
@@ -23,6 +24,11 @@ class _SplashPageState extends State<SplashPage>
 
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+
+    _progressController = AnimationController(
+      duration: const Duration(milliseconds: 2800),
       vsync: this,
     );
 
@@ -42,10 +48,19 @@ class _SplashPageState extends State<SplashPage>
       curve: const Interval(0.2, 0.8, curve: Curves.elasticOut),
     ));
 
+    _progressAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _progressController,
+      curve: Curves.easeOut,
+    ));
+
     _startAnimation();
   }
 
   void _startAnimation() async {
+    _progressController.forward();
     await _animationController.forward();
 
     Timer(const Duration(milliseconds: 1000), () {
@@ -58,6 +73,7 @@ class _SplashPageState extends State<SplashPage>
   @override
   void dispose() {
     _animationController.dispose();
+    _progressController.dispose();
     super.dispose();
   }
 
@@ -69,7 +85,7 @@ class _SplashPageState extends State<SplashPage>
       backgroundColor: theme.colorScheme.background,
       child: Center(
         child: AnimatedBuilder(
-          animation: _animationController,
+          animation: Listenable.merge([_animationController, _progressController]),
           builder: (context, child) {
             return FadeTransition(
               opacity: _fadeAnimation,
@@ -95,28 +111,47 @@ class _SplashPageState extends State<SplashPage>
                       ),
                     ),
                     const SizedBox(height: 32),
-                    Text(
-                      'Lumo',
-                      style: TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.foreground,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Container(
-                      height: 2,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            theme.colorScheme.primary.withValues(alpha: 0.3),
-                            theme.colorScheme.primary,
-                            theme.colorScheme.primary.withValues(alpha: 0.3),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(1),
+
+                    // Progress section
+                    SizedBox(
+                      width: 200,
+                      child: Column(
+                        children: [
+                          // Progress bar
+                          Container(
+                            width: double.infinity,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: 200 * _progressAnimation.value,
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Progress text
+                          Center(
+                            child: Text(
+                              '${(_progressAnimation.value * 100).round()}%',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: theme.colorScheme.mutedForeground,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
