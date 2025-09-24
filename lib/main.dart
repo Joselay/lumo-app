@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'features/home/presentation/pages/home_page.dart';
 
@@ -14,7 +16,7 @@ class LumoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShadApp(
+    return ShadApp.custom(
       themeMode: ThemeMode.system,
       theme: ShadThemeData(
         brightness: Brightness.light,
@@ -24,7 +26,20 @@ class LumoApp extends StatelessWidget {
         brightness: Brightness.dark,
         colorScheme: ShadColorScheme.fromName('red', brightness: Brightness.dark),
       ),
-      home: const HomePage(),
+      appBuilder: (context) {
+        return CupertinoApp(
+          theme: CupertinoTheme.of(context),
+          home: const HomePage(),
+          localizationsDelegates: const [
+            DefaultMaterialLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+          ],
+          builder: (context, child) {
+            return ShadAppBuilder(child: child!);
+          },
+        );
+      },
     );
   }
 }
