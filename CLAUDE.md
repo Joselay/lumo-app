@@ -76,6 +76,7 @@ lib/
 #### UI Framework
 
 - Built with `shadcn_ui` design system (ShadApp as root widget)
+- Uses red theme color scheme for both light and dark modes
 - Uses Material Design 3 principles
 - Navigation handled by `go_router`
 
