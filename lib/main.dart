@@ -24,16 +24,23 @@ class LumoApp extends StatelessWidget {
       ),
       darkTheme: ShadThemeData(
         brightness: Brightness.dark,
-        colorScheme: ShadColorScheme.fromName('red', brightness: Brightness.dark),
+        colorScheme: ShadColorScheme.fromName(
+          'red',
+          brightness: Brightness.dark,
+        ),
       ),
       appBuilder: (context) {
         return CupertinoApp(
           theme: CupertinoTheme.of(context),
           home: const HomePage(),
           localizationsDelegates: const [
-            DefaultMaterialLocalizations.delegate,
-            DefaultCupertinoLocalizations.delegate,
-            DefaultWidgetsLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', 'US'), // English (United States)
+            Locale('km', 'KH'), // Khmer (Cambodia)
           ],
           builder: (context, child) {
             return ShadAppBuilder(child: child!);
