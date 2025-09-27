@@ -60,13 +60,15 @@ class _SplashPageState extends State<SplashPage>
       child: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
-          child: SvgPicture.asset(
-            'assets/icons/logo.svg',
+          child: Container(
             width: 120,
             height: 120,
-            colorFilter: ColorFilter.mode(
-              theme.colorScheme.primary,
-              BlendMode.srcIn,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              image: DecorationImage(
+                image: AssetImage('assets/images/logo.png'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
