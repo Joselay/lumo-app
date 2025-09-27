@@ -22,6 +22,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `dart run build_runner build --delete-conflicting-outputs` - Clean rebuild
 - `dart run build_runner watch` - Watch for changes and auto-generate
 
+### App Icons
+
+- `flutter packages pub run flutter_launcher_icons:main` - Generate app icons from assets/images/logo.png
+
 ## Architecture Overview
 
 This Flutter app follows Clean Architecture principles with feature-based organization:
@@ -73,7 +77,7 @@ lib/
 - Use `Cubit` for simple state, `Bloc` for complex event-driven logic
 - All states extend `Equatable` and are `@immutable`
 
-#### Network Layer
+#### Network Layer (Planned)
 
 - Uses `dio` for HTTP client
 - Uses `retrofit` with code generation for API endpoints
@@ -88,17 +92,24 @@ lib/
 - Combines Cupertino Design principles with shadcn components
 - Navigation handled by `go_router`
 - Supports English (en-US) and Khmer (km-KH) localization
+- Uses Lucide icons for consistent iconography
 
-#### Dependency Injection
+#### Dependency Injection (Planned)
 
 - Uses `injectable` for DI setup
 - Run code generation after adding new injectable classes
 
-#### JSON Handling
+#### JSON Handling (Planned)
 
 - Uses `json_annotation` and `json_serializable`
 - Models have `toJson()` and `fromJson()` methods
 - Run code generation after model changes
+
+#### Environment Configuration
+
+- Uses `flutter_dotenv` for environment variables
+- Load environment with `await dotenv.load(fileName: ".env")`
+- Environment variables loaded at app startup
 
 ### Architecture Principles (from docs/flutter_app_architecture.md)
 
@@ -114,6 +125,7 @@ lib/
 - Name test cases with "should" for expected behavior
 - Tests must verify real functionality, not just mock behavior
 - Use `bloc_test` package for testing BLoCs and Cubits
+- Test directory is currently empty - tests should be added as features are implemented
 
 ### Code Quality Standards
 
@@ -132,3 +144,13 @@ lib/
 4. Use dependency injection for all external dependencies
 5. Run code generation after API or model changes
 6. Run tests and analysis before committing
+
+### Current Implementation Status
+
+The project is in early development with basic structure:
+- Main app setup with shadcn_ui + Cupertino integration
+- Basic navigation with go_router
+- Splash page implemented
+- Feature structure created for auth/home/splash
+- Core directory structure established but mostly empty
+- DI, network layer, and state management not yet implemented
