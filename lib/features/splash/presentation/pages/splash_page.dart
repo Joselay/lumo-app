@@ -38,9 +38,9 @@ class _SplashPageState extends State<SplashPage>
   void _startAnimation() async {
     await _animationController.forward();
 
-    Timer(const Duration(milliseconds: 500), () {
+    Timer(const Duration(milliseconds: 1500), () {
       if (mounted) {
-        context.go('/home');
+        context.go('/login');
       }
     });
   }
@@ -60,16 +60,21 @@ class _SplashPageState extends State<SplashPage>
       child: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
-          child: Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              image: DecorationImage(
-                image: AssetImage('assets/images/logo.png'),
-                fit: BoxFit.cover,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/logo.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),

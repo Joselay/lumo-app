@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 
@@ -14,13 +16,26 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
+      path: '/login',
+      name: 'login',
+      builder: (BuildContext context, GoRouterState state) {
+        return const LoginPage();
+      },
+    ),
+    GoRoute(
+      path: '/register',
+      name: 'register',
+      builder: (BuildContext context, GoRouterState state) {
+        return const RegisterPage();
+      },
+    ),
+    GoRoute(
       path: '/home',
       name: 'home',
       builder: (BuildContext context, GoRouterState state) {
         return const HomePage();
       },
     ),
-    // Add more routes here as features are developed
   ],
   errorBuilder: (context, state) => CupertinoPageScaffold(
     navigationBar: const CupertinoNavigationBar(middle: Text('Error')),
