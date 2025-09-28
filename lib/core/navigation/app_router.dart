@@ -3,10 +3,11 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/movies/presentation/pages/movies_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/movies',
   routes: <RouteBase>[
     GoRoute(
       path: '/',
@@ -34,6 +35,13 @@ final GoRouter appRouter = GoRouter(
       name: 'home',
       builder: (BuildContext context, GoRouterState state) {
         return const HomePage();
+      },
+    ),
+    GoRoute(
+      path: '/movies',
+      name: 'movies',
+      builder: (BuildContext context, GoRouterState state) {
+        return const MoviesPage();
       },
     ),
   ],
