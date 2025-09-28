@@ -7,7 +7,7 @@ import '../../features/movies/presentation/pages/movies_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/movies',
+  initialLocation: '/',
   routes: <RouteBase>[
     GoRoute(
       path: '/',

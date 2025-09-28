@@ -267,29 +267,34 @@ class _MoviesViewState extends State<_MoviesView> {
                       ),
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(8),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Container(
-                                width: double.infinity,
-                                height: 14,
-                                decoration: BoxDecoration(
-                                  color: ShadTheme.of(
-                                    context,
-                                  ).colorScheme.muted.withValues(alpha: 0.4),
-                                  borderRadius: BorderRadius.circular(4),
+                              Flexible(
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 12,
+                                  decoration: BoxDecoration(
+                                    color: ShadTheme.of(
+                                      context,
+                                    ).colorScheme.muted.withValues(alpha: 0.4),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Container(
-                                width: double.infinity * 0.6,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  color: ShadTheme.of(
-                                    context,
-                                  ).colorScheme.muted.withValues(alpha: 0.3),
-                                  borderRadius: BorderRadius.circular(4),
+                              const SizedBox(height: 4),
+                              Flexible(
+                                child: Container(
+                                  width: double.infinity * 0.6,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: ShadTheme.of(
+                                      context,
+                                    ).colorScheme.muted.withValues(alpha: 0.3),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
                                 ),
                               ),
                             ],
