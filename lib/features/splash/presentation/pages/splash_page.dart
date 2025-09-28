@@ -40,7 +40,7 @@ class _SplashPageState extends State<SplashPage>
 
     Timer(const Duration(milliseconds: 1500), () {
       if (mounted) {
-        context.go('/movies');
+        context.go('/home');
       }
     });
   }
