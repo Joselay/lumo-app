@@ -18,7 +18,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Code Generation
 
-- `dart run build_runner build` - Generate code (for retrofit, json_serializable)
+- `dart run build_runner build` - Generate code (for retrofit, json_serializable, freezed)
 - `dart run build_runner build --delete-conflicting-outputs` - Clean rebuild
 - `dart run build_runner watch` - Watch for changes and auto-generate
 
@@ -147,10 +147,15 @@ lib/
 
 ### Current Implementation Status
 
-The project is in early development with basic structure:
-- Main app setup with shadcn_ui + Cupertino integration
-- Basic navigation with go_router
-- Splash page implemented
-- Feature structure created for auth/home/splash
-- Core directory structure established but mostly empty
-- DI, network layer, and state management not yet implemented
+The project has a solid foundation implemented:
+- Main app setup with shadcn_ui + Cupertino integration complete
+- Navigation with go_router implemented
+- Complete authentication feature with BLoC state management
+- API client with Dio configured and environment variable support
+- Freezed models for immutable data classes (User, AuthState, AuthEvent)
+- Clean Architecture layers fully implemented for auth feature
+- Retrofit API interfaces generated for auth endpoints
+- Core utilities (ApiClient, AppLogger, Environment) implemented
+- Login and Register pages with full authentication flow
+- Test directory exists but no tests implemented yet
+- Dependency injection setup pending
