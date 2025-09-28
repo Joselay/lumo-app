@@ -21,7 +21,7 @@ class GenreFilterChips extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: genres.length + 1,
-        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        separatorBuilder: (context, index) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           if (index == 0) {
             final isSelected = selectedGenreId == null;
@@ -34,12 +34,15 @@ class GenreFilterChips extends StatelessWidget {
                 child: const Text('All'),
               );
             } else {
-              return ShadButton.secondary(
+              return ShadButton.outline(
                 onPressed: () => onGenreSelected(null),
                 decoration: ShadDecoration(
                   border: ShadBorder.all(radius: BorderRadius.circular(12)),
                 ),
-                child: const Text('All'),
+                child: const Text(
+                  'All',
+                  style: TextStyle(color: CupertinoColors.white),
+                ),
               );
             }
           }
@@ -56,12 +59,15 @@ class GenreFilterChips extends StatelessWidget {
               child: Text(genre.name),
             );
           } else {
-            return ShadButton.secondary(
+            return ShadButton.outline(
               onPressed: () => onGenreSelected(genre.id),
               decoration: ShadDecoration(
                 border: ShadBorder.all(radius: BorderRadius.circular(12)),
               ),
-              child: Text(genre.name),
+              child: Text(
+                genre.name,
+                style: const TextStyle(color: CupertinoColors.white),
+              ),
             );
           }
         },
