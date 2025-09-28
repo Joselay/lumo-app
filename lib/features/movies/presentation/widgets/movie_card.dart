@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import '../../domain/entities/movie.dart';
 
@@ -11,119 +10,81 @@ class MovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 120,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: CupertinoColors.systemGrey.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: CupertinoColors.systemBackground.resolveFrom(context),
       ),
-      child: ShadCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 3,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(12),
-                ),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: SizedBox(
+                width: 80,
+                height: double.infinity,
                 child: _buildPosterImage(),
               ),
             ),
-
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        movie.title,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    movie.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
-                    const SizedBox(height: 2),
-
-                    if (movie.genres.isNotEmpty) ...[
-                      Flexible(
-                        child: Text(
-                          movie.genres.map((g) => g.name).join(', '),
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: CupertinoColors.systemGrey.resolveFrom(
-                              context,
-                            ),
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                    ],
-
-                    const Spacer(),
-
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  if (movie.rating != null) ...[
                     Row(
                       children: [
                         Icon(
-                          lucide.LucideIcons.clock,
-                          size: 10,
-                          color: CupertinoColors.systemGrey.resolveFrom(
+                          CupertinoIcons.star_fill,
+                          size: 14,
+                          color: CupertinoColors.systemYellow.resolveFrom(
                             context,
                           ),
                         ),
-                        const SizedBox(width: 2),
-                        Flexible(
-                          child: Text(
-                            movie.durationFormatted ?? '${movie.duration}m',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: CupertinoColors.systemGrey.resolveFrom(
-                                context,
-                              ),
-                            ),
+                        const SizedBox(width: 4),
+                        Text(
+                          movie.rating!.toStringAsFixed(1),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const Spacer(),
-                        if (movie.rating != null) ...[
-                          Icon(
-                            lucide.LucideIcons.star,
-                            size: 10,
-                            color: CupertinoColors.systemYellow.resolveFrom(
-                              context,
-                            ),
-                          ),
-                          const SizedBox(width: 1),
-                          Text(
-                            movie.rating!.toStringAsFixed(1),
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: CupertinoColors.systemGrey.resolveFrom(
-                                context,
-                              ),
-                            ),
-                          ),
-                        ],
                       ],
                     ),
+                    const SizedBox(height: 4),
                   ],
-                ),
+                  Expanded(
+                    child: Text(
+                      movie.description.isNotEmpty ? movie.description : 'No description available',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: CupertinoColors.systemGrey.resolveFrom(
+                          context,
+                        ),
+                        height: 1.3,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

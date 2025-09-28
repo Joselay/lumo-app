@@ -156,16 +156,12 @@ class _MoviesViewState extends State<_MoviesView> {
                   ),
                   SliverPadding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                    sliver: SliverGrid(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 20,
-                            childAspectRatio: 0.65,
-                          ),
+                    sliver: SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
-                        return MovieCard(movie: state.movies[index]);
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: MovieCard(movie: state.movies[index]),
+                        );
                       }, childCount: state.movies.length),
                     ),
                   ),
@@ -231,70 +227,73 @@ class _MoviesViewState extends State<_MoviesView> {
       case MoviesStatus.loading:
         return Padding(
           padding: const EdgeInsets.all(16),
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.7,
-            ),
+          child: ListView.builder(
             itemCount: 6,
             itemBuilder: (context, index) {
-              return ShadCard(
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
                 child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
+                  height: 120,
                   decoration: BoxDecoration(
-                    color: ShadTheme.of(
-                      context,
-                    ).colorScheme.muted.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(8),
+                    color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Column(
+                  child: Row(
                     children: [
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          width: double.infinity,
-                          margin: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: ShadTheme.of(
-                              context,
-                            ).colorScheme.muted.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
+                      Container(
+                        width: 80,
+                        height: double.infinity,
+                        margin: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Flexible(
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                    color: ShadTheme.of(
-                                      context,
-                                    ).colorScheme.muted.withValues(alpha: 0.4),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
+                              Container(
+                                width: double.infinity,
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.4),
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Flexible(
-                                child: Container(
-                                  width: double.infinity * 0.6,
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    color: ShadTheme.of(
-                                      context,
-                                    ).colorScheme.muted.withValues(alpha: 0.3),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
+                              const SizedBox(height: 8),
+                              Container(
+                                width: 60,
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.3),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: double.infinity,
+                                      height: 10,
+                                      decoration: BoxDecoration(
+                                        color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.2),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Container(
+                                      width: double.infinity * 0.8,
+                                      height: 10,
+                                      decoration: BoxDecoration(
+                                        color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.2),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
