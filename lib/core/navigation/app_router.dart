@@ -4,6 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/movies/presentation/pages/movies_page.dart';
+import '../../features/movies/presentation/pages/movies_search_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../presentation/pages/main_shell_page.dart';
 import '../presentation/widgets/coming_soon_page.dart';
@@ -45,6 +46,15 @@ final GoRouter appRouter = GoRouter(
               builder: (BuildContext context, GoRouterState state) {
                 return const MoviesPage();
               },
+              routes: [
+                GoRoute(
+                  path: 'search',
+                  name: 'movies-search',
+                  builder: (BuildContext context, GoRouterState state) {
+                    return const MoviesSearchPage();
+                  },
+                ),
+              ],
             ),
           ],
         ),

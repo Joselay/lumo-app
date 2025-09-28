@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import '../../constants/app_colors.dart';
 
@@ -63,10 +62,7 @@ class AppBottomNavigationBar extends StatelessWidget {
           decoration: const BoxDecoration(
             color: AppColors.background,
             border: Border(
-              top: BorderSide(
-                color: CupertinoColors.separator,
-                width: 0.5,
-              ),
+              top: BorderSide(color: CupertinoColors.separator, width: 0.5),
             ),
           ),
           child: SafeArea(
@@ -118,8 +114,7 @@ class AppBottomNavigationBar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color:
-                              CupertinoColors.black.withValues(alpha: 0.2),
+                          color: CupertinoColors.black.withValues(alpha: 0.2),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -150,10 +145,7 @@ class AppBottomNavigationBar extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(18),
                     child: ImageFiltered(
-                      imageFilter: ImageFilter.blur(
-                        sigmaX: 8,
-                        sigmaY: 14,
-                      ),
+                      imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 14),
                       child: Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(

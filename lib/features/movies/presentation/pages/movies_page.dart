@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/data/api_client.dart';
@@ -71,7 +72,11 @@ class _MoviesViewState extends State<_MoviesView> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
+                          padding: const EdgeInsets.only(
+                            top: 12,
+                            left: 16,
+                            right: 16,
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,9 +90,8 @@ class _MoviesViewState extends State<_MoviesView> {
                                 ),
                               ),
                               ShadButton.ghost(
-                                onPressed: () {
-                                  // TODO: Handle search action
-                                },
+                                onPressed: () =>
+                                    context.pushNamed('movies-search'),
                                 child: const Icon(
                                   lucide.LucideIcons.search,
                                   color: CupertinoColors.white,
@@ -98,7 +102,10 @@ class _MoviesViewState extends State<_MoviesView> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           child: GenreFilterChips(
                             genres: state.genres,
                             selectedGenreId: state.selectedGenreId,
@@ -235,7 +242,9 @@ class _MoviesViewState extends State<_MoviesView> {
                 child: Container(
                   height: 120,
                   decoration: BoxDecoration(
-                    color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.3),
+                    color: ShadTheme.of(
+                      context,
+                    ).colorScheme.muted.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -245,7 +254,9 @@ class _MoviesViewState extends State<_MoviesView> {
                         height: double.infinity,
                         margin: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.5),
+                          color: ShadTheme.of(
+                            context,
+                          ).colorScheme.muted.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
@@ -259,7 +270,9 @@ class _MoviesViewState extends State<_MoviesView> {
                                 width: double.infinity,
                                 height: 16,
                                 decoration: BoxDecoration(
-                                  color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.4),
+                                  color: ShadTheme.of(
+                                    context,
+                                  ).colorScheme.muted.withValues(alpha: 0.4),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
@@ -268,7 +281,9 @@ class _MoviesViewState extends State<_MoviesView> {
                                 width: 60,
                                 height: 12,
                                 decoration: BoxDecoration(
-                                  color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.3),
+                                  color: ShadTheme.of(
+                                    context,
+                                  ).colorScheme.muted.withValues(alpha: 0.3),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
@@ -280,7 +295,10 @@ class _MoviesViewState extends State<_MoviesView> {
                                       width: double.infinity,
                                       height: 10,
                                       decoration: BoxDecoration(
-                                        color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.2),
+                                        color: ShadTheme.of(context)
+                                            .colorScheme
+                                            .muted
+                                            .withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
@@ -289,7 +307,10 @@ class _MoviesViewState extends State<_MoviesView> {
                                       width: double.infinity * 0.8,
                                       height: 10,
                                       decoration: BoxDecoration(
-                                        color: ShadTheme.of(context).colorScheme.muted.withValues(alpha: 0.2),
+                                        color: ShadTheme.of(context)
+                                            .colorScheme
+                                            .muted
+                                            .withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
