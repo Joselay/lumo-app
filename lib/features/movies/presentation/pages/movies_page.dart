@@ -11,7 +11,6 @@ import '../viewmodels/movies_event.dart';
 import '../viewmodels/movies_state.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/genre_filter_chips.dart';
-import '../widgets/movie_search_bar.dart';
 import '../widgets/movie_spotlight_carousel.dart';
 
 class MoviesPage extends StatelessWidget {
@@ -51,9 +50,7 @@ class _MoviesViewState extends State<_MoviesView> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemBackground.resolveFrom(context),
-      child: MediaQuery.removePadding(
-        context: context,
-        removeTop: true,
+      child: SafeArea(
         child: BlocBuilder<MoviesBloc, MoviesState>(
           builder: (context, state) {
             if (state.status == MoviesStatus.loaded &&
@@ -71,14 +68,63 @@ class _MoviesViewState extends State<_MoviesView> {
                     },
                   ),
                   SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 12, bottom: 16),
-                      child: MovieSpotlightCarousel(
-                        movies: state.movies,
-                        onMovieTap: (movie) {
-                          // TODO: Navigate to movie details
-                        },
-                      ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Popular now',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: CupertinoColors.white,
+                                ),
+                              ),
+                              ShadButton.ghost(
+                                onPressed: () {
+                                  // TODO: Handle search action
+                                },
+                                child: const Icon(
+                                  lucide.LucideIcons.search,
+                                  color: CupertinoColors.white,
+                                  size: 28,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          child: GenreFilterChips(
+                            genres: state.genres,
+                            selectedGenreId: state.selectedGenreId,
+                            onGenreSelected: (genreId) {
+                              if (genreId == null) {
+                                context.read<MoviesBloc>().add(
+                                  const MoviesEvent.clearFilter(),
+                                );
+                              } else {
+                                context.read<MoviesBloc>().add(
+                                  MoviesEvent.filterByGenre(genreId),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: MovieSpotlightCarousel(
+                            movies: state.movies,
+                            onMovieTap: (movie) {
+                              // TODO: Navigate to movie details
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SliverToBoxAdapter(
@@ -88,71 +134,23 @@ class _MoviesViewState extends State<_MoviesView> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MovieSearchBar(
-                              onSearch: (query) {
-                                context.read<MoviesBloc>().add(
-                                  MoviesEvent.searchMovies(query),
-                                );
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Browse by Genre',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: CupertinoColors.label.resolveFrom(
-                                  context,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            GenreFilterChips(
-                              genres: state.genres,
-                              selectedGenreId: state.selectedGenreId,
-                              onGenreSelected: (genreId) {
-                                if (genreId == state.selectedGenreId) {
-                                  context.read<MoviesBloc>().add(
-                                    const MoviesEvent.clearFilter(),
-                                  );
-                                } else {
-                                  context.read<MoviesBloc>().add(
-                                    MoviesEvent.filterByGenre(genreId),
-                                  );
-                                }
-                              },
-                            ),
-                          ],
-                        ),
+                        child: const SizedBox.shrink(),
                       ),
                     ),
                   ),
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
-                      child: Row(
-                        children: [
-                          Icon(
-                            lucide.LucideIcons.trendingUp,
-                            size: 20,
-                            color: CupertinoColors.systemRed,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            state.selectedGenreId != null
-                                ? 'Filtered Movies (${state.movies.length})'
-                                : state.searchQuery?.isNotEmpty == true
-                                ? 'Search Results (${state.movies.length})'
-                                : 'All Movies (${state.movies.length})',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        state.selectedGenreId != null
+                            ? 'Filtered Movies (${state.movies.length})'
+                            : state.searchQuery?.isNotEmpty == true
+                            ? 'Search Results (${state.movies.length})'
+                            : 'All Movies (${state.movies.length})',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -185,14 +183,6 @@ class _MoviesViewState extends State<_MoviesView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          MovieSearchBar(
-                            onSearch: (query) {
-                              context.read<MoviesBloc>().add(
-                                MoviesEvent.searchMovies(query),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 16),
                           if (state.genres.isNotEmpty) ...[
                             Text(
                               'Browse by Genre',
@@ -209,7 +199,7 @@ class _MoviesViewState extends State<_MoviesView> {
                               genres: state.genres,
                               selectedGenreId: state.selectedGenreId,
                               onGenreSelected: (genreId) {
-                                if (genreId == state.selectedGenreId) {
+                                if (genreId == null) {
                                   context.read<MoviesBloc>().add(
                                     const MoviesEvent.clearFilter(),
                                   );
