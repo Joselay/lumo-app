@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import '../../domain/entities/movie.dart';
@@ -18,19 +19,47 @@ class MovieSpotlightCarousel extends StatefulWidget {
 
 class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
   static const _viewportFraction = 1.0;
+  static const _autoPlayDuration = Duration(seconds: 4);
+  static const _initialPage = 10000; // Large number for infinite effect
   late final PageController _controller;
   int _currentIndex = 0;
+  Timer? _autoPlayTimer;
 
   @override
   void initState() {
     super.initState();
-    _controller = PageController(viewportFraction: _viewportFraction);
+    _controller = PageController(
+      viewportFraction: _viewportFraction,
+      initialPage: _initialPage,
+    );
+    _startAutoPlay();
   }
 
   @override
   void dispose() {
+    _autoPlayTimer?.cancel();
     _controller.dispose();
     super.dispose();
+  }
+
+  void _startAutoPlay() {
+    if (widget.movies.length <= 1) return;
+
+    _autoPlayTimer = Timer.periodic(_autoPlayDuration, (timer) {
+      if (!mounted || !_controller.hasClients) return;
+
+      final currentPage = _controller.page?.round() ?? _initialPage;
+      _controller.animateToPage(
+        currentPage + 1,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  void _resetAutoPlay() {
+    _autoPlayTimer?.cancel();
+    _startAutoPlay();
   }
 
   @override
@@ -52,8 +81,6 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                 controller: _controller,
                 padEnds: false,
                 clipBehavior: Clip.none,
-                itemCount: widget.movies.length,
-                onPageChanged: (index) => setState(() => _currentIndex = index),
                 itemBuilder: (_, __) => const SizedBox.shrink(),
               ),
               Positioned.fill(
@@ -65,7 +92,8 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 
                     for (var index = 0; index < widget.movies.length; index++) {
                       final movie = widget.movies[index];
-                      final distance = index - page;
+                      final actualIndex = page % widget.movies.length;
+                      final distance = index - actualIndex;
                       final depth = distance.abs();
                       final clampedDepth = depth.clamp(0.0, 1.0);
                       final isActive = depth < 0.35;
@@ -130,11 +158,11 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 
   double get _currentPage {
     if (_controller.positions.isEmpty || !_controller.position.haveDimensions) {
-      return _currentIndex.toDouble();
+      return _initialPage.toDouble();
     }
     final page = _controller.page;
     if (page == null) {
-      return _currentIndex.toDouble();
+      return _initialPage.toDouble();
     }
     return page;
   }
