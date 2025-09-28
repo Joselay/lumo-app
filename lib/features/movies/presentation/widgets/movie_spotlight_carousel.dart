@@ -94,20 +94,21 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 
                     final pageOffset = page - page.floor();
 
-                    // Show visible movies around current position
-                    for (var i = -2; i <= 2; i++) {
+                    // Show many more movies and use smooth gradual transitions
+                    for (var i = -5; i <= 5; i++) {
                       final movieIndex = ((page.floor() + i) % widget.movies.length + widget.movies.length) % widget.movies.length;
                       final movie = widget.movies[movieIndex];
                       final distance = i - pageOffset;
                       final depth = distance.abs();
-                      final clampedDepth = depth.clamp(0.0, 1.0);
+                      final clampedDepth = depth.clamp(0.0, 2.0);
                       final isActive = depth < 0.35;
 
-                      final translateX = distance * viewportWidth * 0.12;
-                      final translateY = lerpDouble(0, 56, clampedDepth)!;
-                      final scale = lerpDouble(1, 0.82, clampedDepth)!;
-                      final tilt = -distance * 0.12;
-                      final opacity = lerpDouble(1, 0.6, clampedDepth)!;
+                      // Much smoother and more gradual transitions
+                      final translateX = distance * viewportWidth * 0.05;
+                      final translateY = lerpDouble(0, 28, (clampedDepth / 2.0))!;
+                      final scale = lerpDouble(1, 0.9, (clampedDepth / 2.0))!;
+                      final tilt = -distance * 0.04;
+                      final opacity = lerpDouble(1, 0.85, (clampedDepth / 2.0))!;
 
                       layers.add(
                         _CardLayer(
