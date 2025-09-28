@@ -22,7 +22,6 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
   static const _autoPlayDuration = Duration(seconds: 4);
   static const _initialPage = 10000; // Large number for infinite effect
   late final PageController _controller;
-  int _currentIndex = 0;
   Timer? _autoPlayTimer;
 
   @override
@@ -81,6 +80,9 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                 controller: _controller,
                 padEnds: false,
                 clipBehavior: Clip.none,
+                onPageChanged: (index) {
+                  _resetAutoPlay();
+                },
                 itemBuilder: (_, __) => const SizedBox.shrink(),
               ),
               Positioned.fill(
@@ -90,10 +92,13 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                     final page = _currentPage;
                     final layers = <_CardLayer>[];
 
-                    for (var index = 0; index < widget.movies.length; index++) {
-                      final movie = widget.movies[index];
-                      final actualIndex = page % widget.movies.length;
-                      final distance = index - actualIndex;
+                    final pageOffset = page - page.floor();
+
+                    // Show visible movies around current position
+                    for (var i = -2; i <= 2; i++) {
+                      final movieIndex = ((page.floor() + i) % widget.movies.length + widget.movies.length) % widget.movies.length;
+                      final movie = widget.movies[movieIndex];
+                      final distance = i - pageOffset;
                       final depth = distance.abs();
                       final clampedDepth = depth.clamp(0.0, 1.0);
                       final isActive = depth < 0.35;
@@ -122,7 +127,7 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                                       child: Opacity(
                                         opacity: opacity,
                                         child: _MovieCard(
-                                          key: ValueKey(movie.id),
+                                          key: ValueKey('${movie.id}_$i'),
                                           movie: movie,
                                           dimmed: !isActive,
                                           onTap: () =>
