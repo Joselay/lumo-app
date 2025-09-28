@@ -23,7 +23,7 @@ class AppBottomNavigationBar extends StatelessWidget {
       child: GestureDetector(
         onTap: () => onTap(index),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
