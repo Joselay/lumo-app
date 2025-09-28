@@ -12,13 +12,11 @@ class AuthEvent with _$AuthEvent {
   }) = LoginButtonPressed;
 
   const factory AuthEvent.registerButtonPressed({
-    required String username,
     required String email,
     required String firstName,
     required String lastName,
     required String password,
     required String passwordConfirm,
-    required String phoneNumber,
   }) = RegisterButtonPressed;
 
   const factory AuthEvent.logoutButtonPressed({

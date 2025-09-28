@@ -13,23 +13,19 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<domain.AuthUser> register({
-    required String username,
     required String email,
     required String firstName,
     required String lastName,
     required String password,
     required String passwordConfirm,
-    required String phoneNumber,
   }) async {
     try {
       final request = RegisterRequest(
-        username: username,
         email: email,
         firstName: firstName,
         lastName: lastName,
         password: password,
         passwordConfirm: passwordConfirm,
-        phoneNumber: phoneNumber,
       );
       final response = await _authApi.register(request);
 
@@ -37,7 +33,6 @@ class AuthRepository implements AuthRepositoryInterface {
 
       final user = domain.User(
         id: response.user.id,
-        username: response.user.username,
         email: response.user.email,
         firstName: response.user.firstName,
         lastName: response.user.lastName,
@@ -64,8 +59,6 @@ class AuthRepository implements AuthRepositoryInterface {
             errorMessage = errorData['non_field_errors'][0];
           } else if (errorData.containsKey('email')) {
             errorMessage = errorData['email'][0];
-          } else if (errorData.containsKey('username')) {
-            errorMessage = errorData['username'][0];
           } else if (errorData.containsKey('password')) {
             errorMessage = errorData['password'][0];
           }
@@ -90,7 +83,6 @@ class AuthRepository implements AuthRepositoryInterface {
 
       final user = domain.User(
         id: response.user.id,
-        username: response.user.username,
         email: response.user.email,
         firstName: response.user.firstName,
         lastName: response.user.lastName,

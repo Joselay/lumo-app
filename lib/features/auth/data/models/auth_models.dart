@@ -64,7 +64,6 @@ class CustomerProfile {
 
 @JsonSerializable()
 class RegisterRequest {
-  final String username;
   final String email;
   @JsonKey(name: 'first_name')
   final String firstName;
@@ -73,17 +72,13 @@ class RegisterRequest {
   final String password;
   @JsonKey(name: 'password_confirm')
   final String passwordConfirm;
-  @JsonKey(name: 'phone_number')
-  final String phoneNumber;
 
   const RegisterRequest({
-    required this.username,
     required this.email,
     required this.firstName,
     required this.lastName,
     required this.password,
     required this.passwordConfirm,
-    required this.phoneNumber,
   });
 
   factory RegisterRequest.fromJson(Map<String, dynamic> json) =>

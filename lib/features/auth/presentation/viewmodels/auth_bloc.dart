@@ -54,13 +54,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final user = await _registerUseCase(
-        username: event.username,
         email: event.email,
         firstName: event.firstName,
         lastName: event.lastName,
         password: event.password,
         passwordConfirm: event.passwordConfirm,
-        phoneNumber: event.phoneNumber,
       );
       emit(state.copyWith(status: AuthStatus.authenticated, user: user));
     } catch (e) {

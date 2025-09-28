@@ -128,12 +128,12 @@ return logoutButtonPressed(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  authenticationStarted,TResult Function( String email,  String password)?  loginButtonPressed,TResult Function( String username,  String email,  String firstName,  String lastName,  String password,  String passwordConfirm,  String phoneNumber)?  registerButtonPressed,TResult Function( String refreshToken)?  logoutButtonPressed,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  authenticationStarted,TResult Function( String email,  String password)?  loginButtonPressed,TResult Function( String email,  String firstName,  String lastName,  String password,  String passwordConfirm)?  registerButtonPressed,TResult Function( String refreshToken)?  logoutButtonPressed,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case AuthenticationStarted() when authenticationStarted != null:
 return authenticationStarted();case LoginButtonPressed() when loginButtonPressed != null:
 return loginButtonPressed(_that.email,_that.password);case RegisterButtonPressed() when registerButtonPressed != null:
-return registerButtonPressed(_that.username,_that.email,_that.firstName,_that.lastName,_that.password,_that.passwordConfirm,_that.phoneNumber);case LogoutButtonPressed() when logoutButtonPressed != null:
+return registerButtonPressed(_that.email,_that.firstName,_that.lastName,_that.password,_that.passwordConfirm);case LogoutButtonPressed() when logoutButtonPressed != null:
 return logoutButtonPressed(_that.refreshToken);case _:
   return orElse();
 
@@ -152,12 +152,12 @@ return logoutButtonPressed(_that.refreshToken);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  authenticationStarted,required TResult Function( String email,  String password)  loginButtonPressed,required TResult Function( String username,  String email,  String firstName,  String lastName,  String password,  String passwordConfirm,  String phoneNumber)  registerButtonPressed,required TResult Function( String refreshToken)  logoutButtonPressed,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  authenticationStarted,required TResult Function( String email,  String password)  loginButtonPressed,required TResult Function( String email,  String firstName,  String lastName,  String password,  String passwordConfirm)  registerButtonPressed,required TResult Function( String refreshToken)  logoutButtonPressed,}) {final _that = this;
 switch (_that) {
 case AuthenticationStarted():
 return authenticationStarted();case LoginButtonPressed():
 return loginButtonPressed(_that.email,_that.password);case RegisterButtonPressed():
-return registerButtonPressed(_that.username,_that.email,_that.firstName,_that.lastName,_that.password,_that.passwordConfirm,_that.phoneNumber);case LogoutButtonPressed():
+return registerButtonPressed(_that.email,_that.firstName,_that.lastName,_that.password,_that.passwordConfirm);case LogoutButtonPressed():
 return logoutButtonPressed(_that.refreshToken);case _:
   throw StateError('Unexpected subclass');
 
@@ -175,12 +175,12 @@ return logoutButtonPressed(_that.refreshToken);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  authenticationStarted,TResult? Function( String email,  String password)?  loginButtonPressed,TResult? Function( String username,  String email,  String firstName,  String lastName,  String password,  String passwordConfirm,  String phoneNumber)?  registerButtonPressed,TResult? Function( String refreshToken)?  logoutButtonPressed,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  authenticationStarted,TResult? Function( String email,  String password)?  loginButtonPressed,TResult? Function( String email,  String firstName,  String lastName,  String password,  String passwordConfirm)?  registerButtonPressed,TResult? Function( String refreshToken)?  logoutButtonPressed,}) {final _that = this;
 switch (_that) {
 case AuthenticationStarted() when authenticationStarted != null:
 return authenticationStarted();case LoginButtonPressed() when loginButtonPressed != null:
 return loginButtonPressed(_that.email,_that.password);case RegisterButtonPressed() when registerButtonPressed != null:
-return registerButtonPressed(_that.username,_that.email,_that.firstName,_that.lastName,_that.password,_that.passwordConfirm,_that.phoneNumber);case LogoutButtonPressed() when logoutButtonPressed != null:
+return registerButtonPressed(_that.email,_that.firstName,_that.lastName,_that.password,_that.passwordConfirm);case LogoutButtonPressed() when logoutButtonPressed != null:
 return logoutButtonPressed(_that.refreshToken);case _:
   return null;
 
@@ -293,16 +293,14 @@ as String,
 
 
 class RegisterButtonPressed implements AuthEvent {
-  const RegisterButtonPressed({required this.username, required this.email, required this.firstName, required this.lastName, required this.password, required this.passwordConfirm, required this.phoneNumber});
+  const RegisterButtonPressed({required this.email, required this.firstName, required this.lastName, required this.password, required this.passwordConfirm});
   
 
- final  String username;
  final  String email;
  final  String firstName;
  final  String lastName;
  final  String password;
  final  String passwordConfirm;
- final  String phoneNumber;
 
 /// Create a copy of AuthEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -314,16 +312,16 @@ $RegisterButtonPressedCopyWith<RegisterButtonPressed> get copyWith => _$Register
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterButtonPressed&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.password, password) || other.password == password)&&(identical(other.passwordConfirm, passwordConfirm) || other.passwordConfirm == passwordConfirm)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterButtonPressed&&(identical(other.email, email) || other.email == email)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.password, password) || other.password == password)&&(identical(other.passwordConfirm, passwordConfirm) || other.passwordConfirm == passwordConfirm));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,username,email,firstName,lastName,password,passwordConfirm,phoneNumber);
+int get hashCode => Object.hash(runtimeType,email,firstName,lastName,password,passwordConfirm);
 
 @override
 String toString() {
-  return 'AuthEvent.registerButtonPressed(username: $username, email: $email, firstName: $firstName, lastName: $lastName, password: $password, passwordConfirm: $passwordConfirm, phoneNumber: $phoneNumber)';
+  return 'AuthEvent.registerButtonPressed(email: $email, firstName: $firstName, lastName: $lastName, password: $password, passwordConfirm: $passwordConfirm)';
 }
 
 
@@ -334,7 +332,7 @@ abstract mixin class $RegisterButtonPressedCopyWith<$Res> implements $AuthEventC
   factory $RegisterButtonPressedCopyWith(RegisterButtonPressed value, $Res Function(RegisterButtonPressed) _then) = _$RegisterButtonPressedCopyWithImpl;
 @useResult
 $Res call({
- String username, String email, String firstName, String lastName, String password, String passwordConfirm, String phoneNumber
+ String email, String firstName, String lastName, String password, String passwordConfirm
 });
 
 
@@ -351,15 +349,13 @@ class _$RegisterButtonPressedCopyWithImpl<$Res>
 
 /// Create a copy of AuthEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? username = null,Object? email = null,Object? firstName = null,Object? lastName = null,Object? password = null,Object? passwordConfirm = null,Object? phoneNumber = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? email = null,Object? firstName = null,Object? lastName = null,Object? password = null,Object? passwordConfirm = null,}) {
   return _then(RegisterButtonPressed(
-username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
-as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,passwordConfirm: null == passwordConfirm ? _self.passwordConfirm : passwordConfirm // ignore: cast_nullable_to_non_nullable
-as String,phoneNumber: null == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

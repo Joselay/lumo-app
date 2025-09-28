@@ -46,24 +46,20 @@ Map<String, dynamic> _$CustomerProfileToJson(CustomerProfile instance) =>
 
 RegisterRequest _$RegisterRequestFromJson(Map<String, dynamic> json) =>
     RegisterRequest(
-      username: json['username'] as String,
       email: json['email'] as String,
       firstName: json['first_name'] as String,
       lastName: json['last_name'] as String,
       password: json['password'] as String,
       passwordConfirm: json['password_confirm'] as String,
-      phoneNumber: json['phone_number'] as String,
     );
 
 Map<String, dynamic> _$RegisterRequestToJson(RegisterRequest instance) =>
     <String, dynamic>{
-      'username': instance.username,
       'email': instance.email,
       'first_name': instance.firstName,
       'last_name': instance.lastName,
       'password': instance.password,
       'password_confirm': instance.passwordConfirm,
-      'phone_number': instance.phoneNumber,
     };
 
 RegisterResponse _$RegisterResponseFromJson(Map<String, dynamic> json) =>

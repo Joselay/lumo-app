@@ -34,25 +34,21 @@ class _RegisterView extends StatefulWidget {
 
 class _RegisterViewState extends State<_RegisterView> {
   final _formKey = GlobalKey<ShadFormState>();
-  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordConfirmController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
   bool _obscurePassword = true;
   bool _obscurePasswordConfirm = true;
 
   @override
   void dispose() {
-    _usernameController.dispose();
     _emailController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
     _passwordController.dispose();
     _passwordConfirmController.dispose();
-    _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -60,13 +56,11 @@ class _RegisterViewState extends State<_RegisterView> {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       context.read<AuthBloc>().add(
         RegisterButtonPressed(
-          username: _usernameController.text.trim(),
           email: _emailController.text.trim(),
           firstName: _firstNameController.text.trim(),
           lastName: _lastNameController.text.trim(),
           password: _passwordController.text,
           passwordConfirm: _passwordConfirmController.text,
-          phoneNumber: _phoneNumberController.text.trim(),
         ),
       );
     }
@@ -118,17 +112,15 @@ class _RegisterViewState extends State<_RegisterView> {
 
                     Column(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 80,
                           height: 80,
-                          decoration: BoxDecoration(
-                            color: ShadTheme.of(context).colorScheme.primary,
+                          child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Icon(
-                            Icons.person_add,
-                            color: Colors.white,
-                            size: 40,
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -152,23 +144,6 @@ class _RegisterViewState extends State<_RegisterView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          _buildInputField(
-                            label: 'Username',
-                            controller: _usernameController,
-                            placeholder: 'Enter your username',
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Username is required';
-                              }
-                              if (value.length < 3) {
-                                return 'Username must be at least 3 characters';
-                              }
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(height: 16),
-
                           _buildInputField(
                             label: 'Email',
                             controller: _emailController,
@@ -219,21 +194,6 @@ class _RegisterViewState extends State<_RegisterView> {
                                 ),
                               ),
                             ],
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          _buildInputField(
-                            label: 'Phone Number',
-                            controller: _phoneNumberController,
-                            placeholder: 'Enter your phone number',
-                            keyboardType: TextInputType.phone,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Phone number is required';
-                              }
-                              return null;
-                            },
                           ),
 
                           const SizedBox(height: 16),

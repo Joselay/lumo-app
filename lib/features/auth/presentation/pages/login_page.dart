@@ -97,17 +97,15 @@ class _LoginViewState extends State<_LoginView> {
 
                     Column(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 80,
                           height: 80,
-                          decoration: BoxDecoration(
-                            color: ShadTheme.of(context).colorScheme.primary,
+                          child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Icon(
-                            Icons.person,
-                            color: Colors.white,
-                            size: 40,
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 24),
