@@ -108,7 +108,7 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                       final isActive = depth < 0.35;
 
                       // Horizontal spacing without rotation
-                      final translateX = distance * viewportWidth * 0.4;
+                      final translateX = distance * viewportWidth * 0.15;
                       final translateY = lerpDouble(0, 20, (clampedDepth / 2.0))!;
                       final scale = lerpDouble(1, 0.85, (clampedDepth / 2.0))!;
                       final tilt = 0.0; // No rotation
@@ -129,6 +129,7 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                                     angle: tilt,
                                     child: Transform.scale(
                                       scale: scale,
+                                      alignment: Alignment.bottomCenter,
                                       child: Opacity(
                                         opacity: opacity,
                                         child: _MovieCard(
