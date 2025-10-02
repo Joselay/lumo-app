@@ -20,7 +20,7 @@ class MovieSpotlightCarousel extends StatefulWidget {
 class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
   static const _viewportFraction = 1.0;
   static const _autoPlayDuration = Duration(seconds: 4);
-  static const _initialPage = 10000; // Large number for infinite effect
+  static const _initialPage = 0;
   late final PageController _controller;
   Timer? _autoPlayTimer;
 
@@ -47,9 +47,11 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
     _autoPlayTimer = Timer.periodic(_autoPlayDuration, (timer) {
       if (!mounted || !_controller.hasClients) return;
 
-      final currentPage = _controller.page?.round() ?? _initialPage;
+      final currentPage = _controller.page?.round() ?? 0;
+      final nextPage = (currentPage + 1) % widget.movies.length;
+
       _controller.animateToPage(
-        currentPage + 1,
+        nextPage,
         duration: const Duration(milliseconds: 800),
         curve: Curves.easeInOut,
       );
@@ -94,21 +96,23 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 
                     final pageOffset = page - page.floor();
 
-                    // Show many more movies and use smooth gradual transitions
-                    for (var i = -5; i <= 5; i++) {
-                      final movieIndex = ((page.floor() + i) % widget.movies.length + widget.movies.length) % widget.movies.length;
-                      final movie = widget.movies[movieIndex];
+                    // Show 3-4 movies with smooth gradual transitions
+                    for (var i = -2; i <= 2; i++) {
+                      final index = page.floor() + i;
+                      if (index < 0 || index >= widget.movies.length) continue;
+
+                      final movie = widget.movies[index];
                       final distance = i - pageOffset;
                       final depth = distance.abs();
                       final clampedDepth = depth.clamp(0.0, 2.0);
                       final isActive = depth < 0.35;
 
-                      // Much smoother and more gradual transitions
-                      final translateX = distance * viewportWidth * 0.05;
-                      final translateY = lerpDouble(0, 28, (clampedDepth / 2.0))!;
-                      final scale = lerpDouble(1, 0.9, (clampedDepth / 2.0))!;
-                      final tilt = -distance * 0.04;
-                      final opacity = lerpDouble(1, 0.85, (clampedDepth / 2.0))!;
+                      // Horizontal spacing without rotation
+                      final translateX = distance * viewportWidth * 0.4;
+                      final translateY = lerpDouble(0, 20, (clampedDepth / 2.0))!;
+                      final scale = lerpDouble(1, 0.85, (clampedDepth / 2.0))!;
+                      final tilt = 0.0; // No rotation
+                      final opacity = lerpDouble(1, 0.7, (clampedDepth / 2.0))!;
 
                       layers.add(
                         _CardLayer(
@@ -164,11 +168,11 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 
   double get _currentPage {
     if (_controller.positions.isEmpty || !_controller.position.haveDimensions) {
-      return _initialPage.toDouble();
+      return 0.0;
     }
     final page = _controller.page;
     if (page == null) {
-      return _initialPage.toDouble();
+      return 0.0;
     }
     return page;
   }
