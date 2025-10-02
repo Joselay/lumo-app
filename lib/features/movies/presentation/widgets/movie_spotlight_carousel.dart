@@ -228,10 +228,10 @@ class _MovieCard extends StatelessWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         CupertinoColors.black.withValues(
-                          alpha: dimmed ? 0.4 : 0.22,
+                          alpha: dimmed ? 0.4 : 0.1,
                         ),
                         CupertinoColors.black.withValues(
-                          alpha: dimmed ? 0.65 : 0.45,
+                          alpha: dimmed ? 0.75 : 0.65,
                         ),
                       ],
                     ),
