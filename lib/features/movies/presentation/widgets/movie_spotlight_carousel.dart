@@ -82,6 +82,7 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                 controller: _controller,
                 padEnds: false,
                 clipBehavior: Clip.none,
+                itemCount: widget.movies.length,
                 onPageChanged: (index) {
                   _resetAutoPlay();
                 },
@@ -151,16 +152,18 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 
                     layers.sort((a, b) => b.depth.compareTo(a.depth));
 
-                    final activeLayer = layers.firstWhere(
-                      (layer) => layer.isActive,
-                      orElse: () => layers.first,
-                    );
+                    final activeLayer = layers.isNotEmpty
+                        ? layers.firstWhere(
+                            (layer) => layer.isActive,
+                            orElse: () => layers.first,
+                          )
+                        : layers.first;
 
                     return Stack(
                       clipBehavior: Clip.none,
                       alignment: Alignment.center,
                       children: [
-                        ...layers.map((layer) => layer.widget).toList(),
+                        ...layers.map((layer) => layer.widget),
                         Positioned.fill(
                           child: GestureDetector(
                             behavior: HitTestBehavior.translucent,
