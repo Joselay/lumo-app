@@ -223,101 +223,231 @@ class _MoviesViewState extends State<_MoviesView> {
     switch (state.status) {
       case MoviesStatus.initial:
       case MoviesStatus.loading:
-        return Padding(
-          padding: const EdgeInsets.all(16),
-          child: ListView.builder(
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Container(
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: ShadTheme.of(
-                      context,
-                    ).colorScheme.muted.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 80,
-                        height: double.infinity,
-                        margin: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: ShadTheme.of(
-                            context,
-                          ).colorScheme.muted.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(8),
+        return CustomScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  // Header skeleton
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 12,
+                      left: 16,
+                      right: 16,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 140,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: ShadTheme.of(context)
+                                .colorScheme
+                                .muted
+                                .withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
                         ),
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: ShadTheme.of(context)
+                                .colorScheme
+                                .muted
+                                .withValues(alpha: 0.3),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Genre filter chips skeleton
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: SizedBox(
+                      height: 40,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: Container(
+                              width: 80,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: ShadTheme.of(context)
+                                    .colorScheme
+                                    .muted
+                                    .withValues(alpha: 0.3),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                height: 16,
-                                decoration: BoxDecoration(
-                                  color: ShadTheme.of(
-                                    context,
-                                  ).colorScheme.muted.withValues(alpha: 0.4),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
+                    ),
+                  ),
+                  // Carousel skeleton
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: SizedBox(
+                      height: 320,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: 3,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: Container(
+                              width: 280,
+                              decoration: BoxDecoration(
+                                color: ShadTheme.of(context)
+                                    .colorScheme
+                                    .muted
+                                    .withValues(alpha: 0.3),
+                                borderRadius: BorderRadius.circular(16),
                               ),
-                              const SizedBox(height: 8),
-                              Container(
-                                width: 60,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                  color: ShadTheme.of(
-                                    context,
-                                  ).colorScheme.muted.withValues(alpha: 0.3),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Section header skeleton
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                child: Container(
+                  width: 180,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: ShadTheme.of(context)
+                        .colorScheme
+                        .muted
+                        .withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+              ),
+            ),
+            // Movie cards skeleton
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Container(
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: ShadTheme.of(context)
+                              .colorScheme
+                              .muted
+                              .withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 80,
+                              height: double.infinity,
+                              margin: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: ShadTheme.of(context)
+                                    .colorScheme
+                                    .muted
+                                    .withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              const SizedBox(height: 8),
-                              Expanded(
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
                                       width: double.infinity,
-                                      height: 10,
+                                      height: 16,
                                       decoration: BoxDecoration(
                                         color: ShadTheme.of(context)
                                             .colorScheme
                                             .muted
-                                            .withValues(alpha: 0.2),
+                                            .withValues(alpha: 0.4),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: 8),
                                     Container(
-                                      width: double.infinity * 0.8,
-                                      height: 10,
+                                      width: 60,
+                                      height: 12,
                                       decoration: BoxDecoration(
                                         color: ShadTheme.of(context)
                                             .colorScheme
                                             .muted
-                                            .withValues(alpha: 0.2),
+                                            .withValues(alpha: 0.3),
                                         borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: double.infinity,
+                                            height: 10,
+                                            decoration: BoxDecoration(
+                                              color: ShadTheme.of(context)
+                                                  .colorScheme
+                                                  .muted
+                                                  .withValues(alpha: 0.2),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Container(
+                                            width: double.infinity * 0.8,
+                                            height: 10,
+                                            decoration: BoxDecoration(
+                                              color: ShadTheme.of(context)
+                                                  .colorScheme
+                                                  .muted
+                                                  .withValues(alpha: 0.2),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
+                  childCount: 6,
                 ),
-              );
-            },
-          ),
+              ),
+            ),
+          ],
         );
 
       case MoviesStatus.error:
