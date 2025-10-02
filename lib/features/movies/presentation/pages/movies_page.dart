@@ -123,7 +123,7 @@ class _MoviesViewState extends State<_MoviesView> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
                           child: MovieSpotlightCarousel(
                             movies: state.movies,
                             onMovieTap: (movie) {
