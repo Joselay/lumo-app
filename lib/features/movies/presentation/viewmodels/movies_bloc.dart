@@ -8,6 +8,9 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
   final GetMoviesUseCase getMoviesUseCase;
   final GetGenresUseCase getGenresUseCase;
 
+  // Cache all movies for client-side filtering
+  List<Movie> _allMovies = [];
+
   MoviesBloc({required this.getMoviesUseCase, required this.getGenresUseCase})
     : super(const MoviesState()) {
     on<MoviesStarted>(_onMoviesStarted);
@@ -33,6 +36,9 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
 
       final genres = await genresFuture;
       final movies = await moviesFuture;
+
+      // Cache all movies for client-side filtering
+      _allMovies = movies;
 
       emit(
         state.copyWith(
@@ -88,92 +94,78 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     SearchMovies event,
     Emitter<MoviesState> emit,
   ) async {
-    emit(
-      state.copyWith(status: MoviesStatus.loading, searchQuery: event.query),
-    );
+    // Client-side search filtering - instant, no API call
+    final searchQuery = event.query.toLowerCase();
 
-    try {
-      final filter = MoviesFilter(
-        search: event.query.isEmpty ? null : event.query,
-        genre: state.selectedGenreId,
-        isActive: true,
-      );
+    List<Movie> filtered = _allMovies;
 
-      final movies = await getMoviesUseCase(filter: filter);
-      emit(
-        state.copyWith(
-          status: MoviesStatus.loaded,
-          movies: movies,
-          currentFilter: filter,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(status: MoviesStatus.error, errorMessage: e.toString()),
-      );
+    // Apply genre filter if selected
+    if (state.selectedGenreId != null) {
+      filtered = filtered.where((movie) =>
+        movie.genres.any((genre) => genre.id == state.selectedGenreId)
+      ).toList();
     }
+
+    // Apply search filter if query is not empty
+    if (searchQuery.isNotEmpty) {
+      filtered = filtered.where((movie) =>
+        movie.title.toLowerCase().contains(searchQuery) ||
+        movie.description.toLowerCase().contains(searchQuery)
+      ).toList();
+    }
+
+    emit(
+      state.copyWith(
+        status: MoviesStatus.loaded,
+        movies: filtered,
+        searchQuery: event.query.isEmpty ? null : event.query,
+      ),
+    );
   }
 
   Future<void> _onFilterByGenre(
     FilterByGenre event,
     Emitter<MoviesState> emit,
   ) async {
+    // Client-side genre filtering - instant, no API call
+    List<Movie> filtered = _allMovies;
+
+    // Apply genre filter
+    filtered = filtered.where((movie) =>
+      movie.genres.any((genre) => genre.id == event.genreId)
+    ).toList();
+
+    // Apply search filter if present
+    if (state.searchQuery != null && state.searchQuery!.isNotEmpty) {
+      final searchQuery = state.searchQuery!.toLowerCase();
+      filtered = filtered.where((movie) =>
+        movie.title.toLowerCase().contains(searchQuery) ||
+        movie.description.toLowerCase().contains(searchQuery)
+      ).toList();
+    }
+
     emit(
       state.copyWith(
-        status: MoviesStatus.loading,
+        status: MoviesStatus.loaded,
+        movies: filtered,
         selectedGenreId: event.genreId,
       ),
     );
-
-    try {
-      final filter = MoviesFilter(
-        search: state.searchQuery,
-        genre: event.genreId,
-        isActive: true,
-      );
-
-      final movies = await getMoviesUseCase(filter: filter);
-      emit(
-        state.copyWith(
-          status: MoviesStatus.loaded,
-          movies: movies,
-          currentFilter: filter,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(status: MoviesStatus.error, errorMessage: e.toString()),
-      );
-    }
   }
 
   Future<void> _onClearFilter(
     ClearFilter event,
     Emitter<MoviesState> emit,
   ) async {
+    // Client-side clear filter - instant, show all cached movies
     emit(
       state.copyWith(
-        status: MoviesStatus.loading,
+        status: MoviesStatus.loaded,
+        movies: _allMovies,
         searchQuery: null,
         selectedGenreId: null,
       ),
     );
-
-    try {
-      final filter = const MoviesFilter(isActive: true);
-      final movies = await getMoviesUseCase(filter: filter);
-      emit(
-        state.copyWith(
-          status: MoviesStatus.loaded,
-          movies: movies,
-          currentFilter: filter,
-        ),
-      );
-    } catch (e) {
-      emit(
-        state.copyWith(status: MoviesStatus.error, errorMessage: e.toString()),
-      );
-    }
   }
 
   Future<void> _onRefreshMovies(
@@ -183,11 +175,35 @@ class MoviesBloc extends Bloc<MoviesEvent, MoviesState> {
     emit(state.copyWith(isRefreshing: true));
 
     try {
-      final movies = await getMoviesUseCase(filter: state.currentFilter);
+      // Reload all movies from API
+      final movies = await getMoviesUseCase(
+        filter: const MoviesFilter(isActive: true),
+      );
+
+      // Update cache
+      _allMovies = movies;
+
+      // Re-apply current filters to the new data
+      List<Movie> filtered = movies;
+
+      if (state.selectedGenreId != null) {
+        filtered = filtered.where((movie) =>
+          movie.genres.any((genre) => genre.id == state.selectedGenreId)
+        ).toList();
+      }
+
+      if (state.searchQuery != null && state.searchQuery!.isNotEmpty) {
+        final searchQuery = state.searchQuery!.toLowerCase();
+        filtered = filtered.where((movie) =>
+          movie.title.toLowerCase().contains(searchQuery) ||
+          movie.description.toLowerCase().contains(searchQuery)
+        ).toList();
+      }
+
       emit(
         state.copyWith(
           status: MoviesStatus.loaded,
-          movies: movies,
+          movies: filtered,
           isRefreshing: false,
         ),
       );

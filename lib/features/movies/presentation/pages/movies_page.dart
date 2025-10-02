@@ -207,7 +207,9 @@ class _MoviesViewState extends State<_MoviesView> {
                       ),
                     ),
                   ),
-                  Expanded(child: _buildMoviesContent(state)),
+                  Expanded(
+                    child: _buildMoviesContent(state),
+                  ),
                 ],
               );
             }
