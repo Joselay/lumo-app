@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../domain/entities/movie.dart';
 
 class MovieSpotlightCarousel extends StatefulWidget {
@@ -237,14 +238,33 @@ class _MovieCard extends StatelessWidget {
                     end: Alignment.bottomCenter,
                     colors: [
                       CupertinoColors.black.withValues(
-                        alpha: dimmed ? 0.4 : 0.12,
+                        alpha: dimmed ? 0.7 : 0.6,
+                      ),
+                      CupertinoColors.black.withValues(
+                        alpha: dimmed ? 0.2 : 0.1,
                       ),
                       CupertinoColors.black.withValues(
                         alpha: dimmed ? 0.7 : 0.6,
                       ),
                     ],
+                    stops: const [0.0, 0.5, 1.0],
                   ),
                 ),
+              ),
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: ShadButton.ghost(
+                size: ShadButtonSize.sm,
+                child: const Icon(
+                  LucideIcons.bookmark,
+                  color: CupertinoColors.white,
+                  size: 20,
+                ),
+                onPressed: () {
+                  // TODO: Add bookmark functionality
+                },
               ),
             ),
             Positioned(
