@@ -138,17 +138,24 @@ class _MoviesViewState extends State<_MoviesView> {
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                      child: Text(
-                        state.selectedGenreId != null
-                            ? 'Filtered Movies (${state.movies.length})'
-                            : state.searchQuery?.isNotEmpty == true
-                            ? 'Search Results (${state.movies.length})'
-                            : 'All Movies (${state.movies.length})',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: Builder(
+                      builder: (context) {
+                        final genreName = state.selectedGenreId != null
+                            ? state.genres.where((genre) => genre.id == state.selectedGenreId).firstOrNull?.name ?? 'Genre'
+                            : null;
+                        return Text(
+                          genreName != null
+                              ? '$genreName Movies (${state.movies.length})'
+                              : state.searchQuery?.isNotEmpty == true
+                              ? 'Search Results (${state.movies.length})'
+                              : 'All Movies (${state.movies.length})',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      },
+                    ),
                     ),
                   ),
                   SliverPadding(
