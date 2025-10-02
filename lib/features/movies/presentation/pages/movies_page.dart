@@ -123,7 +123,7 @@ class _MoviesViewState extends State<_MoviesView> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.only(bottom: 8),
                           child: MovieSpotlightCarousel(
                             movies: state.movies,
                             onMovieTap: (movie) {
@@ -135,19 +135,8 @@ class _MoviesViewState extends State<_MoviesView> {
                     ),
                   ),
                   SliverToBoxAdapter(
-                    child: Container(
-                      color: CupertinoColors.systemBackground.resolveFrom(
-                        context,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-                        child: const SizedBox.shrink(),
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                       child: Text(
                         state.selectedGenreId != null
                             ? 'Filtered Movies (${state.movies.length})'

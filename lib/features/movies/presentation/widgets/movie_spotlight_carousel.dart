@@ -241,7 +241,7 @@ class _MovieCard extends StatelessWidget {
               Positioned(
                 left: 20,
                 right: 20,
-                bottom: 28,
+                bottom: 16,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
