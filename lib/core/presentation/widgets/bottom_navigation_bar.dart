@@ -81,7 +81,7 @@ class AppBottomNavigationBar extends StatelessWidget {
                 ),
                 const Expanded(child: SizedBox()),
                 _buildTabItem(
-                  icon: lucide.LucideIcons.heart,
+                  icon: lucide.LucideIcons.bookmark,
                   index: 3,
                   isActive: currentIndex == 3,
                 ),

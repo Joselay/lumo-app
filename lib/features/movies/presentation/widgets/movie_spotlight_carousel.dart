@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:lucide_icons/lucide_icons.dart' as lucide;
+import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../domain/entities/movie.dart';
 
 class MovieSpotlightCarousel extends StatefulWidget {
@@ -183,12 +185,14 @@ class _MovieCard extends StatelessWidget {
   final Movie movie;
   final bool dimmed;
   final VoidCallback? onTap;
+  final VoidCallback? onBookmarkTap;
 
   const _MovieCard({
     super.key,
     required this.movie,
     required this.dimmed,
     this.onTap,
+    this.onBookmarkTap,
   });
 
   @override
@@ -235,6 +239,19 @@ class _MovieCard extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 12,
+                right: 12,
+                child: ShadButton.ghost(
+                  onPressed: onBookmarkTap,
+                  size: ShadButtonSize.sm,
+                  child: const Icon(
+                    lucide.LucideIcons.bookmark,
+                    color: CupertinoColors.white,
+                    size: 20,
                   ),
                 ),
               ),
