@@ -109,8 +109,8 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 
                       // Horizontal spacing without rotation
                       final translateX = distance * viewportWidth * 0.15;
-                      final translateY = lerpDouble(0, 20, (clampedDepth / 2.0))!;
-                      final scale = lerpDouble(1, 0.85, (clampedDepth / 2.0))!;
+                      final translateY = 0.0;
+                      final scale = lerpDouble(1, 0.75, (clampedDepth / 2.0))!;
                       final tilt = 0.0; // No rotation
                       final opacity = lerpDouble(1, 0.7, (clampedDepth / 2.0))!;
 
@@ -129,7 +129,7 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                                     angle: tilt,
                                     child: Transform.scale(
                                       scale: scale,
-                                      alignment: Alignment.bottomCenter,
+                                      alignment: Alignment.center,
                                       child: Opacity(
                                         opacity: opacity,
                                         child: _MovieCard(
@@ -267,69 +267,6 @@ class _MovieCard extends StatelessWidget {
                           fontSize: 14,
                         ),
                       ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        if (movie.rating != null)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: CupertinoColors.systemYellow.withValues(
-                                alpha: 0.9,
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  CupertinoIcons.star_fill,
-                                  size: 14,
-                                  color: CupertinoColors.black,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  movie.rating!.toStringAsFixed(1),
-                                  style: const TextStyle(
-                                    color: CupertinoColors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        if (movie.rating != null) const SizedBox(width: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: CupertinoColors.black.withValues(
-                              alpha: 0.35,
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: CupertinoColors.white.withValues(
-                                alpha: 0.2,
-                              ),
-                              width: 0.5,
-                            ),
-                          ),
-                          child: Text(
-                            movie.durationFormatted ?? '${movie.duration}m',
-                            style: const TextStyle(
-                              color: CupertinoColors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
