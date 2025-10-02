@@ -15,7 +15,7 @@ class MoviesRepository implements MoviesRepositoryInterface {
     if (filter != null) {
       if (filter.page != null) queryParams['page'] = filter.page.toString();
       if (filter.search != null) queryParams['search'] = filter.search;
-      if (filter.genre != null) queryParams['genre'] = filter.genre;
+      if (filter.genre != null) queryParams['genres'] = filter.genre;
       if (filter.ordering != null) queryParams['ordering'] = filter.ordering;
       if (filter.isActive != null) {
         queryParams['is_active'] = filter.isActive.toString();
