@@ -98,7 +98,15 @@ class MovieCard extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
-          return _buildPlaceholder();
+          return Container(
+            color: CupertinoColors.black,
+            child: const Center(
+              child: CupertinoActivityIndicator(
+                radius: 12,
+                color: CupertinoColors.white,
+              ),
+            ),
+          );
         },
       );
     }

@@ -301,7 +301,15 @@ class _MovieCard extends StatelessWidget {
         fit: BoxFit.cover,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
-          return _placeholder();
+          return Container(
+            color: CupertinoColors.black,
+            child: const Center(
+              child: CupertinoActivityIndicator(
+                radius: 16,
+                color: CupertinoColors.white,
+              ),
+            ),
+          );
         },
         errorBuilder: (context, error, stackTrace) => _placeholder(),
       );
