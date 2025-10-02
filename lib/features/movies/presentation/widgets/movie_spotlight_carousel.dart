@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import '../../domain/entities/movie.dart';
 
@@ -167,7 +168,8 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                         Positioned.fill(
                           child: GestureDetector(
                             behavior: HitTestBehavior.translucent,
-                            onTap: () => widget.onMovieTap?.call(activeLayer.movie),
+                            onTap: () =>
+                                widget.onMovieTap?.call(activeLayer.movie),
                           ),
                         ),
                       ],
@@ -198,102 +200,97 @@ class _MovieCard extends StatelessWidget {
   final Movie movie;
   final bool dimmed;
 
-  const _MovieCard({
-    super.key,
-    required this.movie,
-    required this.dimmed,
-  });
+  const _MovieCard({super.key, required this.movie, required this.dimmed});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            if (!dimmed)
-              BoxShadow(
-                color: CupertinoColors.black.withValues(alpha: 0.28),
-                blurRadius: 24,
-                offset: const Offset(0, 16),
-              )
-            else
-              BoxShadow(
-                color: CupertinoColors.black.withValues(alpha: 0.2),
-                blurRadius: 18,
-                offset: const Offset(0, 12),
-              ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              _buildPoster(),
-              Positioned.fill(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        CupertinoColors.black.withValues(
-                          alpha: dimmed ? 0.4 : 0.1,
-                        ),
-                        CupertinoColors.black.withValues(
-                          alpha: dimmed ? 0.75 : 0.65,
-                        ),
-                      ],
-                    ),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          if (!dimmed)
+            BoxShadow(
+              color: CupertinoColors.black.withValues(alpha: 0.28),
+              blurRadius: 24,
+              offset: const Offset(0, 16),
+            )
+          else
+            BoxShadow(
+              color: CupertinoColors.black.withValues(alpha: 0.2),
+              blurRadius: 18,
+              offset: const Offset(0, 12),
+            ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            _buildPoster(),
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      CupertinoColors.black.withValues(
+                        alpha: dimmed ? 0.4 : 0.1,
+                      ),
+                      CupertinoColors.black.withValues(
+                        alpha: dimmed ? 0.75 : 0.65,
+                      ),
+                    ],
                   ),
                 ),
               ),
-              Positioned(
-                left: 20,
-                right: 20,
-                bottom: 16,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+            ),
+            Positioned(
+              left: 20,
+              right: 20,
+              bottom: 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    movie.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: CupertinoColors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  if (movie.genres.isNotEmpty)
                     Text(
-                      movie.title,
-                      maxLines: 2,
+                      movie.genres.map((g) => g.name).join(' • '),
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: CupertinoColors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                      style: TextStyle(
+                        color: CupertinoColors.white.withValues(alpha: 0.85),
+                        fontSize: 14,
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    if (movie.genres.isNotEmpty)
-                      Text(
-                        movie.genres.map((g) => g.name).join(' • '),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: CupertinoColors.white.withValues(alpha: 0.85),
-                          fontSize: 14,
-                        ),
-                      ),
-                  ],
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 
   Widget _buildPoster() {
     if (movie.posterImage?.isNotEmpty == true) {
-      return Image.network(
-        movie.posterImage!,
+      return CachedNetworkImage(
+        imageUrl: movie.posterImage!,
         fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
+        placeholder: (context, url) {
           return Container(
             color: CupertinoColors.black,
             child: const Center(
@@ -304,7 +301,7 @@ class _MovieCard extends StatelessWidget {
             ),
           );
         },
-        errorBuilder: (context, error, stackTrace) => _placeholder(),
+        errorWidget: (context, url, error) => _placeholder(),
       );
     }
     return _placeholder();

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import '../../domain/entities/movie.dart';
@@ -68,12 +69,12 @@ class MovieCard extends StatelessWidget {
                   ],
                   Expanded(
                     child: Text(
-                      movie.description.isNotEmpty ? movie.description : 'No description available',
+                      movie.description.isNotEmpty
+                          ? movie.description
+                          : 'No description available',
                       style: TextStyle(
                         fontSize: 12,
-                        color: CupertinoColors.systemGrey.resolveFrom(
-                          context,
-                        ),
+                        color: CupertinoColors.systemGrey.resolveFrom(context),
                         height: 1.3,
                       ),
                       maxLines: 3,
@@ -91,13 +92,11 @@ class MovieCard extends StatelessWidget {
 
   Widget _buildPosterImage() {
     if (movie.posterImage?.isNotEmpty == true) {
-      return Image.network(
-        movie.posterImage!,
+      return CachedNetworkImage(
+        imageUrl: movie.posterImage!,
         width: double.infinity,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
+        placeholder: (context, url) {
           return Container(
             color: CupertinoColors.black,
             child: const Center(
@@ -108,6 +107,7 @@ class MovieCard extends StatelessWidget {
             ),
           );
         },
+        errorWidget: (context, url, error) => _buildPlaceholder(),
       );
     }
     return _buildPlaceholder();
