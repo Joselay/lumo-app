@@ -13,6 +13,7 @@ import '../viewmodels/movies_state.dart';
 import '../widgets/movie_card.dart';
 import '../widgets/genre_filter_chips.dart';
 import '../widgets/movie_spotlight_carousel.dart';
+import '../widgets/shimmer_loading.dart';
 
 class MoviesPage extends StatelessWidget {
   const MoviesPage({super.key});
@@ -207,9 +208,7 @@ class _MoviesViewState extends State<_MoviesView> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: _buildMoviesContent(state),
-                  ),
+                  Expanded(child: _buildMoviesContent(state)),
                 ],
               );
             }
@@ -220,234 +219,229 @@ class _MoviesViewState extends State<_MoviesView> {
   }
 
   Widget _buildMoviesContent(MoviesState state) {
+    final isLoading =
+        state.status == MoviesStatus.initial ||
+        state.status == MoviesStatus.loading;
+
     switch (state.status) {
       case MoviesStatus.initial:
       case MoviesStatus.loading:
-        return CustomScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  // Header skeleton
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 12,
-                      left: 16,
-                      right: 16,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 140,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: ShadTheme.of(context)
-                                .colorScheme
-                                .muted
-                                .withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: ShadTheme.of(context)
-                                .colorScheme
-                                .muted
-                                .withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Genre filter chips skeleton
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    child: SizedBox(
-                      height: 40,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8),
+        return Shimmer(
+          linearGradient: const LinearGradient(
+            colors: [Color(0xFF1A1A1A), Color(0xFF2D2D2D), Color(0xFF1A1A1A)],
+            stops: [0.1, 0.3, 0.4],
+            begin: Alignment(-1.0, -0.3),
+            end: Alignment(1.0, 0.3),
+            tileMode: TileMode.clamp,
+          ),
+          child: CustomScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 12,
+                        left: 16,
+                        right: 16,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ShimmerLoading(
+                            isLoading: isLoading,
                             child: Container(
-                              width: 80,
-                              height: 32,
+                              width: 140,
+                              height: 28,
                               decoration: BoxDecoration(
-                                color: ShadTheme.of(context)
-                                    .colorScheme
-                                    .muted
-                                    .withValues(alpha: 0.3),
-                                borderRadius: BorderRadius.circular(16),
+                                color: CupertinoColors.black,
+                                borderRadius: BorderRadius.circular(6),
                               ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  // Carousel skeleton
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: SizedBox(
-                      height: 320,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: 3,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 16),
+                          ),
+                          ShimmerLoading(
+                            isLoading: isLoading,
                             child: Container(
-                              width: 280,
+                              width: 40,
+                              height: 40,
                               decoration: BoxDecoration(
-                                color: ShadTheme.of(context)
-                                    .colorScheme
-                                    .muted
-                                    .withValues(alpha: 0.3),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Section header skeleton
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                child: Container(
-                  width: 180,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: ShadTheme.of(context)
-                        .colorScheme
-                        .muted
-                        .withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                ),
-              ),
-            ),
-            // Movie cards skeleton
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: ShadTheme.of(context)
-                              .colorScheme
-                              .muted
-                              .withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 80,
-                              height: double.infinity,
-                              margin: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: ShadTheme.of(context)
-                                    .colorScheme
-                                    .muted
-                                    .withValues(alpha: 0.5),
+                                color: CupertinoColors.black,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: double.infinity,
-                                      height: 16,
-                                      decoration: BoxDecoration(
-                                        color: ShadTheme.of(context)
-                                            .colorScheme
-                                            .muted
-                                            .withValues(alpha: 0.4),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Container(
-                                      width: 60,
-                                      height: 12,
-                                      decoration: BoxDecoration(
-                                        color: ShadTheme.of(context)
-                                            .colorScheme
-                                            .muted
-                                            .withValues(alpha: 0.3),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            width: double.infinity,
-                                            height: 10,
-                                            decoration: BoxDecoration(
-                                              color: ShadTheme.of(context)
-                                                  .colorScheme
-                                                  .muted
-                                                  .withValues(alpha: 0.2),
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Container(
-                                            width: double.infinity * 0.8,
-                                            height: 10,
-                                            decoration: BoxDecoration(
-                                              color: ShadTheme.of(context)
-                                                  .colorScheme
-                                                  .muted
-                                                  .withValues(alpha: 0.2),
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      child: SizedBox(
+                        height: 40,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: ShimmerLoading(
+                                isLoading: isLoading,
+                                child: Container(
+                                  width: 80,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    color: CupertinoColors.black,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: SizedBox(
+                        height: 320,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: ShimmerLoading(
+                                isLoading: isLoading,
+                                child: Container(
+                                  width: 280,
+                                  decoration: BoxDecoration(
+                                    color: CupertinoColors.black,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  child: ShimmerLoading(
+                    isLoading: isLoading,
+                    child: Container(
+                      width: 180,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: CupertinoColors.black,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: ShimmerLoading(
+                        isLoading: isLoading,
+                        child: Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: CupertinoColors.black,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 80,
+                                height: double.infinity,
+                                margin: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: CupertinoColors.black,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: double.infinity,
+                                        height: 16,
+                                        decoration: BoxDecoration(
+                                          color: CupertinoColors.black,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        width: 60,
+                                        height: 12,
+                                        decoration: BoxDecoration(
+                                          color: CupertinoColors.black,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Expanded(
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              width: double.infinity,
+                                              height: 10,
+                                              decoration: BoxDecoration(
+                                                color: CupertinoColors.black,
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Container(
+                                              width: double.infinity * 0.8,
+                                              height: 10,
+                                              decoration: BoxDecoration(
+                                                color: CupertinoColors.black,
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
-                  },
-                  childCount: 6,
+                  }, childCount: 6),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
 
       case MoviesStatus.error:
