@@ -1,20 +1,16 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-The Flutter entry point lives in `lib/main.dart`. Shared code sits under `lib/core` (constants, data, domain, navigation, presentation, utils, and service wiring in `di`). Feature-specific widgets, controllers, and assets reside in `lib/features/<feature>`. Mirror that structure when adding tests under `test/`. Static assets belong in `assets/icons` or `assets/images` and must be registered in `pubspec.yaml`. Reference design docs under `docs/` before making sweeping architecture changes.
+Keep Flutter entry logic in `lib/main.dart`. Shared utilities, data models, navigation, and dependency wiring belong under `lib/core`, while feature widgets and controllers live in `lib/features/<feature>`. Mirror this layout in tests with files under `test/<feature>/<subject>_test.dart`. Register PNG or SVG assets in `pubspec.yaml` and store them in `assets/images` or `assets/icons`. Review `docs/` before adjusting architectural patterns.
 
 ## Build, Test, and Development Commands
-- `flutter pub get` — install or refresh dependencies.
-- `flutter analyze` — run static analysis with the project's lint set.
-- `flutter run` — launch the debug build on an attached device or simulator.
-- `flutter test` — execute the unit and widget test suites.
-- `flutter build apk` / `flutter build ios` — generate release binaries; ensure a clean workspace first.
+Run `flutter pub get` after dependency updates. Use `flutter analyze` to enforce the `flutter_lints` ruleset before every commit. Launch the app locally with `flutter run`, and execute all unit and widget suites through `flutter test`. For release builds, ensure a clean tree, then call `flutter build apk` or `flutter build ios` as needed.
 
 ## Coding Style & Naming Conventions
-The repo relies on `flutter_lints` (see `analysis_options.yaml`); fix all analyzer issues prior to review. Format code with two-space indentation and include trailing commas to keep diffs small. Name files with `snake_case.dart`, classes in `PascalCase`, and members in `camelCase`. Reserve `ALL_CAPS` for compile-time constants. Keep UI widgets thin and push business rules into `core/domain` or feature-specific controllers, documenting non-obvious flows with brief comments.
+Follow two-space indentation and include trailing commas to keep diffs stable. Name files using `snake_case.dart`, classes in `PascalCase`, and members in `camelCase`; reserve `ALL_CAPS` for compile-time constants. Keep UI widgets lean by placing business logic in `core/domain` or the relevant feature controller. Use ASCII unless the existing file demands otherwise.
 
 ## Testing Guidelines
-Place new tests in `test/<feature>/<subject>_test.dart`, matching the structure in `lib/`. Use `flutter_test` for widget coverage and the mocking guidance in `docs/testing.md`. Add regression tests whenever you modify navigation, carousel behavior, or asynchronous data flows. Always finish with `flutter test` before committing.
+Write tests alongside features inside `test/` using `flutter_test` and the mocking patterns outlined in `docs/testing.md`. Match test filenames to their subject, such as `test/movies/movies_page_test.dart`. Add regression coverage whenever navigation, carousels, or async flows change. Validate locally with `flutter test` before pushing.
 
 ## Commit & Pull Request Guidelines
-Craft sentence-style commit subjects (e.g., “Refine MoviesPage padding for tablet layouts”) as seen in the current history, keeping each commit focused on a single concern. PRs should link issues, describe functional changes, list local verification (commands, devices), and include screenshots when the UI shifts. Request review only after analyzer and tests pass.
+Compose sentence-style commit subjects (e.g., “Refine MoviesPage padding for tablet layouts”) that focus on a single concern. PRs should reference related issues, summarize functional changes, document local verification (commands, devices), and attach screenshots for UI adjustments. Request review only after `flutter analyze` and `flutter test` both succeed.
