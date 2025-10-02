@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:lucide_icons/lucide_icons.dart' as lucide;
-import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../domain/entities/movie.dart';
 
 class MovieSpotlightCarousel extends StatefulWidget {
@@ -119,8 +117,9 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                       layers.add(
                         _CardLayer(
                           depth: depth,
+                          movie: movie,
+                          isActive: isActive,
                           widget: IgnorePointer(
-                            ignoring: !isActive,
                             child: Align(
                               alignment: Alignment.center,
                               child: FractionallySizedBox(
@@ -138,8 +137,6 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                                           key: ValueKey('${movie.id}_$i'),
                                           movie: movie,
                                           dimmed: !isActive,
-                                          onTap: () =>
-                                              widget.onMovieTap?.call(movie),
                                         ),
                                       ),
                                     ),
@@ -154,10 +151,23 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 
                     layers.sort((a, b) => b.depth.compareTo(a.depth));
 
+                    final activeLayer = layers.firstWhere(
+                      (layer) => layer.isActive,
+                      orElse: () => layers.first,
+                    );
+
                     return Stack(
                       clipBehavior: Clip.none,
                       alignment: Alignment.center,
-                      children: layers.map((layer) => layer.widget).toList(),
+                      children: [
+                        ...layers.map((layer) => layer.widget).toList(),
+                        Positioned.fill(
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () => widget.onMovieTap?.call(activeLayer.movie),
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
@@ -184,22 +194,16 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 class _MovieCard extends StatelessWidget {
   final Movie movie;
   final bool dimmed;
-  final VoidCallback? onTap;
-  final VoidCallback? onBookmarkTap;
 
   const _MovieCard({
     super.key,
     required this.movie,
     required this.dimmed,
-    this.onTap,
-    this.onBookmarkTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
+    return Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
@@ -243,19 +247,6 @@ class _MovieCard extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 12,
-                right: 12,
-                child: ShadButton.ghost(
-                  onPressed: onBookmarkTap,
-                  size: ShadButtonSize.sm,
-                  child: const Icon(
-                    lucide.LucideIcons.bookmark,
-                    color: CupertinoColors.white,
-                    size: 20,
-                  ),
-                ),
-              ),
-              Positioned(
                 left: 20,
                 right: 20,
                 bottom: 16,
@@ -290,7 +281,6 @@ class _MovieCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 
@@ -341,8 +331,15 @@ class _MovieCard extends StatelessWidget {
 }
 
 class _CardLayer {
-  const _CardLayer({required this.depth, required this.widget});
+  const _CardLayer({
+    required this.depth,
+    required this.movie,
+    required this.isActive,
+    required this.widget,
+  });
 
   final double depth;
+  final Movie movie;
+  final bool isActive;
   final Widget widget;
 }
