@@ -152,12 +152,14 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 
                     layers.sort((a, b) => b.depth.compareTo(a.depth));
 
-                    final activeLayer = layers.isNotEmpty
-                        ? layers.firstWhere(
-                            (layer) => layer.isActive,
-                            orElse: () => layers.first,
-                          )
-                        : layers.first;
+                    if (layers.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    final activeLayer = layers.firstWhere(
+                      (layer) => layer.isActive,
+                      orElse: () => layers.first,
+                    );
 
                     return Stack(
                       clipBehavior: Clip.none,
