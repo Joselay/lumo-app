@@ -134,13 +134,11 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                                     child: Transform.scale(
                                       scale: scale,
                                       alignment: Alignment.center,
-                                      child: Opacity(
-                                        opacity: opacity,
-                                        child: _MovieCard(
-                                          key: ValueKey('${movie.id}_$i'),
-                                          movie: movie,
-                                          dimmed: !isActive,
-                                        ),
+                                      child: _MovieCard(
+                                        key: ValueKey('${movie.id}_$i'),
+                                        movie: movie,
+                                        dimmed: !isActive,
+                                        opacityOverride: opacity,
                                       ),
                                     ),
                                   ),
@@ -200,11 +198,19 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 class _MovieCard extends StatelessWidget {
   final Movie movie;
   final bool dimmed;
+  final double? opacityOverride;
 
-  const _MovieCard({super.key, required this.movie, required this.dimmed});
+  const _MovieCard({
+    super.key,
+    required this.movie,
+    required this.dimmed,
+    this.opacityOverride,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final effectiveOpacity = opacityOverride ?? 1.0;
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
@@ -212,13 +218,13 @@ class _MovieCard extends StatelessWidget {
         boxShadow: [
           if (!dimmed)
             BoxShadow(
-              color: CupertinoColors.black.withValues(alpha: 0.28),
+              color: CupertinoColors.black.withValues(alpha: 0.28 * effectiveOpacity),
               blurRadius: 24,
               offset: const Offset(0, 16),
             )
           else
             BoxShadow(
-              color: CupertinoColors.black.withValues(alpha: 0.2),
+              color: CupertinoColors.black.withValues(alpha: 0.2 * effectiveOpacity),
               blurRadius: 18,
               offset: const Offset(0, 12),
             ),
@@ -229,7 +235,7 @@ class _MovieCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            _buildPoster(),
+            _buildPoster(effectiveOpacity),
             Positioned.fill(
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -238,13 +244,13 @@ class _MovieCard extends StatelessWidget {
                     end: Alignment.bottomCenter,
                     colors: [
                       CupertinoColors.black.withValues(
-                        alpha: dimmed ? 0.7 : 0.6,
+                        alpha: (dimmed ? 0.7 : 0.6) * effectiveOpacity,
                       ),
                       CupertinoColors.black.withValues(
-                        alpha: dimmed ? 0.2 : 0.1,
+                        alpha: (dimmed ? 0.2 : 0.1) * effectiveOpacity,
                       ),
                       CupertinoColors.black.withValues(
-                        alpha: dimmed ? 0.7 : 0.6,
+                        alpha: (dimmed ? 0.7 : 0.6) * effectiveOpacity,
                       ),
                     ],
                     stops: const [0.0, 0.5, 1.0],
@@ -255,48 +261,54 @@ class _MovieCard extends StatelessWidget {
             Positioned(
               top: 8,
               right: 8,
-              child: ShadButton.ghost(
-                size: ShadButtonSize.sm,
-                child: const Icon(
-                  LucideIcons.bookmark,
-                  color: CupertinoColors.white,
-                  size: 20,
+              child: Opacity(
+                opacity: effectiveOpacity,
+                child: ShadButton.ghost(
+                  size: ShadButtonSize.sm,
+                  child: const Icon(
+                    LucideIcons.bookmark,
+                    color: CupertinoColors.white,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    // TODO: Add bookmark functionality
+                  },
                 ),
-                onPressed: () {
-                  // TODO: Add bookmark functionality
-                },
               ),
             ),
             Positioned(
               left: 20,
               right: 20,
               bottom: 16,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    movie.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: CupertinoColors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  if (movie.genres.isNotEmpty)
+              child: Opacity(
+                opacity: effectiveOpacity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     Text(
-                      movie.genres.map((g) => g.name).join(' • '),
-                      maxLines: 1,
+                      movie.title,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: CupertinoColors.white.withValues(alpha: 0.85),
-                        fontSize: 14,
+                      style: const TextStyle(
+                        color: CupertinoColors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                ],
+                    const SizedBox(height: 6),
+                    if (movie.genres.isNotEmpty)
+                      Text(
+                        movie.genres.map((g) => g.name).join(' • '),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: CupertinoColors.white.withValues(alpha: 0.85),
+                          fontSize: 14,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -305,7 +317,7 @@ class _MovieCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPoster() {
+  Widget _buildPoster(double opacity) {
     if (movie.posterImage?.isNotEmpty == true) {
       return CachedNetworkImage(
         imageUrl: movie.posterImage!,
@@ -321,29 +333,29 @@ class _MovieCard extends StatelessWidget {
             ),
           );
         },
-        errorWidget: (context, url, error) => _placeholder(),
+        errorWidget: (context, url, error) => _placeholder(opacity),
       );
     }
-    return _placeholder();
+    return _placeholder(opacity);
   }
 
-  Widget _placeholder() {
+  Widget _placeholder(double opacity) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            CupertinoColors.systemGrey.withValues(alpha: 0.25),
-            CupertinoColors.systemGrey2.withValues(alpha: 0.45),
+            CupertinoColors.systemGrey.withValues(alpha: 0.25 * opacity),
+            CupertinoColors.systemGrey2.withValues(alpha: 0.45 * opacity),
           ],
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Icon(
           CupertinoIcons.film,
           size: 64,
-          color: CupertinoColors.systemGrey3,
+          color: CupertinoColors.systemGrey3.withValues(alpha: opacity),
         ),
       ),
     );
