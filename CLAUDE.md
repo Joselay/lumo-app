@@ -38,7 +38,8 @@ lib/
 ├── core/                     # Shared infrastructure
 │   ├── data/                 # Core data components
 │   ├── domain/               # Core business logic
-│   ├── presentation/         # Shared UI components
+│   ├── presentation/         # Shared UI components (MainShellPage, ComingSoonPage)
+│   ├── navigation/           # App routing (app_router.dart with StatefulShellRoute)
 │   ├── di/                   # Dependency injection setup
 │   ├── utils/                # Utility functions
 │   └── constants/            # App-wide constants
@@ -55,7 +56,9 @@ lib/
     │       ├── pages/        # Screen widgets
     │       ├── widgets/      # Feature-specific components
     │       └── viewmodels/   # BLoC/Cubit state management
-    └── home/                 # Home feature (similar structure)
+    ├── home/                 # Home feature (similar structure)
+    ├── movies/               # Movies feature with full Clean Architecture
+    └── splash/               # Splash screen feature
 ```
 
 #### Localization
@@ -77,12 +80,13 @@ lib/
 - Use `Cubit` for simple state, `Bloc` for complex event-driven logic
 - All states extend `Equatable` and are `@immutable`
 
-#### Network Layer (Planned)
+#### Network Layer
 
 - Uses `dio` for HTTP client
 - Uses `retrofit` with code generation for API endpoints
-- API interfaces defined with `@RestApi()` annotations
+- API interfaces defined with `@RestApi()` annotations (see movies_api.dart)
 - Run `dart run build_runner build` after changing API definitions
+- Generated `.g.dart` files contain Retrofit implementations
 
 #### UI Framework
 
@@ -90,7 +94,8 @@ lib/
 - Uses `ShadApp.custom` with `CupertinoApp` for iOS-native feel
 - Uses red theme color scheme for both light and dark modes
 - Combines Cupertino Design principles with shadcn components
-- Navigation handled by `go_router`
+- Navigation handled by `go_router` with `StatefulShellRoute.indexedStack` for bottom navigation
+- Bottom navigation has 5 tabs: Home (Movies), Scanner, Chat, Favorites, Profile
 - Supports English (en-US) and Khmer (km-KH) localization
 - Uses Lucide icons for consistent iconography
 
@@ -99,11 +104,12 @@ lib/
 - Uses `injectable` for DI setup
 - Run code generation after adding new injectable classes
 
-#### JSON Handling (Planned)
+#### JSON Handling
 
 - Uses `json_annotation` and `json_serializable`
-- Models have `toJson()` and `fromJson()` methods
-- Run code generation after model changes
+- Models have `toJson()` and `fromJson()` methods (see movie_models.dart)
+- Uses `freezed` for immutable data classes with code generation
+- Run code generation after model changes to update `.g.dart` and `.freezed.dart` files
 
 #### Environment Configuration
 
@@ -149,13 +155,20 @@ lib/
 
 The project has a solid foundation implemented:
 - Main app setup with shadcn_ui + Cupertino integration complete
-- Navigation with go_router implemented
+- Navigation with go_router using StatefulShellRoute for bottom navigation
 - Complete authentication feature with BLoC state management
+- Complete movies feature with:
+  - Movies listing page with spotlight carousel
+  - Movies search page
+  - Genre filter chips
+  - Custom movie cards
+  - Full Clean Architecture implementation (data/domain/presentation layers)
+  - Retrofit API client for TMDB integration
 - API client with Dio configured and environment variable support
-- Freezed models for immutable data classes (User, AuthState, AuthEvent)
-- Clean Architecture layers fully implemented for auth feature
-- Retrofit API interfaces generated for auth endpoints
+- Freezed models for immutable data classes (User, Movie, AuthState, MoviesState, etc.)
+- Retrofit API interfaces generated for auth and movies endpoints
 - Core utilities (ApiClient, AppLogger, Environment) implemented
 - Login and Register pages with full authentication flow
+- Bottom navigation with 5 tabs (Movies active, others coming soon)
 - Test directory exists but no tests implemented yet
 - Dependency injection setup pending
