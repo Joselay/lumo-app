@@ -33,7 +33,7 @@ class _StubMoviesApi implements MoviesApi {
   }
 
   @override
-  Future<dynamic> getMovieShowtimes(String id) {
+  Future<models.ShowtimesResponse> getMovieShowtimes(String id) {
     throw UnimplementedError();
   }
 }

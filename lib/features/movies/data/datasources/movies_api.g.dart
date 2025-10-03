@@ -102,12 +102,12 @@ class _MoviesApi implements MoviesApi {
   }
 
   @override
-  Future<dynamic> getMovieShowtimes(String id) async {
+  Future<ShowtimesResponse> getMovieShowtimes(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<dynamic>(
+    final _options = _setStreamType<ShowtimesResponse>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -117,8 +117,14 @@ class _MoviesApi implements MoviesApi {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch(_options);
-    final _value = _result.data;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ShowtimesResponse _value;
+    try {
+      _value = ShowtimesResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
     return _value;
   }
 

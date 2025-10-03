@@ -76,8 +76,9 @@ class MoviesRepository implements MoviesRepositoryInterface {
   }
 
   @override
-  Future<dynamic> getMovieShowtimes(String movieId) async {
-    return await api.getMovieShowtimes(movieId);
+  Future<List<domain.Showtime>> getMovieShowtimes(String movieId) async {
+    final response = await api.getMovieShowtimes(movieId);
+    return response.results.map(_mapToDomainShowtime).toList();
   }
 
   domain.Movie _mapToDomainMovie(Movie movie) {
@@ -98,5 +99,28 @@ class MoviesRepository implements MoviesRepositoryInterface {
 
   domain.Genre _mapToDomainGenre(Genre genre) {
     return domain.Genre(id: genre.id, name: genre.name);
+  }
+
+  domain.Showtime _mapToDomainShowtime(Showtime showtime) {
+    return domain.Showtime(
+      id: showtime.id,
+      movie: showtime.movie,
+      movieTitle: showtime.movieTitle,
+      movieDuration: showtime.movieDuration,
+      moviePoster: showtime.moviePoster,
+      theater: showtime.theater,
+      theaterName: showtime.theaterName,
+      theaterCity: showtime.theaterCity,
+      datetime: showtime.datetime,
+      screenNumber: showtime.screenNumber,
+      totalSeats: showtime.totalSeats,
+      availableSeats: showtime.availableSeats,
+      seatsSold: showtime.seatsSold,
+      ticketPrice: showtime.ticketPrice,
+      isAvailable: showtime.isAvailable,
+      date: showtime.date,
+      time: showtime.time,
+      datetimeFormatted: showtime.datetimeFormatted,
+    );
   }
 }

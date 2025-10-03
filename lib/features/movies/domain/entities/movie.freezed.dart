@@ -833,4 +833,608 @@ as bool?,
 
 }
 
+/// @nodoc
+mixin _$Theater {
+
+ String get id; String get name; String get address; String get city; String get state; String get zipCode; String? get fullAddress; String get phoneNumber; String? get email; int get totalScreens; bool get parkingAvailable; String? get accessibilityFeatures; String? get amenities; bool get isActive;
+/// Create a copy of Theater
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TheaterCopyWith<Theater> get copyWith => _$TheaterCopyWithImpl<Theater>(this as Theater, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Theater&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.zipCode, zipCode) || other.zipCode == zipCode)&&(identical(other.fullAddress, fullAddress) || other.fullAddress == fullAddress)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.email, email) || other.email == email)&&(identical(other.totalScreens, totalScreens) || other.totalScreens == totalScreens)&&(identical(other.parkingAvailable, parkingAvailable) || other.parkingAvailable == parkingAvailable)&&(identical(other.accessibilityFeatures, accessibilityFeatures) || other.accessibilityFeatures == accessibilityFeatures)&&(identical(other.amenities, amenities) || other.amenities == amenities)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,name,address,city,state,zipCode,fullAddress,phoneNumber,email,totalScreens,parkingAvailable,accessibilityFeatures,amenities,isActive);
+
+@override
+String toString() {
+  return 'Theater(id: $id, name: $name, address: $address, city: $city, state: $state, zipCode: $zipCode, fullAddress: $fullAddress, phoneNumber: $phoneNumber, email: $email, totalScreens: $totalScreens, parkingAvailable: $parkingAvailable, accessibilityFeatures: $accessibilityFeatures, amenities: $amenities, isActive: $isActive)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TheaterCopyWith<$Res>  {
+  factory $TheaterCopyWith(Theater value, $Res Function(Theater) _then) = _$TheaterCopyWithImpl;
+@useResult
+$Res call({
+ String id, String name, String address, String city, String state, String zipCode, String? fullAddress, String phoneNumber, String? email, int totalScreens, bool parkingAvailable, String? accessibilityFeatures, String? amenities, bool isActive
+});
+
+
+
+
+}
+/// @nodoc
+class _$TheaterCopyWithImpl<$Res>
+    implements $TheaterCopyWith<$Res> {
+  _$TheaterCopyWithImpl(this._self, this._then);
+
+  final Theater _self;
+  final $Res Function(Theater) _then;
+
+/// Create a copy of Theater
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? address = null,Object? city = null,Object? state = null,Object? zipCode = null,Object? fullAddress = freezed,Object? phoneNumber = null,Object? email = freezed,Object? totalScreens = null,Object? parkingAvailable = null,Object? accessibilityFeatures = freezed,Object? amenities = freezed,Object? isActive = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,address: null == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
+as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String,state: null == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
+as String,zipCode: null == zipCode ? _self.zipCode : zipCode // ignore: cast_nullable_to_non_nullable
+as String,fullAddress: freezed == fullAddress ? _self.fullAddress : fullAddress // ignore: cast_nullable_to_non_nullable
+as String?,phoneNumber: null == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
+as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,totalScreens: null == totalScreens ? _self.totalScreens : totalScreens // ignore: cast_nullable_to_non_nullable
+as int,parkingAvailable: null == parkingAvailable ? _self.parkingAvailable : parkingAvailable // ignore: cast_nullable_to_non_nullable
+as bool,accessibilityFeatures: freezed == accessibilityFeatures ? _self.accessibilityFeatures : accessibilityFeatures // ignore: cast_nullable_to_non_nullable
+as String?,amenities: freezed == amenities ? _self.amenities : amenities // ignore: cast_nullable_to_non_nullable
+as String?,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [Theater].
+extension TheaterPatterns on Theater {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Theater value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Theater() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Theater value)  $default,){
+final _that = this;
+switch (_that) {
+case _Theater():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Theater value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Theater() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String address,  String city,  String state,  String zipCode,  String? fullAddress,  String phoneNumber,  String? email,  int totalScreens,  bool parkingAvailable,  String? accessibilityFeatures,  String? amenities,  bool isActive)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Theater() when $default != null:
+return $default(_that.id,_that.name,_that.address,_that.city,_that.state,_that.zipCode,_that.fullAddress,_that.phoneNumber,_that.email,_that.totalScreens,_that.parkingAvailable,_that.accessibilityFeatures,_that.amenities,_that.isActive);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String address,  String city,  String state,  String zipCode,  String? fullAddress,  String phoneNumber,  String? email,  int totalScreens,  bool parkingAvailable,  String? accessibilityFeatures,  String? amenities,  bool isActive)  $default,) {final _that = this;
+switch (_that) {
+case _Theater():
+return $default(_that.id,_that.name,_that.address,_that.city,_that.state,_that.zipCode,_that.fullAddress,_that.phoneNumber,_that.email,_that.totalScreens,_that.parkingAvailable,_that.accessibilityFeatures,_that.amenities,_that.isActive);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String address,  String city,  String state,  String zipCode,  String? fullAddress,  String phoneNumber,  String? email,  int totalScreens,  bool parkingAvailable,  String? accessibilityFeatures,  String? amenities,  bool isActive)?  $default,) {final _that = this;
+switch (_that) {
+case _Theater() when $default != null:
+return $default(_that.id,_that.name,_that.address,_that.city,_that.state,_that.zipCode,_that.fullAddress,_that.phoneNumber,_that.email,_that.totalScreens,_that.parkingAvailable,_that.accessibilityFeatures,_that.amenities,_that.isActive);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _Theater implements Theater {
+  const _Theater({required this.id, required this.name, required this.address, required this.city, required this.state, required this.zipCode, this.fullAddress, required this.phoneNumber, this.email, required this.totalScreens, required this.parkingAvailable, this.accessibilityFeatures, this.amenities, required this.isActive});
+  
+
+@override final  String id;
+@override final  String name;
+@override final  String address;
+@override final  String city;
+@override final  String state;
+@override final  String zipCode;
+@override final  String? fullAddress;
+@override final  String phoneNumber;
+@override final  String? email;
+@override final  int totalScreens;
+@override final  bool parkingAvailable;
+@override final  String? accessibilityFeatures;
+@override final  String? amenities;
+@override final  bool isActive;
+
+/// Create a copy of Theater
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TheaterCopyWith<_Theater> get copyWith => __$TheaterCopyWithImpl<_Theater>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Theater&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.zipCode, zipCode) || other.zipCode == zipCode)&&(identical(other.fullAddress, fullAddress) || other.fullAddress == fullAddress)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.email, email) || other.email == email)&&(identical(other.totalScreens, totalScreens) || other.totalScreens == totalScreens)&&(identical(other.parkingAvailable, parkingAvailable) || other.parkingAvailable == parkingAvailable)&&(identical(other.accessibilityFeatures, accessibilityFeatures) || other.accessibilityFeatures == accessibilityFeatures)&&(identical(other.amenities, amenities) || other.amenities == amenities)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,name,address,city,state,zipCode,fullAddress,phoneNumber,email,totalScreens,parkingAvailable,accessibilityFeatures,amenities,isActive);
+
+@override
+String toString() {
+  return 'Theater(id: $id, name: $name, address: $address, city: $city, state: $state, zipCode: $zipCode, fullAddress: $fullAddress, phoneNumber: $phoneNumber, email: $email, totalScreens: $totalScreens, parkingAvailable: $parkingAvailable, accessibilityFeatures: $accessibilityFeatures, amenities: $amenities, isActive: $isActive)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TheaterCopyWith<$Res> implements $TheaterCopyWith<$Res> {
+  factory _$TheaterCopyWith(_Theater value, $Res Function(_Theater) _then) = __$TheaterCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String name, String address, String city, String state, String zipCode, String? fullAddress, String phoneNumber, String? email, int totalScreens, bool parkingAvailable, String? accessibilityFeatures, String? amenities, bool isActive
+});
+
+
+
+
+}
+/// @nodoc
+class __$TheaterCopyWithImpl<$Res>
+    implements _$TheaterCopyWith<$Res> {
+  __$TheaterCopyWithImpl(this._self, this._then);
+
+  final _Theater _self;
+  final $Res Function(_Theater) _then;
+
+/// Create a copy of Theater
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? address = null,Object? city = null,Object? state = null,Object? zipCode = null,Object? fullAddress = freezed,Object? phoneNumber = null,Object? email = freezed,Object? totalScreens = null,Object? parkingAvailable = null,Object? accessibilityFeatures = freezed,Object? amenities = freezed,Object? isActive = null,}) {
+  return _then(_Theater(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,address: null == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
+as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String,state: null == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
+as String,zipCode: null == zipCode ? _self.zipCode : zipCode // ignore: cast_nullable_to_non_nullable
+as String,fullAddress: freezed == fullAddress ? _self.fullAddress : fullAddress // ignore: cast_nullable_to_non_nullable
+as String?,phoneNumber: null == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
+as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,totalScreens: null == totalScreens ? _self.totalScreens : totalScreens // ignore: cast_nullable_to_non_nullable
+as int,parkingAvailable: null == parkingAvailable ? _self.parkingAvailable : parkingAvailable // ignore: cast_nullable_to_non_nullable
+as bool,accessibilityFeatures: freezed == accessibilityFeatures ? _self.accessibilityFeatures : accessibilityFeatures // ignore: cast_nullable_to_non_nullable
+as String?,amenities: freezed == amenities ? _self.amenities : amenities // ignore: cast_nullable_to_non_nullable
+as String?,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+/// @nodoc
+mixin _$Showtime {
+
+ String get id; String get movie; String? get movieTitle; int? get movieDuration; String? get moviePoster; String get theater; String? get theaterName; String? get theaterCity; String get datetime; int get screenNumber; int get totalSeats; int get availableSeats; int? get seatsSold; double get ticketPrice; bool? get isAvailable; String? get date; String? get time; String? get datetimeFormatted;
+/// Create a copy of Showtime
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ShowtimeCopyWith<Showtime> get copyWith => _$ShowtimeCopyWithImpl<Showtime>(this as Showtime, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Showtime&&(identical(other.id, id) || other.id == id)&&(identical(other.movie, movie) || other.movie == movie)&&(identical(other.movieTitle, movieTitle) || other.movieTitle == movieTitle)&&(identical(other.movieDuration, movieDuration) || other.movieDuration == movieDuration)&&(identical(other.moviePoster, moviePoster) || other.moviePoster == moviePoster)&&(identical(other.theater, theater) || other.theater == theater)&&(identical(other.theaterName, theaterName) || other.theaterName == theaterName)&&(identical(other.theaterCity, theaterCity) || other.theaterCity == theaterCity)&&(identical(other.datetime, datetime) || other.datetime == datetime)&&(identical(other.screenNumber, screenNumber) || other.screenNumber == screenNumber)&&(identical(other.totalSeats, totalSeats) || other.totalSeats == totalSeats)&&(identical(other.availableSeats, availableSeats) || other.availableSeats == availableSeats)&&(identical(other.seatsSold, seatsSold) || other.seatsSold == seatsSold)&&(identical(other.ticketPrice, ticketPrice) || other.ticketPrice == ticketPrice)&&(identical(other.isAvailable, isAvailable) || other.isAvailable == isAvailable)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.datetimeFormatted, datetimeFormatted) || other.datetimeFormatted == datetimeFormatted));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,movie,movieTitle,movieDuration,moviePoster,theater,theaterName,theaterCity,datetime,screenNumber,totalSeats,availableSeats,seatsSold,ticketPrice,isAvailable,date,time,datetimeFormatted);
+
+@override
+String toString() {
+  return 'Showtime(id: $id, movie: $movie, movieTitle: $movieTitle, movieDuration: $movieDuration, moviePoster: $moviePoster, theater: $theater, theaterName: $theaterName, theaterCity: $theaterCity, datetime: $datetime, screenNumber: $screenNumber, totalSeats: $totalSeats, availableSeats: $availableSeats, seatsSold: $seatsSold, ticketPrice: $ticketPrice, isAvailable: $isAvailable, date: $date, time: $time, datetimeFormatted: $datetimeFormatted)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ShowtimeCopyWith<$Res>  {
+  factory $ShowtimeCopyWith(Showtime value, $Res Function(Showtime) _then) = _$ShowtimeCopyWithImpl;
+@useResult
+$Res call({
+ String id, String movie, String? movieTitle, int? movieDuration, String? moviePoster, String theater, String? theaterName, String? theaterCity, String datetime, int screenNumber, int totalSeats, int availableSeats, int? seatsSold, double ticketPrice, bool? isAvailable, String? date, String? time, String? datetimeFormatted
+});
+
+
+
+
+}
+/// @nodoc
+class _$ShowtimeCopyWithImpl<$Res>
+    implements $ShowtimeCopyWith<$Res> {
+  _$ShowtimeCopyWithImpl(this._self, this._then);
+
+  final Showtime _self;
+  final $Res Function(Showtime) _then;
+
+/// Create a copy of Showtime
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? movie = null,Object? movieTitle = freezed,Object? movieDuration = freezed,Object? moviePoster = freezed,Object? theater = null,Object? theaterName = freezed,Object? theaterCity = freezed,Object? datetime = null,Object? screenNumber = null,Object? totalSeats = null,Object? availableSeats = null,Object? seatsSold = freezed,Object? ticketPrice = null,Object? isAvailable = freezed,Object? date = freezed,Object? time = freezed,Object? datetimeFormatted = freezed,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,movie: null == movie ? _self.movie : movie // ignore: cast_nullable_to_non_nullable
+as String,movieTitle: freezed == movieTitle ? _self.movieTitle : movieTitle // ignore: cast_nullable_to_non_nullable
+as String?,movieDuration: freezed == movieDuration ? _self.movieDuration : movieDuration // ignore: cast_nullable_to_non_nullable
+as int?,moviePoster: freezed == moviePoster ? _self.moviePoster : moviePoster // ignore: cast_nullable_to_non_nullable
+as String?,theater: null == theater ? _self.theater : theater // ignore: cast_nullable_to_non_nullable
+as String,theaterName: freezed == theaterName ? _self.theaterName : theaterName // ignore: cast_nullable_to_non_nullable
+as String?,theaterCity: freezed == theaterCity ? _self.theaterCity : theaterCity // ignore: cast_nullable_to_non_nullable
+as String?,datetime: null == datetime ? _self.datetime : datetime // ignore: cast_nullable_to_non_nullable
+as String,screenNumber: null == screenNumber ? _self.screenNumber : screenNumber // ignore: cast_nullable_to_non_nullable
+as int,totalSeats: null == totalSeats ? _self.totalSeats : totalSeats // ignore: cast_nullable_to_non_nullable
+as int,availableSeats: null == availableSeats ? _self.availableSeats : availableSeats // ignore: cast_nullable_to_non_nullable
+as int,seatsSold: freezed == seatsSold ? _self.seatsSold : seatsSold // ignore: cast_nullable_to_non_nullable
+as int?,ticketPrice: null == ticketPrice ? _self.ticketPrice : ticketPrice // ignore: cast_nullable_to_non_nullable
+as double,isAvailable: freezed == isAvailable ? _self.isAvailable : isAvailable // ignore: cast_nullable_to_non_nullable
+as bool?,date: freezed == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String?,time: freezed == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as String?,datetimeFormatted: freezed == datetimeFormatted ? _self.datetimeFormatted : datetimeFormatted // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [Showtime].
+extension ShowtimePatterns on Showtime {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Showtime value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Showtime() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Showtime value)  $default,){
+final _that = this;
+switch (_that) {
+case _Showtime():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Showtime value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Showtime() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String movie,  String? movieTitle,  int? movieDuration,  String? moviePoster,  String theater,  String? theaterName,  String? theaterCity,  String datetime,  int screenNumber,  int totalSeats,  int availableSeats,  int? seatsSold,  double ticketPrice,  bool? isAvailable,  String? date,  String? time,  String? datetimeFormatted)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Showtime() when $default != null:
+return $default(_that.id,_that.movie,_that.movieTitle,_that.movieDuration,_that.moviePoster,_that.theater,_that.theaterName,_that.theaterCity,_that.datetime,_that.screenNumber,_that.totalSeats,_that.availableSeats,_that.seatsSold,_that.ticketPrice,_that.isAvailable,_that.date,_that.time,_that.datetimeFormatted);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String movie,  String? movieTitle,  int? movieDuration,  String? moviePoster,  String theater,  String? theaterName,  String? theaterCity,  String datetime,  int screenNumber,  int totalSeats,  int availableSeats,  int? seatsSold,  double ticketPrice,  bool? isAvailable,  String? date,  String? time,  String? datetimeFormatted)  $default,) {final _that = this;
+switch (_that) {
+case _Showtime():
+return $default(_that.id,_that.movie,_that.movieTitle,_that.movieDuration,_that.moviePoster,_that.theater,_that.theaterName,_that.theaterCity,_that.datetime,_that.screenNumber,_that.totalSeats,_that.availableSeats,_that.seatsSold,_that.ticketPrice,_that.isAvailable,_that.date,_that.time,_that.datetimeFormatted);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String movie,  String? movieTitle,  int? movieDuration,  String? moviePoster,  String theater,  String? theaterName,  String? theaterCity,  String datetime,  int screenNumber,  int totalSeats,  int availableSeats,  int? seatsSold,  double ticketPrice,  bool? isAvailable,  String? date,  String? time,  String? datetimeFormatted)?  $default,) {final _that = this;
+switch (_that) {
+case _Showtime() when $default != null:
+return $default(_that.id,_that.movie,_that.movieTitle,_that.movieDuration,_that.moviePoster,_that.theater,_that.theaterName,_that.theaterCity,_that.datetime,_that.screenNumber,_that.totalSeats,_that.availableSeats,_that.seatsSold,_that.ticketPrice,_that.isAvailable,_that.date,_that.time,_that.datetimeFormatted);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _Showtime implements Showtime {
+  const _Showtime({required this.id, required this.movie, this.movieTitle, this.movieDuration, this.moviePoster, required this.theater, this.theaterName, this.theaterCity, required this.datetime, required this.screenNumber, required this.totalSeats, required this.availableSeats, this.seatsSold, required this.ticketPrice, this.isAvailable, this.date, this.time, this.datetimeFormatted});
+  
+
+@override final  String id;
+@override final  String movie;
+@override final  String? movieTitle;
+@override final  int? movieDuration;
+@override final  String? moviePoster;
+@override final  String theater;
+@override final  String? theaterName;
+@override final  String? theaterCity;
+@override final  String datetime;
+@override final  int screenNumber;
+@override final  int totalSeats;
+@override final  int availableSeats;
+@override final  int? seatsSold;
+@override final  double ticketPrice;
+@override final  bool? isAvailable;
+@override final  String? date;
+@override final  String? time;
+@override final  String? datetimeFormatted;
+
+/// Create a copy of Showtime
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ShowtimeCopyWith<_Showtime> get copyWith => __$ShowtimeCopyWithImpl<_Showtime>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Showtime&&(identical(other.id, id) || other.id == id)&&(identical(other.movie, movie) || other.movie == movie)&&(identical(other.movieTitle, movieTitle) || other.movieTitle == movieTitle)&&(identical(other.movieDuration, movieDuration) || other.movieDuration == movieDuration)&&(identical(other.moviePoster, moviePoster) || other.moviePoster == moviePoster)&&(identical(other.theater, theater) || other.theater == theater)&&(identical(other.theaterName, theaterName) || other.theaterName == theaterName)&&(identical(other.theaterCity, theaterCity) || other.theaterCity == theaterCity)&&(identical(other.datetime, datetime) || other.datetime == datetime)&&(identical(other.screenNumber, screenNumber) || other.screenNumber == screenNumber)&&(identical(other.totalSeats, totalSeats) || other.totalSeats == totalSeats)&&(identical(other.availableSeats, availableSeats) || other.availableSeats == availableSeats)&&(identical(other.seatsSold, seatsSold) || other.seatsSold == seatsSold)&&(identical(other.ticketPrice, ticketPrice) || other.ticketPrice == ticketPrice)&&(identical(other.isAvailable, isAvailable) || other.isAvailable == isAvailable)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.datetimeFormatted, datetimeFormatted) || other.datetimeFormatted == datetimeFormatted));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id,movie,movieTitle,movieDuration,moviePoster,theater,theaterName,theaterCity,datetime,screenNumber,totalSeats,availableSeats,seatsSold,ticketPrice,isAvailable,date,time,datetimeFormatted);
+
+@override
+String toString() {
+  return 'Showtime(id: $id, movie: $movie, movieTitle: $movieTitle, movieDuration: $movieDuration, moviePoster: $moviePoster, theater: $theater, theaterName: $theaterName, theaterCity: $theaterCity, datetime: $datetime, screenNumber: $screenNumber, totalSeats: $totalSeats, availableSeats: $availableSeats, seatsSold: $seatsSold, ticketPrice: $ticketPrice, isAvailable: $isAvailable, date: $date, time: $time, datetimeFormatted: $datetimeFormatted)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ShowtimeCopyWith<$Res> implements $ShowtimeCopyWith<$Res> {
+  factory _$ShowtimeCopyWith(_Showtime value, $Res Function(_Showtime) _then) = __$ShowtimeCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String movie, String? movieTitle, int? movieDuration, String? moviePoster, String theater, String? theaterName, String? theaterCity, String datetime, int screenNumber, int totalSeats, int availableSeats, int? seatsSold, double ticketPrice, bool? isAvailable, String? date, String? time, String? datetimeFormatted
+});
+
+
+
+
+}
+/// @nodoc
+class __$ShowtimeCopyWithImpl<$Res>
+    implements _$ShowtimeCopyWith<$Res> {
+  __$ShowtimeCopyWithImpl(this._self, this._then);
+
+  final _Showtime _self;
+  final $Res Function(_Showtime) _then;
+
+/// Create a copy of Showtime
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? movie = null,Object? movieTitle = freezed,Object? movieDuration = freezed,Object? moviePoster = freezed,Object? theater = null,Object? theaterName = freezed,Object? theaterCity = freezed,Object? datetime = null,Object? screenNumber = null,Object? totalSeats = null,Object? availableSeats = null,Object? seatsSold = freezed,Object? ticketPrice = null,Object? isAvailable = freezed,Object? date = freezed,Object? time = freezed,Object? datetimeFormatted = freezed,}) {
+  return _then(_Showtime(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,movie: null == movie ? _self.movie : movie // ignore: cast_nullable_to_non_nullable
+as String,movieTitle: freezed == movieTitle ? _self.movieTitle : movieTitle // ignore: cast_nullable_to_non_nullable
+as String?,movieDuration: freezed == movieDuration ? _self.movieDuration : movieDuration // ignore: cast_nullable_to_non_nullable
+as int?,moviePoster: freezed == moviePoster ? _self.moviePoster : moviePoster // ignore: cast_nullable_to_non_nullable
+as String?,theater: null == theater ? _self.theater : theater // ignore: cast_nullable_to_non_nullable
+as String,theaterName: freezed == theaterName ? _self.theaterName : theaterName // ignore: cast_nullable_to_non_nullable
+as String?,theaterCity: freezed == theaterCity ? _self.theaterCity : theaterCity // ignore: cast_nullable_to_non_nullable
+as String?,datetime: null == datetime ? _self.datetime : datetime // ignore: cast_nullable_to_non_nullable
+as String,screenNumber: null == screenNumber ? _self.screenNumber : screenNumber // ignore: cast_nullable_to_non_nullable
+as int,totalSeats: null == totalSeats ? _self.totalSeats : totalSeats // ignore: cast_nullable_to_non_nullable
+as int,availableSeats: null == availableSeats ? _self.availableSeats : availableSeats // ignore: cast_nullable_to_non_nullable
+as int,seatsSold: freezed == seatsSold ? _self.seatsSold : seatsSold // ignore: cast_nullable_to_non_nullable
+as int?,ticketPrice: null == ticketPrice ? _self.ticketPrice : ticketPrice // ignore: cast_nullable_to_non_nullable
+as double,isAvailable: freezed == isAvailable ? _self.isAvailable : isAvailable // ignore: cast_nullable_to_non_nullable
+as bool?,date: freezed == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String?,time: freezed == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as String?,datetimeFormatted: freezed == datetimeFormatted ? _self.datetimeFormatted : datetimeFormatted // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
 // dart format on

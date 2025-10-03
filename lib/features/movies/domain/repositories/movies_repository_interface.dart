@@ -4,5 +4,5 @@ abstract class MoviesRepositoryInterface {
   Future<List<Movie>> getMovies({MoviesFilter? filter});
   Future<Movie> getMovieById(String id);
   Future<List<Genre>> getGenres();
-  Future<dynamic> getMovieShowtimes(String movieId);
+  Future<List<Showtime>> getMovieShowtimes(String movieId);
 }

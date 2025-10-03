@@ -99,7 +99,6 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
 
                     final pageOffset = page - page.floor();
 
-                    // Show 3-4 movies with smooth gradual transitions
                     for (var i = -2; i <= 2; i++) {
                       final index = page.floor() + i;
                       if (index < 0 || index >= widget.movies.length) continue;
@@ -110,11 +109,10 @@ class _MovieSpotlightCarouselState extends State<MovieSpotlightCarousel> {
                       final clampedDepth = depth.clamp(0.0, 2.0);
                       final isActive = depth < 0.35;
 
-                      // Horizontal spacing without rotation
                       final translateX = distance * viewportWidth * 0.15;
                       final translateY = 0.0;
                       final scale = lerpDouble(1, 0.75, (clampedDepth / 2.0))!;
-                      final tilt = 0.0; // No rotation
+                      final tilt = 0.0;
                       final opacity = lerpDouble(1, 0.7, (clampedDepth / 2.0))!;
 
                       layers.add(
@@ -220,13 +218,17 @@ class _MovieCard extends StatelessWidget {
         boxShadow: [
           if (!dimmed)
             BoxShadow(
-              color: CupertinoColors.black.withValues(alpha: 0.28 * effectiveOpacity),
+              color: CupertinoColors.black.withValues(
+                alpha: 0.28 * effectiveOpacity,
+              ),
               blurRadius: 24,
               offset: const Offset(0, 16),
             )
           else
             BoxShadow(
-              color: CupertinoColors.black.withValues(alpha: 0.2 * effectiveOpacity),
+              color: CupertinoColors.black.withValues(
+                alpha: 0.2 * effectiveOpacity,
+              ),
               blurRadius: 18,
               offset: const Offset(0, 12),
             ),

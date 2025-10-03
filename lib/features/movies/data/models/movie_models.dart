@@ -108,3 +108,134 @@ class GenresResponse {
 
   Map<String, dynamic> toJson() => _$GenresResponseToJson(this);
 }
+
+@JsonSerializable()
+class Theater {
+  final String id;
+  final String name;
+  final String address;
+  final String city;
+  final String state;
+  @JsonKey(name: 'zip_code')
+  final String zipCode;
+  @JsonKey(name: 'full_address')
+  final String? fullAddress;
+  @JsonKey(name: 'phone_number')
+  final String phoneNumber;
+  final String? email;
+  @JsonKey(name: 'total_screens')
+  final int totalScreens;
+  @JsonKey(name: 'parking_available')
+  final bool parkingAvailable;
+  @JsonKey(name: 'accessibility_features')
+  final String? accessibilityFeatures;
+  final String? amenities;
+  @JsonKey(name: 'is_active')
+  final bool isActive;
+
+  const Theater({
+    required this.id,
+    required this.name,
+    required this.address,
+    required this.city,
+    required this.state,
+    required this.zipCode,
+    this.fullAddress,
+    required this.phoneNumber,
+    this.email,
+    required this.totalScreens,
+    required this.parkingAvailable,
+    this.accessibilityFeatures,
+    this.amenities,
+    required this.isActive,
+  });
+
+  factory Theater.fromJson(Map<String, dynamic> json) => _$TheaterFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TheaterToJson(this);
+}
+
+@JsonSerializable()
+class Showtime {
+  final String id;
+  final String movie;
+  @JsonKey(name: 'movie_title')
+  final String? movieTitle;
+  @JsonKey(name: 'movie_duration')
+  final int? movieDuration;
+  @JsonKey(name: 'movie_poster')
+  final String? moviePoster;
+  final String theater;
+  @JsonKey(name: 'theater_name')
+  final String? theaterName;
+  @JsonKey(name: 'theater_city')
+  final String? theaterCity;
+  final String datetime;
+  @JsonKey(name: 'screen_number')
+  final int screenNumber;
+  @JsonKey(name: 'total_seats')
+  final int totalSeats;
+  @JsonKey(name: 'available_seats')
+  final int availableSeats;
+  @JsonKey(name: 'seats_sold')
+  final int? seatsSold;
+  @JsonKey(name: 'ticket_price', fromJson: _priceFromJson)
+  final double ticketPrice;
+  @JsonKey(name: 'is_available')
+  final bool? isAvailable;
+  final String? date;
+  final String? time;
+  @JsonKey(name: 'datetime_formatted')
+  final String? datetimeFormatted;
+
+  static double _priceFromJson(dynamic value) {
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.parse(value);
+    throw FormatException('Cannot parse price from $value');
+  }
+
+  const Showtime({
+    required this.id,
+    required this.movie,
+    this.movieTitle,
+    this.movieDuration,
+    this.moviePoster,
+    required this.theater,
+    this.theaterName,
+    this.theaterCity,
+    required this.datetime,
+    required this.screenNumber,
+    required this.totalSeats,
+    required this.availableSeats,
+    this.seatsSold,
+    required this.ticketPrice,
+    this.isAvailable,
+    this.date,
+    this.time,
+    this.datetimeFormatted,
+  });
+
+  factory Showtime.fromJson(Map<String, dynamic> json) => _$ShowtimeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ShowtimeToJson(this);
+}
+
+@JsonSerializable()
+class ShowtimesResponse {
+  final int count;
+  final String? next;
+  final String? previous;
+  final List<Showtime> results;
+
+  const ShowtimesResponse({
+    required this.count,
+    this.next,
+    this.previous,
+    required this.results,
+  });
+
+  factory ShowtimesResponse.fromJson(Map<String, dynamic> json) => _$ShowtimesResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ShowtimesResponseToJson(this);
+}

@@ -79,3 +79,97 @@ Map<String, dynamic> _$GenresResponseToJson(GenresResponse instance) =>
       'previous': instance.previous,
       'results': instance.results,
     };
+
+Theater _$TheaterFromJson(Map<String, dynamic> json) => Theater(
+  id: json['id'] as String,
+  name: json['name'] as String,
+  address: json['address'] as String,
+  city: json['city'] as String,
+  state: json['state'] as String,
+  zipCode: json['zip_code'] as String,
+  fullAddress: json['full_address'] as String?,
+  phoneNumber: json['phone_number'] as String,
+  email: json['email'] as String?,
+  totalScreens: (json['total_screens'] as num).toInt(),
+  parkingAvailable: json['parking_available'] as bool,
+  accessibilityFeatures: json['accessibility_features'] as String?,
+  amenities: json['amenities'] as String?,
+  isActive: json['is_active'] as bool,
+);
+
+Map<String, dynamic> _$TheaterToJson(Theater instance) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'address': instance.address,
+  'city': instance.city,
+  'state': instance.state,
+  'zip_code': instance.zipCode,
+  'full_address': instance.fullAddress,
+  'phone_number': instance.phoneNumber,
+  'email': instance.email,
+  'total_screens': instance.totalScreens,
+  'parking_available': instance.parkingAvailable,
+  'accessibility_features': instance.accessibilityFeatures,
+  'amenities': instance.amenities,
+  'is_active': instance.isActive,
+};
+
+Showtime _$ShowtimeFromJson(Map<String, dynamic> json) => Showtime(
+  id: json['id'] as String,
+  movie: json['movie'] as String,
+  movieTitle: json['movie_title'] as String?,
+  movieDuration: (json['movie_duration'] as num?)?.toInt(),
+  moviePoster: json['movie_poster'] as String?,
+  theater: json['theater'] as String,
+  theaterName: json['theater_name'] as String?,
+  theaterCity: json['theater_city'] as String?,
+  datetime: json['datetime'] as String,
+  screenNumber: (json['screen_number'] as num).toInt(),
+  totalSeats: (json['total_seats'] as num).toInt(),
+  availableSeats: (json['available_seats'] as num).toInt(),
+  seatsSold: (json['seats_sold'] as num?)?.toInt(),
+  ticketPrice: Showtime._priceFromJson(json['ticket_price']),
+  isAvailable: json['is_available'] as bool?,
+  date: json['date'] as String?,
+  time: json['time'] as String?,
+  datetimeFormatted: json['datetime_formatted'] as String?,
+);
+
+Map<String, dynamic> _$ShowtimeToJson(Showtime instance) => <String, dynamic>{
+  'id': instance.id,
+  'movie': instance.movie,
+  'movie_title': instance.movieTitle,
+  'movie_duration': instance.movieDuration,
+  'movie_poster': instance.moviePoster,
+  'theater': instance.theater,
+  'theater_name': instance.theaterName,
+  'theater_city': instance.theaterCity,
+  'datetime': instance.datetime,
+  'screen_number': instance.screenNumber,
+  'total_seats': instance.totalSeats,
+  'available_seats': instance.availableSeats,
+  'seats_sold': instance.seatsSold,
+  'ticket_price': instance.ticketPrice,
+  'is_available': instance.isAvailable,
+  'date': instance.date,
+  'time': instance.time,
+  'datetime_formatted': instance.datetimeFormatted,
+};
+
+ShowtimesResponse _$ShowtimesResponseFromJson(Map<String, dynamic> json) =>
+    ShowtimesResponse(
+      count: (json['count'] as num).toInt(),
+      next: json['next'] as String?,
+      previous: json['previous'] as String?,
+      results: (json['results'] as List<dynamic>)
+          .map((e) => Showtime.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ShowtimesResponseToJson(ShowtimesResponse instance) =>
+    <String, dynamic>{
+      'count': instance.count,
+      'next': instance.next,
+      'previous': instance.previous,
+      'results': instance.results,
+    };

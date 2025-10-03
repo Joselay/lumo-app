@@ -37,3 +37,47 @@ abstract class MoviesFilter with _$MoviesFilter {
     bool? isActive,
   }) = _MoviesFilter;
 }
+
+@freezed
+abstract class Theater with _$Theater {
+  const factory Theater({
+    required String id,
+    required String name,
+    required String address,
+    required String city,
+    required String state,
+    required String zipCode,
+    String? fullAddress,
+    required String phoneNumber,
+    String? email,
+    required int totalScreens,
+    required bool parkingAvailable,
+    String? accessibilityFeatures,
+    String? amenities,
+    required bool isActive,
+  }) = _Theater;
+}
+
+@freezed
+abstract class Showtime with _$Showtime {
+  const factory Showtime({
+    required String id,
+    required String movie,
+    String? movieTitle,
+    int? movieDuration,
+    String? moviePoster,
+    required String theater,
+    String? theaterName,
+    String? theaterCity,
+    required String datetime,
+    required int screenNumber,
+    required int totalSeats,
+    required int availableSeats,
+    int? seatsSold,
+    required double ticketPrice,
+    bool? isAvailable,
+    String? date,
+    String? time,
+    String? datetimeFormatted,
+  }) = _Showtime;
+}

@@ -18,5 +18,5 @@ abstract class MoviesApi {
   Future<GenresResponse> getGenres();
 
   @GET('/movies/{id}/showtimes/')
-  Future<dynamic> getMovieShowtimes(@Path('id') String id);
+  Future<ShowtimesResponse> getMovieShowtimes(@Path('id') String id);
 }

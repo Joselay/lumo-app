@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import '../../domain/entities/movie.dart';
 
@@ -10,7 +11,11 @@ class MovieCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        context.pushNamed('movie-details', extra: movie);
+      },
+      child: Container(
       height: 120,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -87,6 +92,7 @@ class MovieCard extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 
