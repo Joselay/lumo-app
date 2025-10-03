@@ -49,8 +49,6 @@ class _MoviesSearchViewState extends State<_MoviesSearchView> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ShadTheme.of(context).colorScheme;
-
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: const Text('Search'),
@@ -129,12 +127,12 @@ class _MoviesSearchViewState extends State<_MoviesSearchView> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  lucide.LucideIcons.film,
-                                  size: 48,
-                                  color: colorScheme.mutedForeground,
+                                SvgPicture.asset(
+                                  'assets/icons/empty.svg',
+                                  width: 200,
+                                  height: 200,
                                 ),
-                                const SizedBox(height: 12),
+                                const SizedBox(height: 24),
                                 Text(
                                   'No results',
                                   style: ShadTheme.of(context).textTheme.h4,

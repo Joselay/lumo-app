@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lucide_icons/lucide_icons.dart' as lucide;
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/utils/toast_utils.dart';
 import '../viewmodels/movies_bloc.dart';
 import '../viewmodels/movies_event.dart';
@@ -57,33 +57,36 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
             if (state.favoriteMovies.isEmpty) {
               return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      lucide.LucideIcons.bookmark,
-                      size: 64,
-                      color: CupertinoColors.systemGrey.resolveFrom(context),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'No Favorites Yet',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: CupertinoColors.label.resolveFrom(context),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/empty.svg',
+                        width: 200,
+                        height: 200,
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Bookmark your favorite movies to see them here',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: CupertinoColors.systemGrey.resolveFrom(context),
+                      const SizedBox(height: 24),
+                      Text(
+                        'No Favorites Yet',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: CupertinoColors.label.resolveFrom(context),
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      Text(
+                        'Bookmark your favorite movies to see them here',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: CupertinoColors.systemGrey.resolveFrom(context),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
               );
             }

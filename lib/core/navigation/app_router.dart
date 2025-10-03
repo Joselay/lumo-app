@@ -9,6 +9,7 @@ import '../../features/movies/presentation/pages/movie_details_page.dart';
 import '../../features/movies/presentation/pages/favorites_page.dart';
 import '../../features/movies/domain/entities/movie.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
+import '../../features/chat/presentation/pages/chat_page.dart';
 import '../presentation/pages/main_shell_page.dart';
 import '../presentation/widgets/coming_soon_page.dart';
 
@@ -89,10 +90,7 @@ final GoRouter appRouter = GoRouter(
               path: '/chat',
               name: 'chat',
               builder: (BuildContext context, GoRouterState state) {
-                return const ComingSoonPage(
-                  title: 'AI Chat',
-                  icon: lucide.LucideIcons.messageCircle,
-                );
+                return const ChatPage();
               },
             ),
           ],
