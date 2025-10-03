@@ -16,6 +16,7 @@ abstract class MovieDetailsState with _$MovieDetailsState {
     @Default(MovieDetailsStatus.initial) MovieDetailsStatus status,
     @Default([]) List<Showtime> showtimes,
     String? errorMessage,
+    DateTime? errorTimestamp,
     String? movieId,
   }) = _MovieDetailsState;
 }

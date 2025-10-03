@@ -35,18 +35,21 @@ class LumoApp extends StatelessWidget {
         ),
       ),
       appBuilder: (context) {
-        return CupertinoApp.router(
-          theme: CupertinoTheme.of(context),
-          routerConfig: appRouter,
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('en', 'US'), Locale('km', 'KH')],
-          builder: (context, child) {
-            return ShadAppBuilder(child: child!);
-          },
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: CupertinoApp.router(
+            theme: CupertinoTheme.of(context),
+            routerConfig: appRouter,
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
+            supportedLocales: const [Locale('en', 'US'), Locale('km', 'KH')],
+            builder: (context, child) {
+              return ShadAppBuilder(child: child!);
+            },
+          ),
         );
       },
     );

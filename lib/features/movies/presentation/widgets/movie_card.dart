@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import '../../domain/entities/movie.dart';
+import '../viewmodels/movies_bloc.dart';
+import '../viewmodels/movies_event.dart';
 
 class MovieCard extends StatelessWidget {
   final Movie movie;
@@ -87,6 +90,30 @@ class MovieCard extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                context.read<MoviesBloc>().add(
+                      MoviesEvent.toggleFavorite(
+                        movie.id,
+                        movie.isFavorited,
+                      ),
+                    );
+              },
+              child: Icon(
+                movie.isFavorited
+                    ? lucide.LucideIcons.bookmark
+                    : lucide.LucideIcons.bookmark,
+                size: 24,
+                color: movie.isFavorited
+                    ? CupertinoColors.systemYellow
+                    : CupertinoColors.systemGrey,
+                fill: movie.isFavorited ? 1.0 : 0.0,
               ),
             ),
           ),

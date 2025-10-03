@@ -34,6 +34,7 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
       emit(state.copyWith(
         status: MovieDetailsStatus.failure,
         errorMessage: e.toString(),
+        errorTimestamp: DateTime.now(),
       ));
     }
   }
@@ -56,6 +57,7 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
       emit(state.copyWith(
         status: MovieDetailsStatus.failure,
         errorMessage: e.toString(),
+        errorTimestamp: DateTime.now(),
       ));
     }
   }

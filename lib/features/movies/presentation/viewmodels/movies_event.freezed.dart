@@ -55,7 +55,7 @@ extension MoviesEventPatterns on MoviesEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MoviesStarted value)?  started,TResult Function( LoadMovies value)?  loadMovies,TResult Function( LoadGenres value)?  loadGenres,TResult Function( SearchMovies value)?  searchMovies,TResult Function( FilterByGenre value)?  filterByGenre,TResult Function( ClearFilter value)?  clearFilter,TResult Function( RefreshMovies value)?  refreshMovies,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MoviesStarted value)?  started,TResult Function( LoadMovies value)?  loadMovies,TResult Function( LoadGenres value)?  loadGenres,TResult Function( SearchMovies value)?  searchMovies,TResult Function( FilterByGenre value)?  filterByGenre,TResult Function( ClearFilter value)?  clearFilter,TResult Function( RefreshMovies value)?  refreshMovies,TResult Function( ToggleFavorite value)?  toggleFavorite,TResult Function( LoadFavorites value)?  loadFavorites,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case MoviesStarted() when started != null:
@@ -65,7 +65,9 @@ return loadGenres(_that);case SearchMovies() when searchMovies != null:
 return searchMovies(_that);case FilterByGenre() when filterByGenre != null:
 return filterByGenre(_that);case ClearFilter() when clearFilter != null:
 return clearFilter(_that);case RefreshMovies() when refreshMovies != null:
-return refreshMovies(_that);case _:
+return refreshMovies(_that);case ToggleFavorite() when toggleFavorite != null:
+return toggleFavorite(_that);case LoadFavorites() when loadFavorites != null:
+return loadFavorites(_that);case _:
   return orElse();
 
 }
@@ -83,7 +85,7 @@ return refreshMovies(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MoviesStarted value)  started,required TResult Function( LoadMovies value)  loadMovies,required TResult Function( LoadGenres value)  loadGenres,required TResult Function( SearchMovies value)  searchMovies,required TResult Function( FilterByGenre value)  filterByGenre,required TResult Function( ClearFilter value)  clearFilter,required TResult Function( RefreshMovies value)  refreshMovies,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MoviesStarted value)  started,required TResult Function( LoadMovies value)  loadMovies,required TResult Function( LoadGenres value)  loadGenres,required TResult Function( SearchMovies value)  searchMovies,required TResult Function( FilterByGenre value)  filterByGenre,required TResult Function( ClearFilter value)  clearFilter,required TResult Function( RefreshMovies value)  refreshMovies,required TResult Function( ToggleFavorite value)  toggleFavorite,required TResult Function( LoadFavorites value)  loadFavorites,}){
 final _that = this;
 switch (_that) {
 case MoviesStarted():
@@ -93,7 +95,9 @@ return loadGenres(_that);case SearchMovies():
 return searchMovies(_that);case FilterByGenre():
 return filterByGenre(_that);case ClearFilter():
 return clearFilter(_that);case RefreshMovies():
-return refreshMovies(_that);case _:
+return refreshMovies(_that);case ToggleFavorite():
+return toggleFavorite(_that);case LoadFavorites():
+return loadFavorites(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -110,7 +114,7 @@ return refreshMovies(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MoviesStarted value)?  started,TResult? Function( LoadMovies value)?  loadMovies,TResult? Function( LoadGenres value)?  loadGenres,TResult? Function( SearchMovies value)?  searchMovies,TResult? Function( FilterByGenre value)?  filterByGenre,TResult? Function( ClearFilter value)?  clearFilter,TResult? Function( RefreshMovies value)?  refreshMovies,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MoviesStarted value)?  started,TResult? Function( LoadMovies value)?  loadMovies,TResult? Function( LoadGenres value)?  loadGenres,TResult? Function( SearchMovies value)?  searchMovies,TResult? Function( FilterByGenre value)?  filterByGenre,TResult? Function( ClearFilter value)?  clearFilter,TResult? Function( RefreshMovies value)?  refreshMovies,TResult? Function( ToggleFavorite value)?  toggleFavorite,TResult? Function( LoadFavorites value)?  loadFavorites,}){
 final _that = this;
 switch (_that) {
 case MoviesStarted() when started != null:
@@ -120,7 +124,9 @@ return loadGenres(_that);case SearchMovies() when searchMovies != null:
 return searchMovies(_that);case FilterByGenre() when filterByGenre != null:
 return filterByGenre(_that);case ClearFilter() when clearFilter != null:
 return clearFilter(_that);case RefreshMovies() when refreshMovies != null:
-return refreshMovies(_that);case _:
+return refreshMovies(_that);case ToggleFavorite() when toggleFavorite != null:
+return toggleFavorite(_that);case LoadFavorites() when loadFavorites != null:
+return loadFavorites(_that);case _:
   return null;
 
 }
@@ -137,7 +143,7 @@ return refreshMovies(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( MoviesFilter? filter)?  loadMovies,TResult Function()?  loadGenres,TResult Function( String query)?  searchMovies,TResult Function( String genreId)?  filterByGenre,TResult Function()?  clearFilter,TResult Function()?  refreshMovies,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  started,TResult Function( MoviesFilter? filter)?  loadMovies,TResult Function()?  loadGenres,TResult Function( String query)?  searchMovies,TResult Function( String genreId)?  filterByGenre,TResult Function()?  clearFilter,TResult Function()?  refreshMovies,TResult Function( String movieId,  bool currentlyFavorited)?  toggleFavorite,TResult Function()?  loadFavorites,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case MoviesStarted() when started != null:
 return started();case LoadMovies() when loadMovies != null:
@@ -146,7 +152,9 @@ return loadGenres();case SearchMovies() when searchMovies != null:
 return searchMovies(_that.query);case FilterByGenre() when filterByGenre != null:
 return filterByGenre(_that.genreId);case ClearFilter() when clearFilter != null:
 return clearFilter();case RefreshMovies() when refreshMovies != null:
-return refreshMovies();case _:
+return refreshMovies();case ToggleFavorite() when toggleFavorite != null:
+return toggleFavorite(_that.movieId,_that.currentlyFavorited);case LoadFavorites() when loadFavorites != null:
+return loadFavorites();case _:
   return orElse();
 
 }
@@ -164,7 +172,7 @@ return refreshMovies();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( MoviesFilter? filter)  loadMovies,required TResult Function()  loadGenres,required TResult Function( String query)  searchMovies,required TResult Function( String genreId)  filterByGenre,required TResult Function()  clearFilter,required TResult Function()  refreshMovies,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  started,required TResult Function( MoviesFilter? filter)  loadMovies,required TResult Function()  loadGenres,required TResult Function( String query)  searchMovies,required TResult Function( String genreId)  filterByGenre,required TResult Function()  clearFilter,required TResult Function()  refreshMovies,required TResult Function( String movieId,  bool currentlyFavorited)  toggleFavorite,required TResult Function()  loadFavorites,}) {final _that = this;
 switch (_that) {
 case MoviesStarted():
 return started();case LoadMovies():
@@ -173,7 +181,9 @@ return loadGenres();case SearchMovies():
 return searchMovies(_that.query);case FilterByGenre():
 return filterByGenre(_that.genreId);case ClearFilter():
 return clearFilter();case RefreshMovies():
-return refreshMovies();case _:
+return refreshMovies();case ToggleFavorite():
+return toggleFavorite(_that.movieId,_that.currentlyFavorited);case LoadFavorites():
+return loadFavorites();case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -190,7 +200,7 @@ return refreshMovies();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( MoviesFilter? filter)?  loadMovies,TResult? Function()?  loadGenres,TResult? Function( String query)?  searchMovies,TResult? Function( String genreId)?  filterByGenre,TResult? Function()?  clearFilter,TResult? Function()?  refreshMovies,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  started,TResult? Function( MoviesFilter? filter)?  loadMovies,TResult? Function()?  loadGenres,TResult? Function( String query)?  searchMovies,TResult? Function( String genreId)?  filterByGenre,TResult? Function()?  clearFilter,TResult? Function()?  refreshMovies,TResult? Function( String movieId,  bool currentlyFavorited)?  toggleFavorite,TResult? Function()?  loadFavorites,}) {final _that = this;
 switch (_that) {
 case MoviesStarted() when started != null:
 return started();case LoadMovies() when loadMovies != null:
@@ -199,7 +209,9 @@ return loadGenres();case SearchMovies() when searchMovies != null:
 return searchMovies(_that.query);case FilterByGenre() when filterByGenre != null:
 return filterByGenre(_that.genreId);case ClearFilter() when clearFilter != null:
 return clearFilter();case RefreshMovies() when refreshMovies != null:
-return refreshMovies();case _:
+return refreshMovies();case ToggleFavorite() when toggleFavorite != null:
+return toggleFavorite(_that.movieId,_that.currentlyFavorited);case LoadFavorites() when loadFavorites != null:
+return loadFavorites();case _:
   return null;
 
 }
@@ -537,6 +549,106 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'MoviesEvent.refreshMovies()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class ToggleFavorite implements MoviesEvent {
+  const ToggleFavorite(this.movieId, this.currentlyFavorited);
+  
+
+ final  String movieId;
+ final  bool currentlyFavorited;
+
+/// Create a copy of MoviesEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ToggleFavoriteCopyWith<ToggleFavorite> get copyWith => _$ToggleFavoriteCopyWithImpl<ToggleFavorite>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ToggleFavorite&&(identical(other.movieId, movieId) || other.movieId == movieId)&&(identical(other.currentlyFavorited, currentlyFavorited) || other.currentlyFavorited == currentlyFavorited));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,movieId,currentlyFavorited);
+
+@override
+String toString() {
+  return 'MoviesEvent.toggleFavorite(movieId: $movieId, currentlyFavorited: $currentlyFavorited)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ToggleFavoriteCopyWith<$Res> implements $MoviesEventCopyWith<$Res> {
+  factory $ToggleFavoriteCopyWith(ToggleFavorite value, $Res Function(ToggleFavorite) _then) = _$ToggleFavoriteCopyWithImpl;
+@useResult
+$Res call({
+ String movieId, bool currentlyFavorited
+});
+
+
+
+
+}
+/// @nodoc
+class _$ToggleFavoriteCopyWithImpl<$Res>
+    implements $ToggleFavoriteCopyWith<$Res> {
+  _$ToggleFavoriteCopyWithImpl(this._self, this._then);
+
+  final ToggleFavorite _self;
+  final $Res Function(ToggleFavorite) _then;
+
+/// Create a copy of MoviesEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? movieId = null,Object? currentlyFavorited = null,}) {
+  return _then(ToggleFavorite(
+null == movieId ? _self.movieId : movieId // ignore: cast_nullable_to_non_nullable
+as String,null == currentlyFavorited ? _self.currentlyFavorited : currentlyFavorited // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class LoadFavorites implements MoviesEvent {
+  const LoadFavorites();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoadFavorites);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'MoviesEvent.loadFavorites()';
 }
 
 

@@ -4,9 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/data/api_client.dart';
+import '../../../../core/utils/toast_utils.dart';
 import '../../data/datasources/movies_api.dart';
 import '../../data/repositories/movies_repository.dart';
 import '../../domain/usecases/get_movies_usecase.dart';
+import '../../domain/usecases/toggle_favorite_usecase.dart';
+import '../../domain/usecases/get_favorite_movies_usecase.dart';
 import '../viewmodels/movies_bloc.dart';
 import '../viewmodels/movies_event.dart';
 import '../viewmodels/movies_state.dart';
@@ -18,14 +21,14 @@ class MoviesSearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final repository = MoviesRepository(MoviesApi(ApiClient.instance));
+
     return BlocProvider(
       create: (_) => MoviesBloc(
-        getMoviesUseCase: GetMoviesUseCase(
-          MoviesRepository(MoviesApi(ApiClient.instance)),
-        ),
-        getGenresUseCase: GetGenresUseCase(
-          MoviesRepository(MoviesApi(ApiClient.instance)),
-        ),
+        getMoviesUseCase: GetMoviesUseCase(repository),
+        getGenresUseCase: GetGenresUseCase(repository),
+        toggleFavoriteUseCase: ToggleFavoriteUseCase(repository),
+        getFavoriteMoviesUseCase: GetFavoriteMoviesUseCase(repository),
       )..add(const MoviesEvent.started()),
       child: const _MoviesSearchView(),
     );
@@ -67,8 +70,18 @@ class _MoviesSearchViewState extends State<_MoviesSearchView> {
               child: MovieSearchBar(onSearch: _onSearch),
             ),
             Expanded(
-              child: BlocBuilder<MoviesBloc, MoviesState>(
-                builder: (context, state) {
+              child: BlocListener<MoviesBloc, MoviesState>(
+                listener: (context, state) {
+                  if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
+                    ToastUtils.showError(
+                      context,
+                      title: 'Error',
+                      description: state.errorMessage,
+                    );
+                  }
+                },
+                child: BlocBuilder<MoviesBloc, MoviesState>(
+                  builder: (context, state) {
                   switch (state.status) {
                     case MoviesStatus.initial:
                     case MoviesStatus.loading:
@@ -153,6 +166,7 @@ class _MoviesSearchViewState extends State<_MoviesSearchView> {
                       );
                   }
                 },
+              ),
               ),
             ),
           ],

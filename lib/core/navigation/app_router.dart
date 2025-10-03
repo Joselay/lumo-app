@@ -6,6 +6,7 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/movies/presentation/pages/movies_page.dart';
 import '../../features/movies/presentation/pages/movies_search_page.dart';
 import '../../features/movies/presentation/pages/movie_details_page.dart';
+import '../../features/movies/presentation/pages/favorites_page.dart';
 import '../../features/movies/domain/entities/movie.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../presentation/pages/main_shell_page.dart';
@@ -102,10 +103,7 @@ final GoRouter appRouter = GoRouter(
               path: '/favorites',
               name: 'favorites',
               builder: (BuildContext context, GoRouterState state) {
-                return const ComingSoonPage(
-                  title: 'Favorites',
-                  icon: lucide.LucideIcons.heart,
-                );
+                return const FavoritesPage();
               },
             ),
           ],

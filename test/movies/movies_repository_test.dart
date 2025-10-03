@@ -36,6 +36,26 @@ class _StubMoviesApi implements MoviesApi {
   Future<models.ShowtimesResponse> getMovieShowtimes(String id) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<models.MovieFavoritesResponse> getFavoriteMovies() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<models.MovieFavorite> addFavorite(models.AddFavoriteRequest request) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> removeFavorite(String movieId) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<models.FavoriteCheckResponse> checkFavorite(String movieId) {
+    throw UnimplementedError();
+  }
 }
 
 models.Movie _buildApiMovie(String id) {

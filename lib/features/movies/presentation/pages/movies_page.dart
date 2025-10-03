@@ -3,10 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
-import '../../../../core/data/api_client.dart';
-import '../../data/datasources/movies_api.dart';
-import '../../data/repositories/movies_repository.dart';
-import '../../domain/usecases/get_movies_usecase.dart';
+import '../../../../core/utils/toast_utils.dart';
 import '../viewmodels/movies_bloc.dart';
 import '../viewmodels/movies_event.dart';
 import '../viewmodels/movies_state.dart';
@@ -20,17 +17,7 @@ class MoviesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MoviesBloc(
-        getMoviesUseCase: GetMoviesUseCase(
-          MoviesRepository(MoviesApi(ApiClient.instance)),
-        ),
-        getGenresUseCase: GetGenresUseCase(
-          MoviesRepository(MoviesApi(ApiClient.instance)),
-        ),
-      ),
-      child: const _MoviesView(),
-    );
+    return const _MoviesView();
   }
 }
 
@@ -53,8 +40,18 @@ class _MoviesViewState extends State<_MoviesView> {
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemBackground.resolveFrom(context),
       child: SafeArea(
-        child: BlocBuilder<MoviesBloc, MoviesState>(
-          builder: (context, state) {
+        child: BlocListener<MoviesBloc, MoviesState>(
+          listener: (context, state) {
+            if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
+              ToastUtils.showError(
+                context,
+                title: 'Error',
+                description: state.errorMessage,
+              );
+            }
+          },
+          child: BlocBuilder<MoviesBloc, MoviesState>(
+            builder: (context, state) {
             if (state.status == MoviesStatus.loaded &&
                 state.movies.isNotEmpty) {
               return CustomScrollView(
@@ -128,7 +125,10 @@ class _MoviesViewState extends State<_MoviesView> {
                           child: MovieSpotlightCarousel(
                             movies: state.movies,
                             onMovieTap: (movie) {
-                              // TODO: Navigate to movie details
+                              context.pushNamed(
+                                'movie-details',
+                                extra: movie,
+                              );
                             },
                           ),
                         ),
@@ -221,6 +221,7 @@ class _MoviesViewState extends State<_MoviesView> {
             }
           },
         ),
+      ),
       ),
     );
   }

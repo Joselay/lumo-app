@@ -24,6 +24,7 @@ abstract class Movie with _$Movie {
     required List<Genre> genres,
     required bool isActive,
     String? durationFormatted,
+    @Default(false) bool isFavorited,
   }) = _Movie;
 }
 

@@ -19,4 +19,16 @@ abstract class MoviesApi {
 
   @GET('/movies/{id}/showtimes/')
   Future<ShowtimesResponse> getMovieShowtimes(@Path('id') String id);
+
+  @GET('/movies/favorites/')
+  Future<MovieFavoritesResponse> getFavoriteMovies();
+
+  @POST('/movies/favorites/add/')
+  Future<MovieFavorite> addFavorite(@Body() AddFavoriteRequest request);
+
+  @DELETE('/movies/favorites/{movieId}/')
+  Future<void> removeFavorite(@Path('movieId') String movieId);
+
+  @GET('/movies/favorites/{movieId}/check/')
+  Future<FavoriteCheckResponse> checkFavorite(@Path('movieId') String movieId);
 }

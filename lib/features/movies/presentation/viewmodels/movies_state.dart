@@ -11,10 +11,13 @@ abstract class MoviesState with _$MoviesState {
     @Default(MoviesStatus.initial) MoviesStatus status,
     @Default([]) List<Movie> movies,
     @Default([]) List<Genre> genres,
+    @Default([]) List<Movie> favoriteMovies,
     String? errorMessage,
+    DateTime? errorTimestamp,
     String? searchQuery,
     String? selectedGenreId,
     MoviesFilter? currentFilter,
     @Default(false) bool isRefreshing,
+    @Default(false) bool isFavoritesLoading,
   }) = _MoviesState;
 }

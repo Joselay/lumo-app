@@ -12,4 +12,6 @@ abstract class MoviesEvent with _$MoviesEvent {
   const factory MoviesEvent.filterByGenre(String genreId) = FilterByGenre;
   const factory MoviesEvent.clearFilter() = ClearFilter;
   const factory MoviesEvent.refreshMovies() = RefreshMovies;
+  const factory MoviesEvent.toggleFavorite(String movieId, bool currentlyFavorited) = ToggleFavorite;
+  const factory MoviesEvent.loadFavorites() = LoadFavorites;
 }

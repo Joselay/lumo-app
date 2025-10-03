@@ -4,12 +4,16 @@ import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/data/api_client.dart';
+import '../../../../core/utils/toast_utils.dart';
 import '../../data/datasources/movies_api.dart';
 import '../../data/repositories/movies_repository.dart';
 import '../../domain/usecases/get_movie_showtimes_usecase.dart';
 import '../viewmodels/movie_details_bloc.dart';
 import '../viewmodels/movie_details_event.dart';
 import '../viewmodels/movie_details_state.dart';
+import '../viewmodels/movies_bloc.dart';
+import '../viewmodels/movies_event.dart';
+import '../viewmodels/movies_state.dart';
 import '../../domain/entities/movie.dart';
 
 class MovieDetailsPage extends StatelessWidget {
@@ -37,7 +41,17 @@ class _MovieDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
+    return BlocListener<MoviesBloc, MoviesState>(
+      listener: (context, state) {
+        if (state.errorMessage != null && state.errorMessage!.isNotEmpty) {
+          ToastUtils.showError(
+            context,
+            title: 'Error',
+            description: state.errorMessage,
+          );
+        }
+      },
+      child: CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemBackground.resolveFrom(context),
       navigationBar: CupertinoNavigationBar(
         backgroundColor: CupertinoColors.systemBackground.resolveFrom(context),
@@ -48,6 +62,27 @@ class _MovieDetailsView extends StatelessWidget {
             color: CupertinoColors.white,
             fontSize: 17,
             fontWeight: FontWeight.w600,
+          ),
+        ),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            context.read<MoviesBloc>().add(
+                  MoviesEvent.toggleFavorite(
+                    movie.id,
+                    movie.isFavorited,
+                  ),
+                );
+          },
+          child: Icon(
+            movie.isFavorited
+                ? lucide.LucideIcons.bookmark
+                : lucide.LucideIcons.bookmark,
+            size: 24,
+            color: movie.isFavorited
+                ? CupertinoColors.systemYellow
+                : CupertinoColors.white,
+            fill: movie.isFavorited ? 1.0 : 0.0,
           ),
         ),
       ),
@@ -302,6 +337,7 @@ class _MovieDetailsView extends StatelessWidget {
             const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
           ],
         ),
+      ),
       ),
     );
   }

@@ -37,6 +37,8 @@ class Movie {
   final bool isActive;
   @JsonKey(name: 'duration_formatted')
   final String? durationFormatted;
+  @JsonKey(name: 'is_favorited')
+  final bool? isFavorited;
 
   static int _intFromJson(dynamic value) {
     if (value is int) return value;
@@ -64,6 +66,7 @@ class Movie {
     required this.genres,
     required this.isActive,
     this.durationFormatted,
+    this.isFavorited,
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
@@ -238,4 +241,72 @@ class ShowtimesResponse {
   factory ShowtimesResponse.fromJson(Map<String, dynamic> json) => _$ShowtimesResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$ShowtimesResponseToJson(this);
+}
+
+@JsonSerializable()
+class MovieFavorite {
+  final String id;
+  final Movie movie;
+  @JsonKey(name: 'created_at')
+  final String createdAt;
+
+  const MovieFavorite({
+    required this.id,
+    required this.movie,
+    required this.createdAt,
+  });
+
+  factory MovieFavorite.fromJson(Map<String, dynamic> json) => _$MovieFavoriteFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MovieFavoriteToJson(this);
+}
+
+@JsonSerializable()
+class MovieFavoritesResponse {
+  final int count;
+  final String? next;
+  final String? previous;
+  final List<MovieFavorite> results;
+
+  const MovieFavoritesResponse({
+    required this.count,
+    this.next,
+    this.previous,
+    required this.results,
+  });
+
+  factory MovieFavoritesResponse.fromJson(Map<String, dynamic> json) => _$MovieFavoritesResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MovieFavoritesResponseToJson(this);
+}
+
+@JsonSerializable()
+class AddFavoriteRequest {
+  @JsonKey(name: 'movie_id')
+  final String movieId;
+
+  const AddFavoriteRequest({
+    required this.movieId,
+  });
+
+  factory AddFavoriteRequest.fromJson(Map<String, dynamic> json) => _$AddFavoriteRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AddFavoriteRequestToJson(this);
+}
+
+@JsonSerializable()
+class FavoriteCheckResponse {
+  @JsonKey(name: 'is_favorited')
+  final bool isFavorited;
+  @JsonKey(name: 'favorite_id')
+  final String? favoriteId;
+
+  const FavoriteCheckResponse({
+    required this.isFavorited,
+    this.favoriteId,
+  });
+
+  factory FavoriteCheckResponse.fromJson(Map<String, dynamic> json) => _$FavoriteCheckResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FavoriteCheckResponseToJson(this);
 }

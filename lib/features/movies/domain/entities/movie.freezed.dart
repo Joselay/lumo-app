@@ -274,7 +274,7 @@ as String,
 /// @nodoc
 mixin _$Movie {
 
- String get id; String get title; String get description; int get duration; String get releaseDate; double? get rating; String? get posterImage; String? get trailerUrl; List<Genre> get genres; bool get isActive; String? get durationFormatted;
+ String get id; String get title; String get description; int get duration; String get releaseDate; double? get rating; String? get posterImage; String? get trailerUrl; List<Genre> get genres; bool get isActive; String? get durationFormatted; bool get isFavorited;
 /// Create a copy of Movie
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -285,16 +285,16 @@ $MovieCopyWith<Movie> get copyWith => _$MovieCopyWithImpl<Movie>(this as Movie, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Movie&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.posterImage, posterImage) || other.posterImage == posterImage)&&(identical(other.trailerUrl, trailerUrl) || other.trailerUrl == trailerUrl)&&const DeepCollectionEquality().equals(other.genres, genres)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.durationFormatted, durationFormatted) || other.durationFormatted == durationFormatted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Movie&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.posterImage, posterImage) || other.posterImage == posterImage)&&(identical(other.trailerUrl, trailerUrl) || other.trailerUrl == trailerUrl)&&const DeepCollectionEquality().equals(other.genres, genres)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.durationFormatted, durationFormatted) || other.durationFormatted == durationFormatted)&&(identical(other.isFavorited, isFavorited) || other.isFavorited == isFavorited));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,duration,releaseDate,rating,posterImage,trailerUrl,const DeepCollectionEquality().hash(genres),isActive,durationFormatted);
+int get hashCode => Object.hash(runtimeType,id,title,description,duration,releaseDate,rating,posterImage,trailerUrl,const DeepCollectionEquality().hash(genres),isActive,durationFormatted,isFavorited);
 
 @override
 String toString() {
-  return 'Movie(id: $id, title: $title, description: $description, duration: $duration, releaseDate: $releaseDate, rating: $rating, posterImage: $posterImage, trailerUrl: $trailerUrl, genres: $genres, isActive: $isActive, durationFormatted: $durationFormatted)';
+  return 'Movie(id: $id, title: $title, description: $description, duration: $duration, releaseDate: $releaseDate, rating: $rating, posterImage: $posterImage, trailerUrl: $trailerUrl, genres: $genres, isActive: $isActive, durationFormatted: $durationFormatted, isFavorited: $isFavorited)';
 }
 
 
@@ -305,7 +305,7 @@ abstract mixin class $MovieCopyWith<$Res>  {
   factory $MovieCopyWith(Movie value, $Res Function(Movie) _then) = _$MovieCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String description, int duration, String releaseDate, double? rating, String? posterImage, String? trailerUrl, List<Genre> genres, bool isActive, String? durationFormatted
+ String id, String title, String description, int duration, String releaseDate, double? rating, String? posterImage, String? trailerUrl, List<Genre> genres, bool isActive, String? durationFormatted, bool isFavorited
 });
 
 
@@ -322,7 +322,7 @@ class _$MovieCopyWithImpl<$Res>
 
 /// Create a copy of Movie
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? duration = null,Object? releaseDate = null,Object? rating = freezed,Object? posterImage = freezed,Object? trailerUrl = freezed,Object? genres = null,Object? isActive = null,Object? durationFormatted = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? duration = null,Object? releaseDate = null,Object? rating = freezed,Object? posterImage = freezed,Object? trailerUrl = freezed,Object? genres = null,Object? isActive = null,Object? durationFormatted = freezed,Object? isFavorited = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -335,7 +335,8 @@ as String?,trailerUrl: freezed == trailerUrl ? _self.trailerUrl : trailerUrl // 
 as String?,genres: null == genres ? _self.genres : genres // ignore: cast_nullable_to_non_nullable
 as List<Genre>,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
 as bool,durationFormatted: freezed == durationFormatted ? _self.durationFormatted : durationFormatted // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,isFavorited: null == isFavorited ? _self.isFavorited : isFavorited // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -420,10 +421,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int duration,  String releaseDate,  double? rating,  String? posterImage,  String? trailerUrl,  List<Genre> genres,  bool isActive,  String? durationFormatted)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int duration,  String releaseDate,  double? rating,  String? posterImage,  String? trailerUrl,  List<Genre> genres,  bool isActive,  String? durationFormatted,  bool isFavorited)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Movie() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.duration,_that.releaseDate,_that.rating,_that.posterImage,_that.trailerUrl,_that.genres,_that.isActive,_that.durationFormatted);case _:
+return $default(_that.id,_that.title,_that.description,_that.duration,_that.releaseDate,_that.rating,_that.posterImage,_that.trailerUrl,_that.genres,_that.isActive,_that.durationFormatted,_that.isFavorited);case _:
   return orElse();
 
 }
@@ -441,10 +442,10 @@ return $default(_that.id,_that.title,_that.description,_that.duration,_that.rele
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int duration,  String releaseDate,  double? rating,  String? posterImage,  String? trailerUrl,  List<Genre> genres,  bool isActive,  String? durationFormatted)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  int duration,  String releaseDate,  double? rating,  String? posterImage,  String? trailerUrl,  List<Genre> genres,  bool isActive,  String? durationFormatted,  bool isFavorited)  $default,) {final _that = this;
 switch (_that) {
 case _Movie():
-return $default(_that.id,_that.title,_that.description,_that.duration,_that.releaseDate,_that.rating,_that.posterImage,_that.trailerUrl,_that.genres,_that.isActive,_that.durationFormatted);case _:
+return $default(_that.id,_that.title,_that.description,_that.duration,_that.releaseDate,_that.rating,_that.posterImage,_that.trailerUrl,_that.genres,_that.isActive,_that.durationFormatted,_that.isFavorited);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -461,10 +462,10 @@ return $default(_that.id,_that.title,_that.description,_that.duration,_that.rele
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  int duration,  String releaseDate,  double? rating,  String? posterImage,  String? trailerUrl,  List<Genre> genres,  bool isActive,  String? durationFormatted)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  int duration,  String releaseDate,  double? rating,  String? posterImage,  String? trailerUrl,  List<Genre> genres,  bool isActive,  String? durationFormatted,  bool isFavorited)?  $default,) {final _that = this;
 switch (_that) {
 case _Movie() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.duration,_that.releaseDate,_that.rating,_that.posterImage,_that.trailerUrl,_that.genres,_that.isActive,_that.durationFormatted);case _:
+return $default(_that.id,_that.title,_that.description,_that.duration,_that.releaseDate,_that.rating,_that.posterImage,_that.trailerUrl,_that.genres,_that.isActive,_that.durationFormatted,_that.isFavorited);case _:
   return null;
 
 }
@@ -476,7 +477,7 @@ return $default(_that.id,_that.title,_that.description,_that.duration,_that.rele
 
 
 class _Movie implements Movie {
-  const _Movie({required this.id, required this.title, required this.description, required this.duration, required this.releaseDate, this.rating, this.posterImage, this.trailerUrl, required final  List<Genre> genres, required this.isActive, this.durationFormatted}): _genres = genres;
+  const _Movie({required this.id, required this.title, required this.description, required this.duration, required this.releaseDate, this.rating, this.posterImage, this.trailerUrl, required final  List<Genre> genres, required this.isActive, this.durationFormatted, this.isFavorited = false}): _genres = genres;
   
 
 @override final  String id;
@@ -496,6 +497,7 @@ class _Movie implements Movie {
 
 @override final  bool isActive;
 @override final  String? durationFormatted;
+@override@JsonKey() final  bool isFavorited;
 
 /// Create a copy of Movie
 /// with the given fields replaced by the non-null parameter values.
@@ -507,16 +509,16 @@ _$MovieCopyWith<_Movie> get copyWith => __$MovieCopyWithImpl<_Movie>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Movie&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.posterImage, posterImage) || other.posterImage == posterImage)&&(identical(other.trailerUrl, trailerUrl) || other.trailerUrl == trailerUrl)&&const DeepCollectionEquality().equals(other._genres, _genres)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.durationFormatted, durationFormatted) || other.durationFormatted == durationFormatted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Movie&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.posterImage, posterImage) || other.posterImage == posterImage)&&(identical(other.trailerUrl, trailerUrl) || other.trailerUrl == trailerUrl)&&const DeepCollectionEquality().equals(other._genres, _genres)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.durationFormatted, durationFormatted) || other.durationFormatted == durationFormatted)&&(identical(other.isFavorited, isFavorited) || other.isFavorited == isFavorited));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,duration,releaseDate,rating,posterImage,trailerUrl,const DeepCollectionEquality().hash(_genres),isActive,durationFormatted);
+int get hashCode => Object.hash(runtimeType,id,title,description,duration,releaseDate,rating,posterImage,trailerUrl,const DeepCollectionEquality().hash(_genres),isActive,durationFormatted,isFavorited);
 
 @override
 String toString() {
-  return 'Movie(id: $id, title: $title, description: $description, duration: $duration, releaseDate: $releaseDate, rating: $rating, posterImage: $posterImage, trailerUrl: $trailerUrl, genres: $genres, isActive: $isActive, durationFormatted: $durationFormatted)';
+  return 'Movie(id: $id, title: $title, description: $description, duration: $duration, releaseDate: $releaseDate, rating: $rating, posterImage: $posterImage, trailerUrl: $trailerUrl, genres: $genres, isActive: $isActive, durationFormatted: $durationFormatted, isFavorited: $isFavorited)';
 }
 
 
@@ -527,7 +529,7 @@ abstract mixin class _$MovieCopyWith<$Res> implements $MovieCopyWith<$Res> {
   factory _$MovieCopyWith(_Movie value, $Res Function(_Movie) _then) = __$MovieCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String description, int duration, String releaseDate, double? rating, String? posterImage, String? trailerUrl, List<Genre> genres, bool isActive, String? durationFormatted
+ String id, String title, String description, int duration, String releaseDate, double? rating, String? posterImage, String? trailerUrl, List<Genre> genres, bool isActive, String? durationFormatted, bool isFavorited
 });
 
 
@@ -544,7 +546,7 @@ class __$MovieCopyWithImpl<$Res>
 
 /// Create a copy of Movie
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? duration = null,Object? releaseDate = null,Object? rating = freezed,Object? posterImage = freezed,Object? trailerUrl = freezed,Object? genres = null,Object? isActive = null,Object? durationFormatted = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? duration = null,Object? releaseDate = null,Object? rating = freezed,Object? posterImage = freezed,Object? trailerUrl = freezed,Object? genres = null,Object? isActive = null,Object? durationFormatted = freezed,Object? isFavorited = null,}) {
   return _then(_Movie(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -557,7 +559,8 @@ as String?,trailerUrl: freezed == trailerUrl ? _self.trailerUrl : trailerUrl // 
 as String?,genres: null == genres ? _self._genres : genres // ignore: cast_nullable_to_non_nullable
 as List<Genre>,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
 as bool,durationFormatted: freezed == durationFormatted ? _self.durationFormatted : durationFormatted // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,isFavorited: null == isFavorited ? _self.isFavorited : isFavorited // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MovieDetailsState {
 
- MovieDetailsStatus get status; List<Showtime> get showtimes; String? get errorMessage; String? get movieId;
+ MovieDetailsStatus get status; List<Showtime> get showtimes; String? get errorMessage; DateTime? get errorTimestamp; String? get movieId;
 /// Create a copy of MovieDetailsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MovieDetailsStateCopyWith<MovieDetailsState> get copyWith => _$MovieDetailsStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MovieDetailsState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.showtimes, showtimes)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.movieId, movieId) || other.movieId == movieId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MovieDetailsState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.showtimes, showtimes)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.errorTimestamp, errorTimestamp) || other.errorTimestamp == errorTimestamp)&&(identical(other.movieId, movieId) || other.movieId == movieId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(showtimes),errorMessage,movieId);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(showtimes),errorMessage,errorTimestamp,movieId);
 
 @override
 String toString() {
-  return 'MovieDetailsState(status: $status, showtimes: $showtimes, errorMessage: $errorMessage, movieId: $movieId)';
+  return 'MovieDetailsState(status: $status, showtimes: $showtimes, errorMessage: $errorMessage, errorTimestamp: $errorTimestamp, movieId: $movieId)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MovieDetailsStateCopyWith<$Res>  {
   factory $MovieDetailsStateCopyWith(MovieDetailsState value, $Res Function(MovieDetailsState) _then) = _$MovieDetailsStateCopyWithImpl;
 @useResult
 $Res call({
- MovieDetailsStatus status, List<Showtime> showtimes, String? errorMessage, String? movieId
+ MovieDetailsStatus status, List<Showtime> showtimes, String? errorMessage, DateTime? errorTimestamp, String? movieId
 });
 
 
@@ -62,12 +62,13 @@ class _$MovieDetailsStateCopyWithImpl<$Res>
 
 /// Create a copy of MovieDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? showtimes = null,Object? errorMessage = freezed,Object? movieId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? showtimes = null,Object? errorMessage = freezed,Object? errorTimestamp = freezed,Object? movieId = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MovieDetailsStatus,showtimes: null == showtimes ? _self.showtimes : showtimes // ignore: cast_nullable_to_non_nullable
 as List<Showtime>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,movieId: freezed == movieId ? _self.movieId : movieId // ignore: cast_nullable_to_non_nullable
+as String?,errorTimestamp: freezed == errorTimestamp ? _self.errorTimestamp : errorTimestamp // ignore: cast_nullable_to_non_nullable
+as DateTime?,movieId: freezed == movieId ? _self.movieId : movieId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MovieDetailsStatus status,  List<Showtime> showtimes,  String? errorMessage,  String? movieId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MovieDetailsStatus status,  List<Showtime> showtimes,  String? errorMessage,  DateTime? errorTimestamp,  String? movieId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MovieDetailsState() when $default != null:
-return $default(_that.status,_that.showtimes,_that.errorMessage,_that.movieId);case _:
+return $default(_that.status,_that.showtimes,_that.errorMessage,_that.errorTimestamp,_that.movieId);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.status,_that.showtimes,_that.errorMessage,_that.movieId);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MovieDetailsStatus status,  List<Showtime> showtimes,  String? errorMessage,  String? movieId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MovieDetailsStatus status,  List<Showtime> showtimes,  String? errorMessage,  DateTime? errorTimestamp,  String? movieId)  $default,) {final _that = this;
 switch (_that) {
 case _MovieDetailsState():
-return $default(_that.status,_that.showtimes,_that.errorMessage,_that.movieId);case _:
+return $default(_that.status,_that.showtimes,_that.errorMessage,_that.errorTimestamp,_that.movieId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.status,_that.showtimes,_that.errorMessage,_that.movieId);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MovieDetailsStatus status,  List<Showtime> showtimes,  String? errorMessage,  String? movieId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MovieDetailsStatus status,  List<Showtime> showtimes,  String? errorMessage,  DateTime? errorTimestamp,  String? movieId)?  $default,) {final _that = this;
 switch (_that) {
 case _MovieDetailsState() when $default != null:
-return $default(_that.status,_that.showtimes,_that.errorMessage,_that.movieId);case _:
+return $default(_that.status,_that.showtimes,_that.errorMessage,_that.errorTimestamp,_that.movieId);case _:
   return null;
 
 }
@@ -209,7 +210,7 @@ return $default(_that.status,_that.showtimes,_that.errorMessage,_that.movieId);c
 
 
 class _MovieDetailsState implements MovieDetailsState {
-  const _MovieDetailsState({this.status = MovieDetailsStatus.initial, final  List<Showtime> showtimes = const [], this.errorMessage, this.movieId}): _showtimes = showtimes;
+  const _MovieDetailsState({this.status = MovieDetailsStatus.initial, final  List<Showtime> showtimes = const [], this.errorMessage, this.errorTimestamp, this.movieId}): _showtimes = showtimes;
   
 
 @override@JsonKey() final  MovieDetailsStatus status;
@@ -221,6 +222,7 @@ class _MovieDetailsState implements MovieDetailsState {
 }
 
 @override final  String? errorMessage;
+@override final  DateTime? errorTimestamp;
 @override final  String? movieId;
 
 /// Create a copy of MovieDetailsState
@@ -233,16 +235,16 @@ _$MovieDetailsStateCopyWith<_MovieDetailsState> get copyWith => __$MovieDetailsS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MovieDetailsState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._showtimes, _showtimes)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.movieId, movieId) || other.movieId == movieId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MovieDetailsState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._showtimes, _showtimes)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.errorTimestamp, errorTimestamp) || other.errorTimestamp == errorTimestamp)&&(identical(other.movieId, movieId) || other.movieId == movieId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_showtimes),errorMessage,movieId);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_showtimes),errorMessage,errorTimestamp,movieId);
 
 @override
 String toString() {
-  return 'MovieDetailsState(status: $status, showtimes: $showtimes, errorMessage: $errorMessage, movieId: $movieId)';
+  return 'MovieDetailsState(status: $status, showtimes: $showtimes, errorMessage: $errorMessage, errorTimestamp: $errorTimestamp, movieId: $movieId)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$MovieDetailsStateCopyWith<$Res> implements $MovieDetailsS
   factory _$MovieDetailsStateCopyWith(_MovieDetailsState value, $Res Function(_MovieDetailsState) _then) = __$MovieDetailsStateCopyWithImpl;
 @override @useResult
 $Res call({
- MovieDetailsStatus status, List<Showtime> showtimes, String? errorMessage, String? movieId
+ MovieDetailsStatus status, List<Showtime> showtimes, String? errorMessage, DateTime? errorTimestamp, String? movieId
 });
 
 
@@ -270,12 +272,13 @@ class __$MovieDetailsStateCopyWithImpl<$Res>
 
 /// Create a copy of MovieDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? showtimes = null,Object? errorMessage = freezed,Object? movieId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? showtimes = null,Object? errorMessage = freezed,Object? errorTimestamp = freezed,Object? movieId = freezed,}) {
   return _then(_MovieDetailsState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MovieDetailsStatus,showtimes: null == showtimes ? _self._showtimes : showtimes // ignore: cast_nullable_to_non_nullable
 as List<Showtime>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,movieId: freezed == movieId ? _self.movieId : movieId // ignore: cast_nullable_to_non_nullable
+as String?,errorTimestamp: freezed == errorTimestamp ? _self.errorTimestamp : errorTimestamp // ignore: cast_nullable_to_non_nullable
+as DateTime?,movieId: freezed == movieId ? _self.movieId : movieId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

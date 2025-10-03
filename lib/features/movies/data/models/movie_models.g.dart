@@ -28,6 +28,7 @@ Movie _$MovieFromJson(Map<String, dynamic> json) => Movie(
       .toList(),
   isActive: json['is_active'] as bool,
   durationFormatted: json['duration_formatted'] as String?,
+  isFavorited: json['is_favorited'] as bool?,
 );
 
 Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
@@ -42,6 +43,7 @@ Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
   'genres': instance.genres,
   'is_active': instance.isActive,
   'duration_formatted': instance.durationFormatted,
+  'is_favorited': instance.isFavorited,
 };
 
 MoviesResponse _$MoviesResponseFromJson(Map<String, dynamic> json) =>
@@ -173,3 +175,57 @@ Map<String, dynamic> _$ShowtimesResponseToJson(ShowtimesResponse instance) =>
       'previous': instance.previous,
       'results': instance.results,
     };
+
+MovieFavorite _$MovieFavoriteFromJson(Map<String, dynamic> json) =>
+    MovieFavorite(
+      id: json['id'] as String,
+      movie: Movie.fromJson(json['movie'] as Map<String, dynamic>),
+      createdAt: json['created_at'] as String,
+    );
+
+Map<String, dynamic> _$MovieFavoriteToJson(MovieFavorite instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'movie': instance.movie,
+      'created_at': instance.createdAt,
+    };
+
+MovieFavoritesResponse _$MovieFavoritesResponseFromJson(
+  Map<String, dynamic> json,
+) => MovieFavoritesResponse(
+  count: (json['count'] as num).toInt(),
+  next: json['next'] as String?,
+  previous: json['previous'] as String?,
+  results: (json['results'] as List<dynamic>)
+      .map((e) => MovieFavorite.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
+
+Map<String, dynamic> _$MovieFavoritesResponseToJson(
+  MovieFavoritesResponse instance,
+) => <String, dynamic>{
+  'count': instance.count,
+  'next': instance.next,
+  'previous': instance.previous,
+  'results': instance.results,
+};
+
+AddFavoriteRequest _$AddFavoriteRequestFromJson(Map<String, dynamic> json) =>
+    AddFavoriteRequest(movieId: json['movie_id'] as String);
+
+Map<String, dynamic> _$AddFavoriteRequestToJson(AddFavoriteRequest instance) =>
+    <String, dynamic>{'movie_id': instance.movieId};
+
+FavoriteCheckResponse _$FavoriteCheckResponseFromJson(
+  Map<String, dynamic> json,
+) => FavoriteCheckResponse(
+  isFavorited: json['is_favorited'] as bool,
+  favoriteId: json['favorite_id'] as String?,
+);
+
+Map<String, dynamic> _$FavoriteCheckResponseToJson(
+  FavoriteCheckResponse instance,
+) => <String, dynamic>{
+  'is_favorited': instance.isFavorited,
+  'favorite_id': instance.favoriteId,
+};

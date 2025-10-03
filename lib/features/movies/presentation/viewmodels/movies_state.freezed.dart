@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MoviesState {
 
- MoviesStatus get status; List<Movie> get movies; List<Genre> get genres; String? get errorMessage; String? get searchQuery; String? get selectedGenreId; MoviesFilter? get currentFilter; bool get isRefreshing;
+ MoviesStatus get status; List<Movie> get movies; List<Genre> get genres; List<Movie> get favoriteMovies; String? get errorMessage; DateTime? get errorTimestamp; String? get searchQuery; String? get selectedGenreId; MoviesFilter? get currentFilter; bool get isRefreshing; bool get isFavoritesLoading;
 /// Create a copy of MoviesState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MoviesStateCopyWith<MoviesState> get copyWith => _$MoviesStateCopyWithImpl<Movi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MoviesState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.movies, movies)&&const DeepCollectionEquality().equals(other.genres, genres)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.selectedGenreId, selectedGenreId) || other.selectedGenreId == selectedGenreId)&&(identical(other.currentFilter, currentFilter) || other.currentFilter == currentFilter)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MoviesState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.movies, movies)&&const DeepCollectionEquality().equals(other.genres, genres)&&const DeepCollectionEquality().equals(other.favoriteMovies, favoriteMovies)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.errorTimestamp, errorTimestamp) || other.errorTimestamp == errorTimestamp)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.selectedGenreId, selectedGenreId) || other.selectedGenreId == selectedGenreId)&&(identical(other.currentFilter, currentFilter) || other.currentFilter == currentFilter)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.isFavoritesLoading, isFavoritesLoading) || other.isFavoritesLoading == isFavoritesLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(movies),const DeepCollectionEquality().hash(genres),errorMessage,searchQuery,selectedGenreId,currentFilter,isRefreshing);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(movies),const DeepCollectionEquality().hash(genres),const DeepCollectionEquality().hash(favoriteMovies),errorMessage,errorTimestamp,searchQuery,selectedGenreId,currentFilter,isRefreshing,isFavoritesLoading);
 
 @override
 String toString() {
-  return 'MoviesState(status: $status, movies: $movies, genres: $genres, errorMessage: $errorMessage, searchQuery: $searchQuery, selectedGenreId: $selectedGenreId, currentFilter: $currentFilter, isRefreshing: $isRefreshing)';
+  return 'MoviesState(status: $status, movies: $movies, genres: $genres, favoriteMovies: $favoriteMovies, errorMessage: $errorMessage, errorTimestamp: $errorTimestamp, searchQuery: $searchQuery, selectedGenreId: $selectedGenreId, currentFilter: $currentFilter, isRefreshing: $isRefreshing, isFavoritesLoading: $isFavoritesLoading)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MoviesStateCopyWith<$Res>  {
   factory $MoviesStateCopyWith(MoviesState value, $Res Function(MoviesState) _then) = _$MoviesStateCopyWithImpl;
 @useResult
 $Res call({
- MoviesStatus status, List<Movie> movies, List<Genre> genres, String? errorMessage, String? searchQuery, String? selectedGenreId, MoviesFilter? currentFilter, bool isRefreshing
+ MoviesStatus status, List<Movie> movies, List<Genre> genres, List<Movie> favoriteMovies, String? errorMessage, DateTime? errorTimestamp, String? searchQuery, String? selectedGenreId, MoviesFilter? currentFilter, bool isRefreshing, bool isFavoritesLoading
 });
 
 
@@ -62,16 +62,19 @@ class _$MoviesStateCopyWithImpl<$Res>
 
 /// Create a copy of MoviesState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? movies = null,Object? genres = null,Object? errorMessage = freezed,Object? searchQuery = freezed,Object? selectedGenreId = freezed,Object? currentFilter = freezed,Object? isRefreshing = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? movies = null,Object? genres = null,Object? favoriteMovies = null,Object? errorMessage = freezed,Object? errorTimestamp = freezed,Object? searchQuery = freezed,Object? selectedGenreId = freezed,Object? currentFilter = freezed,Object? isRefreshing = null,Object? isFavoritesLoading = null,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MoviesStatus,movies: null == movies ? _self.movies : movies // ignore: cast_nullable_to_non_nullable
 as List<Movie>,genres: null == genres ? _self.genres : genres // ignore: cast_nullable_to_non_nullable
-as List<Genre>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as List<Genre>,favoriteMovies: null == favoriteMovies ? _self.favoriteMovies : favoriteMovies // ignore: cast_nullable_to_non_nullable
+as List<Movie>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,errorTimestamp: freezed == errorTimestamp ? _self.errorTimestamp : errorTimestamp // ignore: cast_nullable_to_non_nullable
+as DateTime?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String?,selectedGenreId: freezed == selectedGenreId ? _self.selectedGenreId : selectedGenreId // ignore: cast_nullable_to_non_nullable
 as String?,currentFilter: freezed == currentFilter ? _self.currentFilter : currentFilter // ignore: cast_nullable_to_non_nullable
 as MoviesFilter?,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
+as bool,isFavoritesLoading: null == isFavoritesLoading ? _self.isFavoritesLoading : isFavoritesLoading // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -169,10 +172,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MoviesStatus status,  List<Movie> movies,  List<Genre> genres,  String? errorMessage,  String? searchQuery,  String? selectedGenreId,  MoviesFilter? currentFilter,  bool isRefreshing)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MoviesStatus status,  List<Movie> movies,  List<Genre> genres,  List<Movie> favoriteMovies,  String? errorMessage,  DateTime? errorTimestamp,  String? searchQuery,  String? selectedGenreId,  MoviesFilter? currentFilter,  bool isRefreshing,  bool isFavoritesLoading)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MoviesState() when $default != null:
-return $default(_that.status,_that.movies,_that.genres,_that.errorMessage,_that.searchQuery,_that.selectedGenreId,_that.currentFilter,_that.isRefreshing);case _:
+return $default(_that.status,_that.movies,_that.genres,_that.favoriteMovies,_that.errorMessage,_that.errorTimestamp,_that.searchQuery,_that.selectedGenreId,_that.currentFilter,_that.isRefreshing,_that.isFavoritesLoading);case _:
   return orElse();
 
 }
@@ -190,10 +193,10 @@ return $default(_that.status,_that.movies,_that.genres,_that.errorMessage,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MoviesStatus status,  List<Movie> movies,  List<Genre> genres,  String? errorMessage,  String? searchQuery,  String? selectedGenreId,  MoviesFilter? currentFilter,  bool isRefreshing)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MoviesStatus status,  List<Movie> movies,  List<Genre> genres,  List<Movie> favoriteMovies,  String? errorMessage,  DateTime? errorTimestamp,  String? searchQuery,  String? selectedGenreId,  MoviesFilter? currentFilter,  bool isRefreshing,  bool isFavoritesLoading)  $default,) {final _that = this;
 switch (_that) {
 case _MoviesState():
-return $default(_that.status,_that.movies,_that.genres,_that.errorMessage,_that.searchQuery,_that.selectedGenreId,_that.currentFilter,_that.isRefreshing);case _:
+return $default(_that.status,_that.movies,_that.genres,_that.favoriteMovies,_that.errorMessage,_that.errorTimestamp,_that.searchQuery,_that.selectedGenreId,_that.currentFilter,_that.isRefreshing,_that.isFavoritesLoading);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +213,10 @@ return $default(_that.status,_that.movies,_that.genres,_that.errorMessage,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MoviesStatus status,  List<Movie> movies,  List<Genre> genres,  String? errorMessage,  String? searchQuery,  String? selectedGenreId,  MoviesFilter? currentFilter,  bool isRefreshing)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MoviesStatus status,  List<Movie> movies,  List<Genre> genres,  List<Movie> favoriteMovies,  String? errorMessage,  DateTime? errorTimestamp,  String? searchQuery,  String? selectedGenreId,  MoviesFilter? currentFilter,  bool isRefreshing,  bool isFavoritesLoading)?  $default,) {final _that = this;
 switch (_that) {
 case _MoviesState() when $default != null:
-return $default(_that.status,_that.movies,_that.genres,_that.errorMessage,_that.searchQuery,_that.selectedGenreId,_that.currentFilter,_that.isRefreshing);case _:
+return $default(_that.status,_that.movies,_that.genres,_that.favoriteMovies,_that.errorMessage,_that.errorTimestamp,_that.searchQuery,_that.selectedGenreId,_that.currentFilter,_that.isRefreshing,_that.isFavoritesLoading);case _:
   return null;
 
 }
@@ -225,7 +228,7 @@ return $default(_that.status,_that.movies,_that.genres,_that.errorMessage,_that.
 
 
 class _MoviesState implements MoviesState {
-  const _MoviesState({this.status = MoviesStatus.initial, final  List<Movie> movies = const [], final  List<Genre> genres = const [], this.errorMessage, this.searchQuery, this.selectedGenreId, this.currentFilter, this.isRefreshing = false}): _movies = movies,_genres = genres;
+  const _MoviesState({this.status = MoviesStatus.initial, final  List<Movie> movies = const [], final  List<Genre> genres = const [], final  List<Movie> favoriteMovies = const [], this.errorMessage, this.errorTimestamp, this.searchQuery, this.selectedGenreId, this.currentFilter, this.isRefreshing = false, this.isFavoritesLoading = false}): _movies = movies,_genres = genres,_favoriteMovies = favoriteMovies;
   
 
 @override@JsonKey() final  MoviesStatus status;
@@ -243,11 +246,20 @@ class _MoviesState implements MoviesState {
   return EqualUnmodifiableListView(_genres);
 }
 
+ final  List<Movie> _favoriteMovies;
+@override@JsonKey() List<Movie> get favoriteMovies {
+  if (_favoriteMovies is EqualUnmodifiableListView) return _favoriteMovies;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_favoriteMovies);
+}
+
 @override final  String? errorMessage;
+@override final  DateTime? errorTimestamp;
 @override final  String? searchQuery;
 @override final  String? selectedGenreId;
 @override final  MoviesFilter? currentFilter;
 @override@JsonKey() final  bool isRefreshing;
+@override@JsonKey() final  bool isFavoritesLoading;
 
 /// Create a copy of MoviesState
 /// with the given fields replaced by the non-null parameter values.
@@ -259,16 +271,16 @@ _$MoviesStateCopyWith<_MoviesState> get copyWith => __$MoviesStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MoviesState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._movies, _movies)&&const DeepCollectionEquality().equals(other._genres, _genres)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.selectedGenreId, selectedGenreId) || other.selectedGenreId == selectedGenreId)&&(identical(other.currentFilter, currentFilter) || other.currentFilter == currentFilter)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MoviesState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._movies, _movies)&&const DeepCollectionEquality().equals(other._genres, _genres)&&const DeepCollectionEquality().equals(other._favoriteMovies, _favoriteMovies)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.errorTimestamp, errorTimestamp) || other.errorTimestamp == errorTimestamp)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.selectedGenreId, selectedGenreId) || other.selectedGenreId == selectedGenreId)&&(identical(other.currentFilter, currentFilter) || other.currentFilter == currentFilter)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.isFavoritesLoading, isFavoritesLoading) || other.isFavoritesLoading == isFavoritesLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_movies),const DeepCollectionEquality().hash(_genres),errorMessage,searchQuery,selectedGenreId,currentFilter,isRefreshing);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_movies),const DeepCollectionEquality().hash(_genres),const DeepCollectionEquality().hash(_favoriteMovies),errorMessage,errorTimestamp,searchQuery,selectedGenreId,currentFilter,isRefreshing,isFavoritesLoading);
 
 @override
 String toString() {
-  return 'MoviesState(status: $status, movies: $movies, genres: $genres, errorMessage: $errorMessage, searchQuery: $searchQuery, selectedGenreId: $selectedGenreId, currentFilter: $currentFilter, isRefreshing: $isRefreshing)';
+  return 'MoviesState(status: $status, movies: $movies, genres: $genres, favoriteMovies: $favoriteMovies, errorMessage: $errorMessage, errorTimestamp: $errorTimestamp, searchQuery: $searchQuery, selectedGenreId: $selectedGenreId, currentFilter: $currentFilter, isRefreshing: $isRefreshing, isFavoritesLoading: $isFavoritesLoading)';
 }
 
 
@@ -279,7 +291,7 @@ abstract mixin class _$MoviesStateCopyWith<$Res> implements $MoviesStateCopyWith
   factory _$MoviesStateCopyWith(_MoviesState value, $Res Function(_MoviesState) _then) = __$MoviesStateCopyWithImpl;
 @override @useResult
 $Res call({
- MoviesStatus status, List<Movie> movies, List<Genre> genres, String? errorMessage, String? searchQuery, String? selectedGenreId, MoviesFilter? currentFilter, bool isRefreshing
+ MoviesStatus status, List<Movie> movies, List<Genre> genres, List<Movie> favoriteMovies, String? errorMessage, DateTime? errorTimestamp, String? searchQuery, String? selectedGenreId, MoviesFilter? currentFilter, bool isRefreshing, bool isFavoritesLoading
 });
 
 
@@ -296,16 +308,19 @@ class __$MoviesStateCopyWithImpl<$Res>
 
 /// Create a copy of MoviesState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? movies = null,Object? genres = null,Object? errorMessage = freezed,Object? searchQuery = freezed,Object? selectedGenreId = freezed,Object? currentFilter = freezed,Object? isRefreshing = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? movies = null,Object? genres = null,Object? favoriteMovies = null,Object? errorMessage = freezed,Object? errorTimestamp = freezed,Object? searchQuery = freezed,Object? selectedGenreId = freezed,Object? currentFilter = freezed,Object? isRefreshing = null,Object? isFavoritesLoading = null,}) {
   return _then(_MoviesState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MoviesStatus,movies: null == movies ? _self._movies : movies // ignore: cast_nullable_to_non_nullable
 as List<Movie>,genres: null == genres ? _self._genres : genres // ignore: cast_nullable_to_non_nullable
-as List<Genre>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as List<Genre>,favoriteMovies: null == favoriteMovies ? _self._favoriteMovies : favoriteMovies // ignore: cast_nullable_to_non_nullable
+as List<Movie>,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,errorTimestamp: freezed == errorTimestamp ? _self.errorTimestamp : errorTimestamp // ignore: cast_nullable_to_non_nullable
+as DateTime?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String?,selectedGenreId: freezed == selectedGenreId ? _self.selectedGenreId : selectedGenreId // ignore: cast_nullable_to_non_nullable
 as String?,currentFilter: freezed == currentFilter ? _self.currentFilter : currentFilter // ignore: cast_nullable_to_non_nullable
 as MoviesFilter?,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
+as bool,isFavoritesLoading: null == isFavoritesLoading ? _self.isFavoritesLoading : isFavoritesLoading // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
