@@ -24,8 +24,43 @@ class MoviesRepository implements MoviesRepositoryInterface {
 
     queryParams.putIfAbsent('ordering', () => '-rating');
 
-    final response = await api.getMovies(queryParams);
-    return response.results.map(_mapToDomainMovie).toList();
+    final baseQueryParams = Map<String, dynamic>.from(queryParams);
+    final visitedPages = <String>{(filter?.page ?? 1).toString()};
+
+    final initialResponse = await api.getMovies(
+      Map<String, dynamic>.from(baseQueryParams),
+    );
+    final movies = initialResponse.results
+        .map(_mapToDomainMovie)
+        .toList(growable: true);
+
+    if (filter?.page != null) {
+      return movies;
+    }
+
+    var nextUrl = initialResponse.next;
+    var currentPage = filter?.page ?? 1;
+
+    while (nextUrl != null) {
+      final nextUri = Uri.tryParse(nextUrl);
+      final nextPageCandidate = nextUri?.queryParameters['page'];
+      final pageToFetch = nextPageCandidate ?? (currentPage + 1).toString();
+
+      if (!visitedPages.add(pageToFetch)) {
+        break;
+      }
+
+      final nextQueryParams = Map<String, dynamic>.from(baseQueryParams);
+      nextQueryParams['page'] = pageToFetch;
+
+      final pageResponse = await api.getMovies(nextQueryParams);
+      movies.addAll(pageResponse.results.map(_mapToDomainMovie));
+
+      nextUrl = pageResponse.next;
+      currentPage = int.tryParse(pageToFetch) ?? currentPage + 1;
+    }
+
+    return movies;
   }
 
   @override
