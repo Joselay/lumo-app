@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../domain/usecases/login_usecase.dart';
@@ -32,7 +32,8 @@ class _RegisterView extends StatefulWidget {
   State<_RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<_RegisterView> {
+class _RegisterViewState extends State<_RegisterView>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<ShadFormState>();
   final _emailController = TextEditingController();
   final _firstNameController = TextEditingController();
@@ -41,6 +42,29 @@ class _RegisterViewState extends State<_RegisterView> {
   final _passwordConfirmController = TextEditingController();
   bool _obscurePassword = true;
   bool _obscurePasswordConfirm = true;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+          CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+        );
+
+    _animationController.forward();
+  }
 
   @override
   void dispose() {
@@ -49,6 +73,7 @@ class _RegisterViewState extends State<_RegisterView> {
     _lastNameController.dispose();
     _passwordController.dispose();
     _passwordConfirmController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -68,6 +93,9 @@ class _RegisterViewState extends State<_RegisterView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.authenticated) {
@@ -93,197 +121,282 @@ class _RegisterViewState extends State<_RegisterView> {
           final isLoading = state.status == AuthStatus.loading;
 
           return CupertinoPageScaffold(
-            navigationBar: CupertinoNavigationBar(
-              middle: const Text('Create Account'),
-              backgroundColor: Colors.transparent,
-              border: null,
-              leading: CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () => context.go('/login'),
-                child: const Icon(CupertinoIcons.back),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [
+                          const Color(0xFF1A1A1A),
+                          const Color(0xFF1C1818),
+                          const Color(0xFF1A1515),
+                        ]
+                      : [
+                          const Color(0xFFFAFAFA),
+                          const Color(0xFFFDF8F8),
+                          const Color(0xFFFFF5F5),
+                        ],
+                ),
               ),
-            ),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
+              child: SafeArea(
+                child: Stack(
                   children: [
-                    const SizedBox(height: 20),
-
-                    Column(
-                      children: [
-                        SizedBox(
-                          width: 80,
-                          height: 80,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'assets/images/logo.png',
-                              fit: BoxFit.cover,
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () => context.go('/login'),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.background.withValues(
+                              alpha: 0.8,
                             ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            lucide.LucideIcons.arrowLeft,
+                            color: theme.colorScheme.foreground,
+                            size: 24,
                           ),
                         ),
-                        const SizedBox(height: 24),
-                        Text(
-                          'Join Lumo Cinema',
-                          style: ShadTheme.of(context).textTheme.h1,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Create your account to start booking movies',
-                          style: ShadTheme.of(context).textTheme.muted,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                      ),
                     ),
-
-                    const SizedBox(height: 32),
-
-                    ShadForm(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _buildInputField(
-                            label: 'Email',
-                            controller: _emailController,
-                            placeholder: 'Enter your email',
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Email is required';
-                              }
-                              if (!RegExp(
-                                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                              ).hasMatch(value)) {
-                                return 'Please enter a valid email';
-                              }
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          Row(
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: SlideTransition(
+                        position: _slideAnimation,
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
                             children: [
-                              Expanded(
-                                child: _buildInputField(
-                                  label: 'First Name',
-                                  controller: _firstNameController,
-                                  placeholder: 'First name',
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'First name is required';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: _buildInputField(
-                                  label: 'Last Name',
-                                  controller: _lastNameController,
-                                  placeholder: 'Last name',
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Last name is required';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          _buildPasswordField(
-                            label: 'Password',
-                            controller: _passwordController,
-                            placeholder: 'Enter your password',
-                            obscureText: _obscurePassword,
-                            onToggleVisibility: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Password is required';
-                              }
-                              if (value.length < 8) {
-                                return 'Password must be at least 8 characters';
-                              }
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          _buildPasswordField(
-                            label: 'Confirm Password',
-                            controller: _passwordConfirmController,
-                            placeholder: 'Confirm your password',
-                            obscureText: _obscurePasswordConfirm,
-                            onToggleVisibility: () {
-                              setState(() {
-                                _obscurePasswordConfirm =
-                                    !_obscurePasswordConfirm;
-                              });
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please confirm your password';
-                              }
-                              if (value != _passwordController.text) {
-                                return 'Passwords do not match';
-                              }
-                              return null;
-                            },
-                          ),
-
-                          const SizedBox(height: 32),
-
-                          ShadButton(
-                            onPressed: isLoading ? null : _handleRegister,
-                            width: double.infinity,
-                            child: isLoading
-                                ? const SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CupertinoActivityIndicator(
-                                      color: Colors.white,
+                              const SizedBox(height: 80),
+                              Column(
+                                children: [
+                                  Container(
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(24),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: theme.colorScheme.primary
+                                              .withValues(alpha: 0.4),
+                                          blurRadius: 30,
+                                          spreadRadius: 5,
+                                        ),
+                                      ],
+                                      image: const DecorationImage(
+                                        image: AssetImage(
+                                          'assets/images/logo.png',
+                                        ),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  )
-                                : const Text('Create Account'),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Already have an account? ',
-                                style: ShadTheme.of(context).textTheme.small,
+                                  ),
+                                  const SizedBox(height: 32),
+                                  Text(
+                                    'Join Lumo Cinema',
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.colorScheme.foreground,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Create your account to start booking',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: theme.colorScheme.mutedForeground,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              ShadButton.ghost(
-                                onPressed: () => context.go('/login'),
-                                child: Text(
-                                  'Sign in',
-                                  style: ShadTheme.of(context).textTheme.small
-                                      .copyWith(
-                                        color: ShadTheme.of(
-                                          context,
-                                        ).colorScheme.primary,
+                              const SizedBox(height: 40),
+                              Container(
+                                padding: const EdgeInsets.all(24),
+                                decoration: BoxDecoration(
+                                  color: theme.colorScheme.background
+                                      .withValues(alpha: 0.7),
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                    color: theme.colorScheme.border,
+                                    width: 1,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: CupertinoColors.black.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      blurRadius: 20,
+                                      offset: const Offset(0, 10),
+                                    ),
+                                  ],
+                                ),
+                                child: ShadForm(
+                                  key: _formKey,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      _buildInputField(
+                                        context: context,
+                                        label: 'Email',
+                                        icon: lucide.LucideIcons.mail,
+                                        controller: _emailController,
+                                        placeholder: 'Enter your email',
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        validator: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Email is required';
+                                          }
+                                          if (!RegExp(
+                                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                          ).hasMatch(value)) {
+                                            return 'Please enter a valid email';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: _buildInputField(
+                                              context: context,
+                                              label: 'First Name',
+                                              icon: lucide.LucideIcons.user,
+                                              controller: _firstNameController,
+                                              placeholder: 'First name',
+                                              validator: (value) {
+                                                if (value.isEmpty) {
+                                                  return 'Required';
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 16),
+                                          Expanded(
+                                            child: _buildInputField(
+                                              context: context,
+                                              label: 'Last Name',
+                                              icon: lucide.LucideIcons.user,
+                                              controller: _lastNameController,
+                                              placeholder: 'Last name',
+                                              validator: (value) {
+                                                if (value.isEmpty) {
+                                                  return 'Required';
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      _buildPasswordField(
+                                        context: context,
+                                        label: 'Password',
+                                        controller: _passwordController,
+                                        placeholder: 'Enter your password',
+                                        obscureText: _obscurePassword,
+                                        onToggle: () {
+                                          setState(() {
+                                            _obscurePassword =
+                                                !_obscurePassword;
+                                          });
+                                        },
+                                        validator: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Password is required';
+                                          }
+                                          if (value.length < 8) {
+                                            return 'Password must be at least 8 characters';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      const SizedBox(height: 16),
+                                      _buildPasswordField(
+                                        context: context,
+                                        label: 'Confirm Password',
+                                        controller: _passwordConfirmController,
+                                        placeholder: 'Confirm your password',
+                                        obscureText: _obscurePasswordConfirm,
+                                        onToggle: () {
+                                          setState(() {
+                                            _obscurePasswordConfirm =
+                                                !_obscurePasswordConfirm;
+                                          });
+                                        },
+                                        validator: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Please confirm your password';
+                                          }
+                                          if (value !=
+                                              _passwordController.text) {
+                                            return 'Passwords do not match';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      const SizedBox(height: 32),
+                                      ShadButton(
+                                        onPressed: isLoading
+                                            ? null
+                                            : _handleRegister,
+                                        size: ShadButtonSize.lg,
+                                        width: double.infinity,
+                                        child: isLoading
+                                            ? const SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child:
+                                                    CupertinoActivityIndicator(
+                                                      color:
+                                                          CupertinoColors.white,
+                                                    ),
+                                              )
+                                            : const Text('Create Account'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Already have an account? ',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: theme.colorScheme.mutedForeground,
+                                    ),
+                                  ),
+                                  CupertinoButton(
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size.zero,
+                                    onPressed: () => context.go('/login'),
+                                    child: Text(
+                                      'Sign in',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: theme.colorScheme.primary,
                                         fontWeight: FontWeight.w600,
                                       ),
-                                ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
@@ -297,20 +410,31 @@ class _RegisterViewState extends State<_RegisterView> {
   }
 
   Widget _buildInputField({
+    required BuildContext context,
     required String label,
+    required IconData icon,
     required TextEditingController controller,
     required String placeholder,
     TextInputType? keyboardType,
     required String? Function(String) validator,
   }) {
+    final theme = ShadTheme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: ShadTheme.of(
-            context,
-          ).textTheme.small.copyWith(fontWeight: FontWeight.w500),
+        Row(
+          children: [
+            Icon(icon, size: 16, color: theme.colorScheme.mutedForeground),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.foreground,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
         ShadInputFormField(
@@ -325,21 +449,61 @@ class _RegisterViewState extends State<_RegisterView> {
   }
 
   Widget _buildPasswordField({
+    required BuildContext context,
     required String label,
     required TextEditingController controller,
     required String placeholder,
     required bool obscureText,
-    required VoidCallback onToggleVisibility,
+    required VoidCallback onToggle,
     required String? Function(String) validator,
   }) {
+    final theme = ShadTheme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: ShadTheme.of(
-            context,
-          ).textTheme.small.copyWith(fontWeight: FontWeight.w500),
+        Row(
+          children: [
+            Icon(
+              lucide.LucideIcons.lock,
+              size: 16,
+              color: theme.colorScheme.mutedForeground,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.foreground,
+              ),
+            ),
+            const Spacer(),
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              minimumSize: Size.zero,
+              onPressed: onToggle,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    obscureText
+                        ? lucide.LucideIcons.eye
+                        : lucide.LucideIcons.eyeOff,
+                    size: 16,
+                    color: theme.colorScheme.mutedForeground,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    obscureText ? 'Show' : 'Hide',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: theme.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
         ShadInputFormField(
@@ -348,31 +512,6 @@ class _RegisterViewState extends State<_RegisterView> {
           placeholder: Text(placeholder),
           obscureText: obscureText,
           validator: validator,
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: CupertinoButton(
-            padding: const EdgeInsets.only(top: 8),
-            minimumSize: Size.zero,
-            onPressed: onToggleVisibility,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  obscureText ? Icons.visibility : Icons.visibility_off,
-                  size: 16,
-                  color: ShadTheme.of(context).colorScheme.mutedForeground,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  obscureText ? 'Show' : 'Hide',
-                  style: ShadTheme.of(context).textTheme.small.copyWith(
-                    color: ShadTheme.of(context).colorScheme.mutedForeground,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
       ],
     );

@@ -10,6 +10,7 @@ import '../../features/movies/presentation/pages/favorites_page.dart';
 import '../../features/movies/domain/entities/movie.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
 import '../presentation/pages/main_shell_page.dart';
 import '../presentation/widgets/coming_soon_page.dart';
 
@@ -112,10 +113,7 @@ final GoRouter appRouter = GoRouter(
               path: '/profile',
               name: 'profile',
               builder: (BuildContext context, GoRouterState state) {
-                return const ComingSoonPage(
-                  title: 'Profile',
-                  icon: lucide.LucideIcons.userCircle,
-                );
+                return const ProfilePage();
               },
             ),
           ],

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:lumo_app/core/data/api_client.dart';
+import 'package:lumo_app/core/services/auth_service.dart';
 
 import '../../domain/entities/user.dart' as domain;
 import '../../domain/repositories/auth_repository_interface.dart';
@@ -30,6 +31,16 @@ class AuthRepository implements AuthRepositoryInterface {
       final response = await _authApi.register(request);
 
       ApiClient.setAuthToken(response.accessToken);
+
+      await AuthService.saveAuthTokens(
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+      );
+
+      await AuthService.saveUserInfo(
+        userId: response.user.id,
+        email: response.user.email,
+      );
 
       final user = domain.User(
         id: response.user.id,
@@ -81,6 +92,16 @@ class AuthRepository implements AuthRepositoryInterface {
 
       ApiClient.setAuthToken(response.accessToken);
 
+      await AuthService.saveAuthTokens(
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+      );
+
+      await AuthService.saveUserInfo(
+        userId: response.user.id,
+        email: response.user.email,
+      );
+
       final user = domain.User(
         id: response.user.id,
         email: response.user.email,
@@ -120,8 +141,10 @@ class AuthRepository implements AuthRepositoryInterface {
     try {
       await _authApi.logout({'refresh_token': refreshToken});
       ApiClient.clearAuthToken();
+      await AuthService.clearAuthData();
     } catch (e) {
       ApiClient.clearAuthToken();
+      await AuthService.clearAuthData();
     }
   }
 }
