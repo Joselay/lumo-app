@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
+import '../../../../core/services/auth_service.dart';
 import '../../data/repositories/chat_repository.dart';
 import '../viewmodels/chat_bloc.dart';
 import '../viewmodels/chat_event.dart';
@@ -8,14 +11,133 @@ import '../viewmodels/chat_state.dart';
 import '../widgets/chat_input.dart';
 import '../widgets/message_bubble.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
 
   @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  bool _isLoggedIn = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthStatus();
+  }
+
+  Future<void> _checkAuthStatus() async {
+    final isLoggedIn = await AuthService.isLoggedIn();
+    setState(() {
+      _isLoggedIn = isLoggedIn;
+      _isLoading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const CupertinoPageScaffold(
+        child: Center(
+          child: CupertinoActivityIndicator(),
+        ),
+      );
+    }
+
+    if (!_isLoggedIn) {
+      return _buildAuthRequired(context);
+    }
+
     return BlocProvider(
       create: (context) => ChatBloc(repository: ChatRepository()),
       child: const _ChatView(),
+    );
+  }
+
+  Widget _buildAuthRequired(BuildContext context) {
+    final theme = ShadTheme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return CupertinoPageScaffold(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDark
+                ? [
+                    const Color(0xFF1A1A1A),
+                    const Color(0xFF1C1818),
+                    const Color(0xFF1A1515),
+                  ]
+                : [
+                    const Color(0xFFFAFAFA),
+                    const Color(0xFFFDF8F8),
+                    const Color(0xFFFFF5F5),
+                  ],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: Icon(
+                      lucide.LucideIcons.messageCircle,
+                      size: 64,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Text(
+                    'Sign in Required',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.foreground,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Create an account or sign in to chat with our AI assistant and get help with movie bookings.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: theme.colorScheme.mutedForeground,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  ShadButton(
+                    onPressed: () => context.go('/login'),
+                    size: ShadButtonSize.lg,
+                    width: double.infinity,
+                    child: const Text('Sign In'),
+                  ),
+                  const SizedBox(height: 16),
+                  ShadButton.outline(
+                    onPressed: () => context.go('/register'),
+                    size: ShadButtonSize.lg,
+                    width: double.infinity,
+                    child: const Text('Create Account'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -153,8 +275,13 @@ class _ChatViewState extends State<_ChatView> {
                   return ListView.builder(
                     controller: _scrollController,
                     padding: const EdgeInsets.only(top: 16, bottom: 16),
-                    itemCount: state.messages.length,
+                    itemCount: state.messages.length + (state.status == ChatStatus.executingTools ? 1 : 0),
                     itemBuilder: (context, index) {
+                      // Show loading indicator if executing tools and at last position
+                      if (state.status == ChatStatus.executingTools && index == state.messages.length) {
+                        return _buildToolExecutionIndicator(theme);
+                      }
+
                       final message = state.messages[index];
                       return MessageBubble(message: message);
                     },
@@ -263,6 +390,62 @@ class _ChatViewState extends State<_ChatView> {
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _buildToolExecutionIndicator(ShadThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondary.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              lucide.LucideIcons.bot,
+              size: 20,
+              color: theme.colorScheme.secondary,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.muted,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CupertinoActivityIndicator(
+                      radius: 8,
+                      color: theme.colorScheme.foreground,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Searching...',
+                    style: TextStyle(
+                      color: theme.colorScheme.foreground,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

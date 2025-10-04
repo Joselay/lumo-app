@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../domain/entities/message.dart';
@@ -43,13 +44,67 @@ class MessageBubble extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        message.content,
-                        style: TextStyle(
-                          color: isUser
-                              ? theme.colorScheme.primaryForeground
-                              : theme.colorScheme.foreground,
-                          fontSize: 15,
+                      MarkdownBody(
+                        data: message.content,
+                        styleSheet: MarkdownStyleSheet(
+                          p: TextStyle(
+                            color: isUser
+                                ? theme.colorScheme.primaryForeground
+                                : theme.colorScheme.foreground,
+                            fontSize: 15,
+                          ),
+                          strong: TextStyle(
+                            color: isUser
+                                ? theme.colorScheme.primaryForeground
+                                : theme.colorScheme.foreground,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          h1: TextStyle(
+                            color: isUser
+                                ? theme.colorScheme.primaryForeground
+                                : theme.colorScheme.foreground,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          h2: TextStyle(
+                            color: isUser
+                                ? theme.colorScheme.primaryForeground
+                                : theme.colorScheme.foreground,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          h3: TextStyle(
+                            color: isUser
+                                ? theme.colorScheme.primaryForeground
+                                : theme.colorScheme.foreground,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          listBullet: TextStyle(
+                            color: isUser
+                                ? theme.colorScheme.primaryForeground
+                                : theme.colorScheme.foreground,
+                            fontSize: 15,
+                          ),
+                          code: TextStyle(
+                            color: isUser
+                                ? theme.colorScheme.primaryForeground
+                                : theme.colorScheme.foreground,
+                            fontSize: 14,
+                            fontFamily: 'monospace',
+                            backgroundColor: (isUser
+                                    ? theme.colorScheme.primaryForeground
+                                    : theme.colorScheme.foreground)
+                                .withValues(alpha: 0.1),
+                          ),
+                          blockquote: TextStyle(
+                            color: isUser
+                                ? theme.colorScheme.primaryForeground.withValues(alpha: 0.8)
+                                : theme.colorScheme.foreground.withValues(alpha: 0.8),
+                            fontSize: 15,
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                       if (message.hasToolCalls) ...[

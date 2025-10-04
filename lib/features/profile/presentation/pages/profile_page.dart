@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/services/auth_service.dart';
+import '../../../auth/data/repositories/auth_repository.dart';
+import '../../../auth/domain/usecases/logout_usecase.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,10 +17,12 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _isLoggedIn = false;
   Map<String, dynamic>? _userInfo;
   bool _isLoading = true;
+  late final LogoutUseCase _logoutUseCase;
 
   @override
   void initState() {
     super.initState();
+    _logoutUseCase = LogoutUseCase(AuthRepository());
     _checkAuthStatus();
   }
 
@@ -54,11 +58,50 @@ class _ProfilePageState extends State<ProfilePage> {
     );
 
     if (confirmed == true) {
-      await AuthService.clearAuthData();
-      setState(() {
-        _isLoggedIn = false;
-        _userInfo = null;
-      });
+      if (mounted) {
+        showCupertinoDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) =>
+              const Center(child: CupertinoActivityIndicator()),
+        );
+      }
+
+      try {
+        await _logoutUseCase();
+
+        if (mounted) Navigator.of(context).pop();
+
+        setState(() {
+          _isLoggedIn = false;
+          _userInfo = null;
+        });
+      } catch (e) {
+        if (mounted) Navigator.of(context).pop();
+
+        if (mounted) {
+          showCupertinoDialog(
+            context: context,
+            builder: (context) => CupertinoAlertDialog(
+              title: const Text('Logout Error'),
+              content: const Text(
+                'Failed to logout properly. Your session has been cleared locally.',
+              ),
+              actions: [
+                CupertinoDialogAction(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        setState(() {
+          _isLoggedIn = false;
+          _userInfo = null;
+        });
+      }
     }
   }
 
@@ -69,9 +112,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (_isLoading) {
       return const CupertinoPageScaffold(
-        child: Center(
-          child: CupertinoActivityIndicator(),
-        ),
+        child: Center(child: CupertinoActivityIndicator()),
       );
     }
 
@@ -157,13 +198,14 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     }
 
-    // Logged in view
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemBackground.resolveFrom(context),
       child: CustomScrollView(
         slivers: [
           CupertinoSliverNavigationBar(
-            backgroundColor: CupertinoColors.systemBackground.resolveFrom(context),
+            backgroundColor: CupertinoColors.systemBackground.resolveFrom(
+              context,
+            ),
             largeTitle: const Text('Profile'),
             border: null,
           ),
@@ -172,15 +214,12 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  // Profile Header
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.background,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: theme.colorScheme.border,
-                      ),
+                      border: Border.all(color: theme.colorScheme.border),
                     ),
                     child: Column(
                       children: [
@@ -188,7 +227,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(40),
                           ),
                           child: Icon(
@@ -213,7 +254,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -230,7 +273,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Menu Items
                   _buildMenuSection(
                     context: context,
                     theme: theme,
@@ -325,7 +367,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   const SizedBox(height: 24),
 
-                  // Logout Button
                   ShadButton.destructive(
                     onPressed: _handleLogout,
                     size: ShadButtonSize.lg,
@@ -333,10 +374,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
-                          lucide.LucideIcons.logOut,
-                          size: 20,
-                        ),
+                        const Icon(lucide.LucideIcons.logOut, size: 20),
                         const SizedBox(width: 8),
                         const Text('Logout'),
                       ],
@@ -378,9 +416,7 @@ class _ProfilePageState extends State<ProfilePage> {
           decoration: BoxDecoration(
             color: theme.colorScheme.background,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: theme.colorScheme.border,
-            ),
+            border: Border.all(color: theme.colorScheme.border),
           ),
           child: Column(
             children: items.asMap().entries.map((entry) {
@@ -399,7 +435,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Icon(

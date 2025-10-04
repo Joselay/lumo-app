@@ -6,7 +6,15 @@ class SendMessage {
 
   SendMessage(this._repository);
 
-  Future<ChatResult> call(String message, List<Message> history) async {
-    return await _repository.sendMessage(message, history);
+  Future<ChatResult> call(
+    String message,
+    List<Message> history, {
+    String? sessionId,
+  }) async {
+    return await _repository.sendMessage(
+      message,
+      sessionId: sessionId,
+      conversationHistory: history,
+    );
   }
 }

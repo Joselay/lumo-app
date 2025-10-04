@@ -10,4 +10,13 @@ abstract class ChatApi {
 
   @POST('/chat/ai-chat/')
   Future<ChatResponse> sendMessage(@Body() ChatRequest request);
+
+  @GET('/chat/sessions/')
+  Future<List<ChatSession>> getChatSessions();
+
+  @GET('/chat/sessions/{sessionId}/')
+  Future<ChatSessionDetail> getChatSession(@Path('sessionId') String sessionId);
+
+  @DELETE('/chat/sessions/{sessionId}/delete/')
+  Future<void> deleteChatSession(@Path('sessionId') String sessionId);
 }

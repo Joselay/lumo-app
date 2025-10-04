@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import '../data/api_client.dart';
 
 class AuthService {
   static const String _accessTokenKey = 'access_token';
@@ -13,6 +14,8 @@ class AuthService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_accessTokenKey, accessToken);
     await prefs.setString(_refreshTokenKey, refreshToken);
+
+    ApiClient.setAuthToken(accessToken);
   }
 
   static Future<void> saveUserInfo({
@@ -45,6 +48,8 @@ class AuthService {
     await prefs.remove(_refreshTokenKey);
     await prefs.remove(_userIdKey);
     await prefs.remove(_userEmailKey);
+
+    ApiClient.clearAuthToken();
   }
 
   static Future<Map<String, dynamic>?> getUserInfo() async {
@@ -53,10 +58,7 @@ class AuthService {
     final email = prefs.getString(_userEmailKey);
 
     if (userId != null && email != null) {
-      return {
-        'userId': userId,
-        'email': email,
-      };
+      return {'userId': userId, 'email': email};
     }
     return null;
   }

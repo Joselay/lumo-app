@@ -30,8 +30,6 @@ class AuthRepository implements AuthRepositoryInterface {
       );
       final response = await _authApi.register(request);
 
-      ApiClient.setAuthToken(response.accessToken);
-
       await AuthService.saveAuthTokens(
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
@@ -90,8 +88,6 @@ class AuthRepository implements AuthRepositoryInterface {
       final request = LoginRequest(email: email, password: password);
       final response = await _authApi.login(request);
 
-      ApiClient.setAuthToken(response.accessToken);
-
       await AuthService.saveAuthTokens(
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
@@ -140,10 +136,8 @@ class AuthRepository implements AuthRepositoryInterface {
   Future<void> logout(String refreshToken) async {
     try {
       await _authApi.logout({'refresh_token': refreshToken});
-      ApiClient.clearAuthToken();
       await AuthService.clearAuthData();
     } catch (e) {
-      ApiClient.clearAuthToken();
       await AuthService.clearAuthData();
     }
   }
