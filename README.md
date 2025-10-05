@@ -2,6 +2,13 @@
 
 A modern Flutter application for movies and AI-powered chat, featuring a clean architecture, streaming chat capabilities, and a beautiful iOS-native design using shadcn_ui and Cupertino components.
 
+## Screenshots
+
+<div align="center">
+  <img src="screenshots/home.png" alt="Home Screen" width="300"/>
+  <img src="screenshots/chat.png" alt="Chat Screen" width="300"/>
+</div>
+
 ## Features
 
 ### 🎬 Movies
