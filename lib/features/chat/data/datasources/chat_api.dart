@@ -28,4 +28,10 @@ abstract class ChatApi {
 
   @PATCH('/chat/sessions/{sessionId}/archive/')
   Future<ChatSession> archiveChatSession(@Path('sessionId') String sessionId);
+
+  @PATCH('/chat/sessions/{sessionId}/unarchive/')
+  Future<ChatSession> unarchiveChatSession(@Path('sessionId') String sessionId);
+
+  @GET('/chat/sessions/archived/')
+  Future<List<ChatSession>> getArchivedSessions();
 }

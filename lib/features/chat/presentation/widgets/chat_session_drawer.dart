@@ -140,15 +140,43 @@ class ChatSessionDrawer extends StatelessWidget {
     ShadThemeData theme,
     ChatState state,
   ) {
-    return ListView.builder(
+    return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      itemCount: state.sessions.length,
-      itemBuilder: (context, index) {
-        final session = state.sessions[index];
-        final isActive = session.id == state.sessionId;
+      children: [
+        ...state.sessions.map((session) {
+          final isActive = session.id == state.sessionId;
+          return _buildSessionItem(context, theme, session, isActive, false);
+        }),
 
-        return _buildSessionItem(context, theme, session, isActive);
-      },
+        if (state.archivedSessions.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Row(
+              children: [
+                Icon(
+                  lucide.LucideIcons.archive,
+                  size: 16,
+                  color: theme.colorScheme.mutedForeground,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Archived',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.mutedForeground,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ...state.archivedSessions.map((session) {
+            return _buildSessionItem(context, theme, session, false, true);
+          }),
+        ],
+      ],
     );
   }
 
@@ -157,6 +185,7 @@ class ChatSessionDrawer extends StatelessWidget {
     ShadThemeData theme,
     ChatSession session,
     bool isActive,
+    bool isArchived,
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 4),
@@ -171,7 +200,8 @@ class ChatSessionDrawer extends StatelessWidget {
           context.read<ChatBloc>().add(ChatEvent.loadSession(session.id));
           Navigator.of(context).pop();
         },
-        onLongPress: () => _showSessionActions(context, theme, session),
+        onLongPress: () =>
+            _showSessionActions(context, theme, session, isArchived),
         child: Container(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -184,6 +214,8 @@ class ChatSessionDrawer extends StatelessWidget {
                   fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
                   color: isActive
                       ? theme.colorScheme.primary
+                      : isArchived
+                      ? theme.colorScheme.foreground.withValues(alpha: 0.6)
                       : theme.colorScheme.foreground,
                 ),
                 maxLines: 1,
@@ -228,6 +260,7 @@ class ChatSessionDrawer extends StatelessWidget {
     BuildContext context,
     ShadThemeData theme,
     ChatSession session,
+    bool isArchived,
   ) async {
     showCupertinoDialog(
       context: context,
@@ -250,18 +283,27 @@ class ChatSessionDrawer extends StatelessWidget {
       context: context,
       barrierDismissible: true,
       useRootNavigator: false,
-      builder: (ctx) => _buildPreviewDialog(ctx, theme, session, sessionDetail),
+      builder: (dialogCtx) => _buildPreviewDialog(
+        context,
+        dialogCtx,
+        theme,
+        session,
+        sessionDetail,
+        isArchived,
+      ),
     );
   }
 
   Widget _buildPreviewDialog(
-    BuildContext context,
+    BuildContext parentContext,
+    BuildContext dialogContext,
     ShadThemeData theme,
     ChatSession session,
     ChatSessionDetail sessionDetail,
+    bool isArchived,
   ) {
     return GestureDetector(
-      onTap: () => Navigator.of(context, rootNavigator: false).pop(),
+      onTap: () => Navigator.of(dialogContext, rootNavigator: false).pop(),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -392,8 +434,8 @@ class ChatSessionDrawer extends StatelessWidget {
                     CupertinoButton(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       onPressed: () {
-                        Navigator.of(context, rootNavigator: false).pop();
-                        _showRenameDialog(context, theme, session);
+                        Navigator.of(dialogContext, rootNavigator: false).pop();
+                        _showRenameDialog(parentContext, theme, session);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -419,20 +461,32 @@ class ChatSessionDrawer extends StatelessWidget {
                     CupertinoButton(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       onPressed: () {
-                        Navigator.of(context, rootNavigator: false).pop();
-                        _showArchiveConfirmation(context, theme, session);
+                        Navigator.of(dialogContext, rootNavigator: false).pop();
+                        if (isArchived) {
+                          parentContext.read<ChatBloc>().add(
+                            ChatEvent.unarchiveSession(session.id),
+                          );
+                        } else {
+                          _showArchiveConfirmation(
+                            parentContext,
+                            theme,
+                            session,
+                          );
+                        }
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            lucide.LucideIcons.archive,
+                            isArchived
+                                ? lucide.LucideIcons.archiveRestore
+                                : lucide.LucideIcons.archive,
                             size: 18,
                             color: theme.colorScheme.foreground,
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Archive',
+                            isArchived ? 'Unarchive' : 'Archive',
                             style: TextStyle(
                               fontSize: 16,
                               color: theme.colorScheme.foreground,
@@ -446,8 +500,8 @@ class ChatSessionDrawer extends StatelessWidget {
                     CupertinoButton(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       onPressed: () {
-                        Navigator.of(context, rootNavigator: false).pop();
-                        _showDeleteConfirmation(context, theme, session);
+                        Navigator.of(dialogContext, rootNavigator: false).pop();
+                        _showDeleteConfirmation(parentContext, theme, session);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -562,6 +616,8 @@ class ChatSessionDrawer extends StatelessWidget {
     ShadThemeData theme,
     ChatSession session,
   ) {
+    final chatBloc = context.read<ChatBloc>();
+
     showCupertinoDialog(
       context: context,
       useRootNavigator: false,
@@ -579,8 +635,8 @@ class ChatSessionDrawer extends StatelessWidget {
           CupertinoDialogAction(
             isDestructiveAction: true,
             onPressed: () {
-              context.read<ChatBloc>().add(ChatEvent.deleteSession(session.id));
               Navigator.pop(ctx);
+              chatBloc.add(ChatEvent.deleteSession(session.id));
             },
             child: const Text('Delete'),
           ),

@@ -273,6 +273,32 @@ class ChatRepository {
       return null;
     }
   }
+
+  Future<ChatSession?> unarchiveChatSession(String sessionId) async {
+    try {
+      return await _chatApi.unarchiveChatSession(sessionId);
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'Failed to unarchive chat session',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return null;
+    }
+  }
+
+  Future<List<ChatSession>> getArchivedSessions() async {
+    try {
+      return await _chatApi.getArchivedSessions();
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'Failed to get archived sessions',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return [];
+    }
+  }
 }
 
 class ChatResult {

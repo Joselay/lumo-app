@@ -21,6 +21,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<DeleteSession>(_onDeleteSession);
     on<RenameSession>(_onRenameSession);
     on<ArchiveSession>(_onArchiveSession);
+    on<UnarchiveSession>(_onUnarchiveSession);
+    on<LoadArchivedSessions>(_onLoadArchivedSessions);
     on<CreateNewSession>(_onCreateNewSession);
   }
 
@@ -306,6 +308,61 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         error: e,
         stackTrace: stackTrace,
       );
+    }
+  }
+
+  Future<void> _onUnarchiveSession(
+    UnarchiveSession event,
+    Emitter<ChatState> emit,
+  ) async {
+    try {
+      final unarchivedSession = await repository.unarchiveChatSession(
+        event.sessionId,
+      );
+
+      if (unarchivedSession != null) {
+        final updatedArchivedSessions = state.archivedSessions
+            .where((s) => s.id != event.sessionId)
+            .toList();
+
+        final updatedSessions = [...state.sessions, unarchivedSession];
+
+        emit(
+          state.copyWith(
+            archivedSessions: updatedArchivedSessions,
+            sessions: updatedSessions,
+          ),
+        );
+      }
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'Failed to unarchive session',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  Future<void> _onLoadArchivedSessions(
+    LoadArchivedSessions event,
+    Emitter<ChatState> emit,
+  ) async {
+    emit(state.copyWith(isLoadingArchivedSessions: true));
+    try {
+      final archivedSessions = await repository.getArchivedSessions();
+      emit(
+        state.copyWith(
+          archivedSessions: archivedSessions,
+          isLoadingArchivedSessions: false,
+        ),
+      );
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'Failed to load archived sessions',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      emit(state.copyWith(isLoadingArchivedSessions: false));
     }
   }
 

@@ -16,5 +16,7 @@ abstract class ChatState with _$ChatState {
     String? sessionId,
     @Default([]) List<ChatSession> sessions,
     @Default(false) bool isLoadingSessions,
+    @Default([]) List<ChatSession> archivedSessions,
+    @Default(false) bool isLoadingArchivedSessions,
   }) = _ChatState;
 }

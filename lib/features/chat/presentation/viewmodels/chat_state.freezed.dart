@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChatState {
 
- ChatStatus get status; List<Message> get messages; String get errorMessage; String get streamingContent; String? get sessionId; List<ChatSession> get sessions; bool get isLoadingSessions;
+ ChatStatus get status; List<Message> get messages; String get errorMessage; String get streamingContent; String? get sessionId; List<ChatSession> get sessions; bool get isLoadingSessions; List<ChatSession> get archivedSessions; bool get isLoadingArchivedSessions;
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ChatStateCopyWith<ChatState> get copyWith => _$ChatStateCopyWithImpl<ChatState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.streamingContent, streamingContent) || other.streamingContent == streamingContent)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&const DeepCollectionEquality().equals(other.sessions, sessions)&&(identical(other.isLoadingSessions, isLoadingSessions) || other.isLoadingSessions == isLoadingSessions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.streamingContent, streamingContent) || other.streamingContent == streamingContent)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&const DeepCollectionEquality().equals(other.sessions, sessions)&&(identical(other.isLoadingSessions, isLoadingSessions) || other.isLoadingSessions == isLoadingSessions)&&const DeepCollectionEquality().equals(other.archivedSessions, archivedSessions)&&(identical(other.isLoadingArchivedSessions, isLoadingArchivedSessions) || other.isLoadingArchivedSessions == isLoadingArchivedSessions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(messages),errorMessage,streamingContent,sessionId,const DeepCollectionEquality().hash(sessions),isLoadingSessions);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(messages),errorMessage,streamingContent,sessionId,const DeepCollectionEquality().hash(sessions),isLoadingSessions,const DeepCollectionEquality().hash(archivedSessions),isLoadingArchivedSessions);
 
 @override
 String toString() {
-  return 'ChatState(status: $status, messages: $messages, errorMessage: $errorMessage, streamingContent: $streamingContent, sessionId: $sessionId, sessions: $sessions, isLoadingSessions: $isLoadingSessions)';
+  return 'ChatState(status: $status, messages: $messages, errorMessage: $errorMessage, streamingContent: $streamingContent, sessionId: $sessionId, sessions: $sessions, isLoadingSessions: $isLoadingSessions, archivedSessions: $archivedSessions, isLoadingArchivedSessions: $isLoadingArchivedSessions)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ChatStateCopyWith<$Res>  {
   factory $ChatStateCopyWith(ChatState value, $Res Function(ChatState) _then) = _$ChatStateCopyWithImpl;
 @useResult
 $Res call({
- ChatStatus status, List<Message> messages, String errorMessage, String streamingContent, String? sessionId, List<ChatSession> sessions, bool isLoadingSessions
+ ChatStatus status, List<Message> messages, String errorMessage, String streamingContent, String? sessionId, List<ChatSession> sessions, bool isLoadingSessions, List<ChatSession> archivedSessions, bool isLoadingArchivedSessions
 });
 
 
@@ -62,7 +62,7 @@ class _$ChatStateCopyWithImpl<$Res>
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? messages = null,Object? errorMessage = null,Object? streamingContent = null,Object? sessionId = freezed,Object? sessions = null,Object? isLoadingSessions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? messages = null,Object? errorMessage = null,Object? streamingContent = null,Object? sessionId = freezed,Object? sessions = null,Object? isLoadingSessions = null,Object? archivedSessions = null,Object? isLoadingArchivedSessions = null,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ChatStatus,messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
@@ -71,6 +71,8 @@ as String,streamingContent: null == streamingContent ? _self.streamingContent : 
 as String,sessionId: freezed == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String?,sessions: null == sessions ? _self.sessions : sessions // ignore: cast_nullable_to_non_nullable
 as List<ChatSession>,isLoadingSessions: null == isLoadingSessions ? _self.isLoadingSessions : isLoadingSessions // ignore: cast_nullable_to_non_nullable
+as bool,archivedSessions: null == archivedSessions ? _self.archivedSessions : archivedSessions // ignore: cast_nullable_to_non_nullable
+as List<ChatSession>,isLoadingArchivedSessions: null == isLoadingArchivedSessions ? _self.isLoadingArchivedSessions : isLoadingArchivedSessions // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -156,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ChatStatus status,  List<Message> messages,  String errorMessage,  String streamingContent,  String? sessionId,  List<ChatSession> sessions,  bool isLoadingSessions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ChatStatus status,  List<Message> messages,  String errorMessage,  String streamingContent,  String? sessionId,  List<ChatSession> sessions,  bool isLoadingSessions,  List<ChatSession> archivedSessions,  bool isLoadingArchivedSessions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
-return $default(_that.status,_that.messages,_that.errorMessage,_that.streamingContent,_that.sessionId,_that.sessions,_that.isLoadingSessions);case _:
+return $default(_that.status,_that.messages,_that.errorMessage,_that.streamingContent,_that.sessionId,_that.sessions,_that.isLoadingSessions,_that.archivedSessions,_that.isLoadingArchivedSessions);case _:
   return orElse();
 
 }
@@ -177,10 +179,10 @@ return $default(_that.status,_that.messages,_that.errorMessage,_that.streamingCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ChatStatus status,  List<Message> messages,  String errorMessage,  String streamingContent,  String? sessionId,  List<ChatSession> sessions,  bool isLoadingSessions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ChatStatus status,  List<Message> messages,  String errorMessage,  String streamingContent,  String? sessionId,  List<ChatSession> sessions,  bool isLoadingSessions,  List<ChatSession> archivedSessions,  bool isLoadingArchivedSessions)  $default,) {final _that = this;
 switch (_that) {
 case _ChatState():
-return $default(_that.status,_that.messages,_that.errorMessage,_that.streamingContent,_that.sessionId,_that.sessions,_that.isLoadingSessions);case _:
+return $default(_that.status,_that.messages,_that.errorMessage,_that.streamingContent,_that.sessionId,_that.sessions,_that.isLoadingSessions,_that.archivedSessions,_that.isLoadingArchivedSessions);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +199,10 @@ return $default(_that.status,_that.messages,_that.errorMessage,_that.streamingCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ChatStatus status,  List<Message> messages,  String errorMessage,  String streamingContent,  String? sessionId,  List<ChatSession> sessions,  bool isLoadingSessions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ChatStatus status,  List<Message> messages,  String errorMessage,  String streamingContent,  String? sessionId,  List<ChatSession> sessions,  bool isLoadingSessions,  List<ChatSession> archivedSessions,  bool isLoadingArchivedSessions)?  $default,) {final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
-return $default(_that.status,_that.messages,_that.errorMessage,_that.streamingContent,_that.sessionId,_that.sessions,_that.isLoadingSessions);case _:
+return $default(_that.status,_that.messages,_that.errorMessage,_that.streamingContent,_that.sessionId,_that.sessions,_that.isLoadingSessions,_that.archivedSessions,_that.isLoadingArchivedSessions);case _:
   return null;
 
 }
@@ -212,7 +214,7 @@ return $default(_that.status,_that.messages,_that.errorMessage,_that.streamingCo
 
 
 class _ChatState implements ChatState {
-  const _ChatState({this.status = ChatStatus.initial, final  List<Message> messages = const [], this.errorMessage = '', this.streamingContent = '', this.sessionId, final  List<ChatSession> sessions = const [], this.isLoadingSessions = false}): _messages = messages,_sessions = sessions;
+  const _ChatState({this.status = ChatStatus.initial, final  List<Message> messages = const [], this.errorMessage = '', this.streamingContent = '', this.sessionId, final  List<ChatSession> sessions = const [], this.isLoadingSessions = false, final  List<ChatSession> archivedSessions = const [], this.isLoadingArchivedSessions = false}): _messages = messages,_sessions = sessions,_archivedSessions = archivedSessions;
   
 
 @override@JsonKey() final  ChatStatus status;
@@ -234,6 +236,14 @@ class _ChatState implements ChatState {
 }
 
 @override@JsonKey() final  bool isLoadingSessions;
+ final  List<ChatSession> _archivedSessions;
+@override@JsonKey() List<ChatSession> get archivedSessions {
+  if (_archivedSessions is EqualUnmodifiableListView) return _archivedSessions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_archivedSessions);
+}
+
+@override@JsonKey() final  bool isLoadingArchivedSessions;
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
@@ -245,16 +255,16 @@ _$ChatStateCopyWith<_ChatState> get copyWith => __$ChatStateCopyWithImpl<_ChatSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._messages, _messages)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.streamingContent, streamingContent) || other.streamingContent == streamingContent)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&const DeepCollectionEquality().equals(other._sessions, _sessions)&&(identical(other.isLoadingSessions, isLoadingSessions) || other.isLoadingSessions == isLoadingSessions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._messages, _messages)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.streamingContent, streamingContent) || other.streamingContent == streamingContent)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&const DeepCollectionEquality().equals(other._sessions, _sessions)&&(identical(other.isLoadingSessions, isLoadingSessions) || other.isLoadingSessions == isLoadingSessions)&&const DeepCollectionEquality().equals(other._archivedSessions, _archivedSessions)&&(identical(other.isLoadingArchivedSessions, isLoadingArchivedSessions) || other.isLoadingArchivedSessions == isLoadingArchivedSessions));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_messages),errorMessage,streamingContent,sessionId,const DeepCollectionEquality().hash(_sessions),isLoadingSessions);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_messages),errorMessage,streamingContent,sessionId,const DeepCollectionEquality().hash(_sessions),isLoadingSessions,const DeepCollectionEquality().hash(_archivedSessions),isLoadingArchivedSessions);
 
 @override
 String toString() {
-  return 'ChatState(status: $status, messages: $messages, errorMessage: $errorMessage, streamingContent: $streamingContent, sessionId: $sessionId, sessions: $sessions, isLoadingSessions: $isLoadingSessions)';
+  return 'ChatState(status: $status, messages: $messages, errorMessage: $errorMessage, streamingContent: $streamingContent, sessionId: $sessionId, sessions: $sessions, isLoadingSessions: $isLoadingSessions, archivedSessions: $archivedSessions, isLoadingArchivedSessions: $isLoadingArchivedSessions)';
 }
 
 
@@ -265,7 +275,7 @@ abstract mixin class _$ChatStateCopyWith<$Res> implements $ChatStateCopyWith<$Re
   factory _$ChatStateCopyWith(_ChatState value, $Res Function(_ChatState) _then) = __$ChatStateCopyWithImpl;
 @override @useResult
 $Res call({
- ChatStatus status, List<Message> messages, String errorMessage, String streamingContent, String? sessionId, List<ChatSession> sessions, bool isLoadingSessions
+ ChatStatus status, List<Message> messages, String errorMessage, String streamingContent, String? sessionId, List<ChatSession> sessions, bool isLoadingSessions, List<ChatSession> archivedSessions, bool isLoadingArchivedSessions
 });
 
 
@@ -282,7 +292,7 @@ class __$ChatStateCopyWithImpl<$Res>
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? messages = null,Object? errorMessage = null,Object? streamingContent = null,Object? sessionId = freezed,Object? sessions = null,Object? isLoadingSessions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? messages = null,Object? errorMessage = null,Object? streamingContent = null,Object? sessionId = freezed,Object? sessions = null,Object? isLoadingSessions = null,Object? archivedSessions = null,Object? isLoadingArchivedSessions = null,}) {
   return _then(_ChatState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ChatStatus,messages: null == messages ? _self._messages : messages // ignore: cast_nullable_to_non_nullable
@@ -291,6 +301,8 @@ as String,streamingContent: null == streamingContent ? _self.streamingContent : 
 as String,sessionId: freezed == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String?,sessions: null == sessions ? _self._sessions : sessions // ignore: cast_nullable_to_non_nullable
 as List<ChatSession>,isLoadingSessions: null == isLoadingSessions ? _self.isLoadingSessions : isLoadingSessions // ignore: cast_nullable_to_non_nullable
+as bool,archivedSessions: null == archivedSessions ? _self._archivedSessions : archivedSessions // ignore: cast_nullable_to_non_nullable
+as List<ChatSession>,isLoadingArchivedSessions: null == isLoadingArchivedSessions ? _self.isLoadingArchivedSessions : isLoadingArchivedSessions // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

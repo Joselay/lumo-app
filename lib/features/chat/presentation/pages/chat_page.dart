@@ -158,6 +158,7 @@ class _ChatViewState extends State<_ChatView> {
   void initState() {
     super.initState();
     context.read<ChatBloc>().add(const ChatEvent.loadSessions());
+    context.read<ChatBloc>().add(const ChatEvent.loadArchivedSessions());
   }
 
   @override
@@ -183,10 +184,16 @@ class _ChatViewState extends State<_ChatView> {
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
+    final chatBloc = context.read<ChatBloc>();
 
     return Scaffold(
       key: _scaffoldKey,
-      drawer: const Drawer(child: ChatSessionDrawer()),
+      drawer: Drawer(
+        child: BlocProvider.value(
+          value: chatBloc,
+          child: const ChatSessionDrawer(),
+        ),
+      ),
       body: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           backgroundColor: theme.colorScheme.background,
