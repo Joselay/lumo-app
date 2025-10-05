@@ -313,9 +313,22 @@ class _ChatViewState extends State<_ChatView>
                         CupertinoButton(
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            context.read<ChatBloc>().add(
-                              const ChatEvent.createNewSession(),
-                            );
+                            if (state.messages.isEmpty) {
+                              showToast(
+                                context,
+                                'Already in a new chat',
+                                type: ToastType.info,
+                              );
+                            } else {
+                              showToast(
+                                context,
+                                'New chat started',
+                                type: ToastType.success,
+                              );
+                              context.read<ChatBloc>().add(
+                                const ChatEvent.createNewSession(),
+                              );
+                            }
                           },
                           child: Icon(
                             lucide.LucideIcons.badgePlus,
