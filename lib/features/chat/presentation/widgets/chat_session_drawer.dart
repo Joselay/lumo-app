@@ -187,21 +187,21 @@ class ChatSessionDrawer extends StatelessWidget {
     bool isActive,
     bool isArchived,
   ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 4),
-      decoration: BoxDecoration(
-        color: isActive
-            ? theme.colorScheme.primary.withValues(alpha: 0.1)
-            : null,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: GestureDetector(
-        onTap: () {
-          context.read<ChatBloc>().add(ChatEvent.loadSession(session.id));
-          Navigator.of(context).pop();
-        },
-        onLongPress: () =>
-            _showSessionActions(context, theme, session, isArchived),
+    return GestureDetector(
+      onTap: () {
+        context.read<ChatBloc>().add(ChatEvent.loadSession(session.id));
+        Navigator.of(context).pop();
+      },
+      onLongPress: () =>
+          _showSessionActions(context, theme, session, isArchived),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 4),
+        decoration: BoxDecoration(
+          color: isActive
+              ? theme.colorScheme.primary.withValues(alpha: 0.1)
+              : null,
+          borderRadius: BorderRadius.circular(8),
+        ),
         child: Container(
           padding: const EdgeInsets.all(12),
           child: Column(
