@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import '../../data/models/chat_models.dart';
 import '../viewmodels/chat_bloc.dart';
 import '../viewmodels/chat_event.dart';
@@ -199,59 +198,22 @@ class ChatSessionDrawer extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 4),
         decoration: BoxDecoration(
-          color: isActive
-              ? theme.colorScheme.primary.withValues(alpha: 0.1)
-              : null,
+          color: isActive ? theme.colorScheme.muted : null,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Container(
           padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                session.title.isEmpty ? 'New Chat' : session.title,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-                  color: isActive
-                      ? theme.colorScheme.primary
-                      : isArchived
-                      ? theme.colorScheme.foreground.withValues(alpha: 0.6)
-                      : theme.colorScheme.foreground,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Text(
-                    '${session.messagesCount} messages',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: theme.colorScheme.mutedForeground,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '•',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: theme.colorScheme.mutedForeground,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    timeago.format(session.updatedAt, locale: 'en_short'),
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: theme.colorScheme.mutedForeground,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          child: Text(
+            session.title.isEmpty ? 'New Chat' : session.title,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+              color: isArchived
+                  ? theme.colorScheme.foreground.withValues(alpha: 0.6)
+                  : theme.colorScheme.foreground,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),
