@@ -1,4 +1,4 @@
-package com.example.lumo_app
+package com.lumo.cinema
 
 import io.flutter.embedding.android.FlutterActivity
 
