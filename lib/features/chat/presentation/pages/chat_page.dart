@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'
-    show Scaffold, GlobalKey, ScaffoldState, Drawer;
+    show Scaffold, GlobalKey, ScaffoldState, Drawer, Colors, Material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
@@ -200,68 +200,56 @@ class _ChatViewState extends State<_ChatView> {
           border: Border(
             bottom: BorderSide(color: theme.colorScheme.border, width: 0.5),
           ),
-          leading: CupertinoButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-            child: Icon(
-              lucide.LucideIcons.menu,
-              size: 24,
-              color: theme.colorScheme.foreground,
-            ),
-          ),
-          middle: Text(
-            'AI Assistant',
-            style: TextStyle(
-              color: theme.colorScheme.foreground,
-              fontSize: 17,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          trailing: BlocBuilder<ChatBloc, ChatState>(
-            builder: (context, state) {
-              if (state.messages.isEmpty) return const SizedBox.shrink();
-
-              return CupertinoButton(
+          leading: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CupertinoButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {
-                  showCupertinoDialog(
-                    context: context,
-                    builder: (ctx) => CupertinoAlertDialog(
-                      title: const Text('Clear Chat'),
-                      content: const Text(
-                        'Are you sure you want to clear all messages?',
-                      ),
-                      actions: [
-                        CupertinoDialogAction(
-                          isDefaultAction: true,
-                          onPressed: () => Navigator.pop(ctx),
-                          child: const Text('Cancel'),
-                        ),
-                        CupertinoDialogAction(
-                          isDestructiveAction: true,
-                          onPressed: () {
-                            context.read<ChatBloc>().add(
-                              const ChatEvent.clearMessages(),
-                            );
-                            Navigator.pop(ctx);
-                          },
-                          child: const Text('Clear'),
-                        ),
-                      ],
-                    ),
-                  );
+                  _scaffoldKey.currentState?.openDrawer();
                 },
-                child: Text(
-                  'Clear',
-                  style: TextStyle(
-                    color: theme.colorScheme.destructive,
-                    fontSize: 15,
-                  ),
+                child: Icon(
+                  lucide.LucideIcons.menu,
+                  size: 24,
+                  color: theme.colorScheme.foreground,
                 ),
-              );
-            },
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Lumo',
+                style: TextStyle(
+                  color: theme.colorScheme.foreground,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  context.read<ChatBloc>().add(const ChatEvent.createNewSession());
+                },
+                child: Icon(
+                  lucide.LucideIcons.badgePlus,
+                  size: 22,
+                  color: theme.colorScheme.foreground,
+                ),
+              ),
+              const SizedBox(width: 8),
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () => _showChatMenu(context, theme),
+                child: Icon(
+                  lucide.LucideIcons.moreHorizontal,
+                  size: 22,
+                  color: theme.colorScheme.foreground,
+                ),
+              ),
+            ],
           ),
         ),
         child: SafeArea(
@@ -325,6 +313,14 @@ class _ChatViewState extends State<_ChatView> {
               ),
               BlocBuilder<ChatBloc, ChatState>(
                 builder: (context, state) {
+                  if (state.messages.isEmpty) {
+                    return _buildSuggestionPrompts(theme);
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+              BlocBuilder<ChatBloc, ChatState>(
+                builder: (context, state) {
                   return ChatInput(
                     onSend: (message) {
                       context.read<ChatBloc>().add(
@@ -345,85 +341,51 @@ class _ChatViewState extends State<_ChatView> {
   }
 
   Widget _buildEmptyState(ShadThemeData theme) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                CupertinoIcons.chat_bubble_2,
-                size: 40,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'AI Assistant',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.foreground,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Ask me about movies, showtimes, or book tickets!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 15,
-                color: theme.colorScheme.mutedForeground,
-              ),
-            ),
-            const SizedBox(height: 32),
-            _buildSuggestionChips(theme),
-          ],
-        ),
-      ),
-    );
+    return const SizedBox.shrink();
   }
 
-  Widget _buildSuggestionChips(ShadThemeData theme) {
+  Widget _buildSuggestionPrompts(ShadThemeData theme) {
     final suggestions = [
       'Find movies playing today',
-      'Book tickets for a movie',
       'What\'s popular right now?',
+      'Book tickets for a movie',
       'Show my bookings',
     ];
 
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      alignment: WrapAlignment.center,
-      children: suggestions.map((suggestion) {
-        return GestureDetector(
-          onTap: () {
-            context.read<ChatBloc>().add(ChatEvent.sendMessage(suggestion));
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.muted,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: theme.colorScheme.border),
-            ),
-            child: Text(
-              suggestion,
-              style: TextStyle(
-                fontSize: 13,
-                color: theme.colorScheme.foreground,
+    return Container(
+      height: 60,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: suggestions.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              context.read<ChatBloc>().add(
+                ChatEvent.sendMessage(suggestions[index]),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.muted,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Center(
+                child: Text(
+                  suggestions[index],
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: theme.colorScheme.foreground,
+                  ),
+                ),
               ),
             ),
-          ),
-        );
-      }).toList(),
+          );
+        },
+      ),
     );
   }
 
@@ -477,6 +439,244 @@ class _ChatViewState extends State<_ChatView> {
                 ],
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showChatMenu(BuildContext context, ShadThemeData theme) {
+    final state = context.read<ChatBloc>().state;
+    final sessionId = state.sessionId;
+
+    if (sessionId == null) return;
+
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: true,
+        barrierColor: Colors.black.withValues(alpha: 0.0),
+        transitionDuration: const Duration(milliseconds: 150),
+        reverseTransitionDuration: const Duration(milliseconds: 150),
+        pageBuilder: (ctx, _, __) => Stack(
+          children: [
+            GestureDetector(
+              onTap: () => Navigator.pop(ctx),
+              child: Container(color: const Color(0x00000000)),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 44 + 8,
+              right: 16,
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.background,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: theme.colorScheme.border),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.foreground.withValues(alpha: 0.1),
+                        blurRadius: 20,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildMenuItem(
+                        theme,
+                        'Rename',
+                        lucide.LucideIcons.pencil,
+                        () {
+                          Navigator.pop(ctx);
+                          _showRenameDialog(context, sessionId);
+                        },
+                        false,
+                      ),
+                      Container(height: 0.5, color: theme.colorScheme.border),
+                      _buildMenuItem(
+                        theme,
+                        'Archive',
+                        lucide.LucideIcons.archive,
+                        () {
+                          Navigator.pop(ctx);
+                          _showArchiveConfirmation(context, sessionId);
+                        },
+                        false,
+                      ),
+                      Container(height: 0.5, color: theme.colorScheme.border),
+                      _buildMenuItem(
+                        theme,
+                        'Delete',
+                        lucide.LucideIcons.trash2,
+                        () {
+                          Navigator.pop(ctx);
+                          _showDeleteConfirmation(context, sessionId);
+                        },
+                        true,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildMenuItem(
+    ShadThemeData theme,
+    String title,
+    IconData icon,
+    VoidCallback onTap,
+    bool isDestructive,
+  ) {
+    return CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      onPressed: onTap,
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 18,
+            color: isDestructive
+                ? theme.colorScheme.destructive
+                : theme.colorScheme.foreground,
+          ),
+          const SizedBox(width: 12),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 15,
+              color: isDestructive
+                  ? theme.colorScheme.destructive
+                  : theme.colorScheme.foreground,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showRenameDialog(BuildContext context, String sessionId) {
+    final controller = TextEditingController();
+    final state = context.read<ChatBloc>().state;
+    final session = state.sessions.firstWhere(
+      (s) => s.id == sessionId,
+      orElse: () => state.sessions.first,
+    );
+
+    controller.text = session.title.isEmpty ? '' : session.title;
+
+    showCupertinoDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text('Rename Chat'),
+        content: Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: CupertinoTextField(
+            controller: controller,
+            placeholder: 'Enter new name',
+            autofocus: true,
+          ),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          CupertinoDialogAction(
+            onPressed: () {
+              final newTitle = controller.text.trim();
+              if (newTitle.isNotEmpty) {
+                context.read<ChatBloc>().add(
+                  ChatEvent.renameSession(sessionId, newTitle),
+                );
+              }
+              Navigator.pop(ctx);
+            },
+            child: const Text('Rename'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showArchiveConfirmation(BuildContext context, String sessionId) {
+    final state = context.read<ChatBloc>().state;
+    final session = state.sessions.firstWhere(
+      (s) => s.id == sessionId,
+      orElse: () => state.sessions.first,
+    );
+
+    showCupertinoDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text('Archive Chat'),
+        content: Text(
+          'Are you sure you want to archive "${session.title.isEmpty ? 'New Chat' : session.title}"?',
+        ),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          CupertinoDialogAction(
+            onPressed: () {
+              context.read<ChatBloc>().add(
+                ChatEvent.archiveSession(sessionId),
+              );
+              Navigator.pop(ctx);
+            },
+            child: const Text('Archive'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, String sessionId) {
+    final state = context.read<ChatBloc>().state;
+    final session = state.sessions.firstWhere(
+      (s) => s.id == sessionId,
+      orElse: () => state.sessions.first,
+    );
+
+    showCupertinoDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text('Delete Chat'),
+        content: Text(
+          'Are you sure you want to delete "${session.title.isEmpty ? 'New Chat' : session.title}"?',
+        ),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              context.read<ChatBloc>().add(
+                ChatEvent.deleteSession(sessionId),
+              );
+              Navigator.pop(ctx);
+            },
+            child: const Text('Delete'),
           ),
         ],
       ),
