@@ -81,7 +81,7 @@ class _ChatInputState extends State<ChatInput> {
                     CupertinoTextField(
                       controller: _controller,
                       focusNode: _focusNode,
-                      placeholder: 'Ask anything',
+                      placeholder: 'Ask about movies...',
                       maxLines: null,
                       textInputAction: TextInputAction.send,
                       enabled: !widget.isLoading,
