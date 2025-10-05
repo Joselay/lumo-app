@@ -341,19 +341,50 @@ class _ChatViewState extends State<_ChatView> {
   }
 
   Widget _buildEmptyState(ShadThemeData theme) {
-    return const SizedBox.shrink();
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/logo-transparent.png',
+            width: 50,
+            height: 50,
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Hi, I\'m Lumo.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.foreground,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'How can I help you today?',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: theme.colorScheme.mutedForeground,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildSuggestionPrompts(ShadThemeData theme) {
     final suggestions = [
-      'Find movies playing today',
-      'What\'s popular right now?',
-      'Book tickets for a movie',
-      'Show my bookings',
+      {'line1': 'Find movies', 'line2': 'playing in theaters today'},
+      {'line1': 'Popular movies', 'line2': 'What\'s trending right now?'},
+      {'line1': 'Book tickets', 'line2': 'Reserve seats for a movie'},
+      {'line1': 'My bookings', 'line2': 'View all reservations'},
     ];
 
     return Container(
-      height: 60,
+      height: 90,
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
@@ -361,26 +392,43 @@ class _ChatViewState extends State<_ChatView> {
         itemCount: suggestions.length,
         separatorBuilder: (context, index) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
+          final suggestion = suggestions[index];
+          final fullMessage = '${suggestion['line1']}: ${suggestion['line2']}';
+
           return GestureDetector(
             onTap: () {
               context.read<ChatBloc>().add(
-                ChatEvent.sendMessage(suggestions[index]),
+                ChatEvent.sendMessage(fullMessage),
               );
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: theme.colorScheme.muted,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Center(
-                child: Text(
-                  suggestions[index],
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: theme.colorScheme.foreground,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    suggestion['line1']!,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.foreground,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 2),
+                  Text(
+                    suggestion['line2']!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: theme.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ],
               ),
             ),
           );
