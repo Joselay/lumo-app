@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
@@ -22,20 +22,13 @@ class MessageBubble extends StatefulWidget {
 class _MessageBubbleState extends State<MessageBubble> {
   bool _isCopied = false;
 
-  void _handleCopy(BuildContext context, ShadThemeData theme) {
+  void _handleCopy(BuildContext context) {
     Clipboard.setData(ClipboardData(text: widget.message.content));
     setState(() {
       _isCopied = true;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Copied to clipboard'),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: theme.colorScheme.primary,
-      ),
-    );
+    _showToast(context);
 
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
@@ -43,6 +36,17 @@ class _MessageBubbleState extends State<MessageBubble> {
           _isCopied = false;
         });
       }
+    });
+  }
+
+  void _showToast(BuildContext context) {
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(builder: (context) => _ToastOverlay());
+
+    overlay.insert(overlayEntry);
+
+    Future.delayed(const Duration(seconds: 2), () {
+      overlayEntry.remove();
     });
   }
 
@@ -153,7 +157,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                   Padding(
                     padding: const EdgeInsets.only(left: 16),
                     child: GestureDetector(
-                      onTap: () => _handleCopy(context, theme),
+                      onTap: () => _handleCopy(context),
                       child: Icon(
                         _isCopied
                             ? lucide.LucideIcons.check
@@ -231,5 +235,83 @@ class _MessageBubbleState extends State<MessageBubble> {
               : word[0].toUpperCase() + word.substring(1).toLowerCase(),
         )
         .join(' ');
+  }
+}
+
+class _ToastOverlay extends StatefulWidget {
+  @override
+  State<_ToastOverlay> createState() => _ToastOverlayState();
+}
+
+class _ToastOverlayState extends State<_ToastOverlay>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _controller.forward();
+
+    Future.delayed(const Duration(milliseconds: 1700), () {
+      if (mounted) {
+        _controller.reverse();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 60,
+      left: 0,
+      right: 0,
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: Center(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: CupertinoColors.black.withValues(alpha: 0.85),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text(
+                'Copied to clipboard',
+                style: TextStyle(
+                  color: CupertinoColors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
