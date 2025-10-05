@@ -12,6 +12,8 @@ enum ToastType {
   promise,
 }
 
+OverlayEntry? _currentToastEntry;
+
 void showToast(
   BuildContext context,
   String message, {
@@ -20,6 +22,9 @@ void showToast(
   VoidCallback? onAction,
   String? actionLabel,
 }) {
+  _currentToastEntry?.remove();
+  _currentToastEntry = null;
+
   final overlay = Overlay.of(context);
   final overlayEntry = OverlayEntry(
     builder: (context) => _CupertinoToastOverlay(
@@ -30,10 +35,15 @@ void showToast(
     ),
   );
 
+  _currentToastEntry = overlayEntry;
+
   overlay.insert(overlayEntry);
 
   Future.delayed(duration, () {
-    overlayEntry.remove();
+    if (_currentToastEntry == overlayEntry) {
+      overlayEntry.remove();
+      _currentToastEntry = null;
+    }
   });
 }
 

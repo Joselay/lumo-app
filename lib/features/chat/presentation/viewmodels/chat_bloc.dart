@@ -290,20 +290,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             .where((s) => s.id != event.sessionId)
             .toList();
 
-        if (state.sessionId == event.sessionId) {
-          emit(
-            state.copyWith(
-              sessions: updatedSessions,
-              messages: [],
-              sessionId: null,
-              status: ChatStatus.initial,
-              errorMessage: '',
-              streamingContent: '',
-            ),
-          );
-        } else {
-          emit(state.copyWith(sessions: updatedSessions));
-        }
+        emit(state.copyWith(sessions: updatedSessions));
       }
     } catch (e, stackTrace) {
       AppLogger.error(
@@ -382,20 +369,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             .where((s) => s.id != event.sessionId)
             .toList();
 
-        if (state.sessionId == event.sessionId) {
-          emit(
-            state.copyWith(
-              sessions: updatedSessions,
-              messages: [],
-              sessionId: null,
-              status: ChatStatus.initial,
-              errorMessage: '',
-              streamingContent: '',
-            ),
-          );
-        } else {
-          emit(state.copyWith(sessions: updatedSessions));
-        }
+        emit(state.copyWith(sessions: updatedSessions));
       }
     } catch (e, stackTrace) {
       AppLogger.error(

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
 import '../../../../core/services/auth_service.dart';
+import '../../../../core/widgets/toast.dart';
 import '../../data/repositories/chat_repository.dart';
 import '../viewmodels/chat_bloc.dart';
 import '../viewmodels/chat_event.dart';
@@ -233,7 +234,9 @@ class _ChatViewState extends State<_ChatView> {
                   CupertinoButton(
                     padding: EdgeInsets.zero,
                     onPressed: () {
-                      context.read<ChatBloc>().add(const ChatEvent.createNewSession());
+                      context.read<ChatBloc>().add(
+                        const ChatEvent.createNewSession(),
+                      );
                     },
                     child: Icon(
                       lucide.LucideIcons.badgePlus,
@@ -318,8 +321,10 @@ class _ChatViewState extends State<_ChatView> {
                         }
 
                         final message = state.messages[index];
-                        final isLastMessage = index == state.messages.length - 1;
-                        final isStreaming = isLastMessage &&
+                        final isLastMessage =
+                            index == state.messages.length - 1;
+                        final isStreaming =
+                            isLastMessage &&
                             (state.status == ChatStatus.sending ||
                                 state.status == ChatStatus.streaming ||
                                 state.status == ChatStatus.executingTools);
@@ -348,7 +353,8 @@ class _ChatViewState extends State<_ChatView> {
                         ChatEvent.sendMessage(message),
                       );
                     },
-                    isLoading: state.status == ChatStatus.sending ||
+                    isLoading:
+                        state.status == ChatStatus.sending ||
                         state.status == ChatStatus.streaming ||
                         state.status == ChatStatus.executingTools,
                   );
@@ -418,9 +424,7 @@ class _ChatViewState extends State<_ChatView> {
 
           return GestureDetector(
             onTap: () {
-              context.read<ChatBloc>().add(
-                ChatEvent.sendMessage(fullMessage),
-              );
+              context.read<ChatBloc>().add(ChatEvent.sendMessage(fullMessage));
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -471,9 +475,7 @@ class _ChatViewState extends State<_ChatView> {
               children: [
                 Container(
                   padding: const EdgeInsets.all(16),
-                  child: _PingAnimation(
-                    theme: theme,
-                  ),
+                  child: _PingAnimation(theme: theme),
                 ),
               ],
             ),
@@ -515,7 +517,9 @@ class _ChatViewState extends State<_ChatView> {
                     border: Border.all(color: theme.colorScheme.border),
                     boxShadow: [
                       BoxShadow(
-                        color: theme.colorScheme.foreground.withValues(alpha: 0.1),
+                        color: theme.colorScheme.foreground.withValues(
+                          alpha: 0.1,
+                        ),
                         blurRadius: 20,
                         offset: const Offset(0, 4),
                       ),
@@ -564,10 +568,7 @@ class _ChatViewState extends State<_ChatView> {
           ],
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
+          return FadeTransition(opacity: animation, child: child);
         },
       ),
     );
@@ -636,14 +637,39 @@ class _ChatViewState extends State<_ChatView> {
             child: const Text('Cancel'),
           ),
           CupertinoDialogAction(
-            onPressed: () {
+            onPressed: () async {
               final newTitle = controller.text.trim();
-              if (newTitle.isNotEmpty) {
-                context.read<ChatBloc>().add(
-                  ChatEvent.renameSession(sessionId, newTitle),
-                );
-              }
               Navigator.pop(ctx);
+
+              if (newTitle.isNotEmpty) {
+                showToast(
+                  context,
+                  'Renaming chat...',
+                  type: ToastType.promise,
+                  duration: const Duration(seconds: 3),
+                );
+
+                final bloc = context.read<ChatBloc>();
+
+                bloc.add(ChatEvent.renameSession(sessionId, newTitle));
+
+                await for (final state in bloc.stream) {
+                  final updatedSession = state.sessions
+                      .where((s) => s.id == sessionId && s.title == newTitle)
+                      .firstOrNull;
+
+                  if (updatedSession != null) {
+                    if (context.mounted) {
+                      showToast(
+                        context,
+                        'Chat renamed',
+                        type: ToastType.success,
+                      );
+                    }
+                    break;
+                  }
+                }
+              }
             },
             child: const Text('Rename'),
           ),
@@ -673,11 +699,39 @@ class _ChatViewState extends State<_ChatView> {
             child: const Text('Cancel'),
           ),
           CupertinoDialogAction(
-            onPressed: () {
-              context.read<ChatBloc>().add(
-                ChatEvent.archiveSession(sessionId),
-              );
+            onPressed: () async {
               Navigator.pop(ctx);
+
+              showToast(
+                context,
+                'Archiving chat...',
+                type: ToastType.promise,
+                duration: const Duration(seconds: 3),
+              );
+
+              final bloc = context.read<ChatBloc>();
+              final currentSessionCount = bloc.state.sessions.length;
+              final isArchivingCurrentSession =
+                  bloc.state.sessionId == sessionId;
+
+              bloc.add(ChatEvent.archiveSession(sessionId));
+
+              await for (final state in bloc.stream) {
+                if (state.sessions.length < currentSessionCount) {
+                  if (context.mounted) {
+                    showToast(
+                      context,
+                      'Chat archived',
+                      type: ToastType.success,
+                    );
+
+                    if (isArchivingCurrentSession) {
+                      bloc.add(const ChatEvent.createNewSession());
+                    }
+                  }
+                  break;
+                }
+              }
             },
             child: const Text('Archive'),
           ),
@@ -708,11 +762,35 @@ class _ChatViewState extends State<_ChatView> {
           ),
           CupertinoDialogAction(
             isDestructiveAction: true,
-            onPressed: () {
-              context.read<ChatBloc>().add(
-                ChatEvent.deleteSession(sessionId),
-              );
+            onPressed: () async {
               Navigator.pop(ctx);
+
+              showToast(
+                context,
+                'Deleting chat...',
+                type: ToastType.promise,
+                duration: const Duration(seconds: 3),
+              );
+
+              final bloc = context.read<ChatBloc>();
+              final currentSessionCount = bloc.state.sessions.length;
+              final isDeletingCurrentSession =
+                  bloc.state.sessionId == sessionId;
+
+              bloc.add(ChatEvent.deleteSession(sessionId));
+
+              await for (final state in bloc.stream) {
+                if (state.sessions.length < currentSessionCount) {
+                  if (context.mounted) {
+                    showToast(context, 'Chat deleted', type: ToastType.success);
+
+                    if (isDeletingCurrentSession) {
+                      bloc.add(const ChatEvent.createNewSession());
+                    }
+                  }
+                  break;
+                }
+              }
             },
             child: const Text('Delete'),
           ),
@@ -725,9 +803,7 @@ class _ChatViewState extends State<_ChatView> {
 class _PingAnimation extends StatefulWidget {
   final ShadThemeData theme;
 
-  const _PingAnimation({
-    required this.theme,
-  });
+  const _PingAnimation({required this.theme});
 
   @override
   State<_PingAnimation> createState() => _PingAnimationState();
@@ -745,12 +821,10 @@ class _PingAnimationState extends State<_PingAnimation>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat();
-    _animation = Tween<double>(begin: 0.4, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+    _animation = Tween<double>(
+      begin: 0.4,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
