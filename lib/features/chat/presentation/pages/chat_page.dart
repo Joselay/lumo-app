@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart'
+    show Scaffold, GlobalKey, ScaffoldState, Drawer;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
@@ -9,6 +11,7 @@ import '../viewmodels/chat_bloc.dart';
 import '../viewmodels/chat_event.dart';
 import '../viewmodels/chat_state.dart';
 import '../widgets/chat_input.dart';
+import '../widgets/chat_session_drawer.dart';
 import '../widgets/message_bubble.dart';
 
 class ChatPage extends StatefulWidget {
@@ -40,9 +43,7 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const CupertinoPageScaffold(
-        child: Center(
-          child: CupertinoActivityIndicator(),
-        ),
+        child: Center(child: CupertinoActivityIndicator()),
       );
     }
 
@@ -151,6 +152,13 @@ class _ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<_ChatView> {
   final _scrollController = ScrollController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<ChatBloc>().add(const ChatEvent.loadSessions());
+  }
 
   @override
   void dispose() {
@@ -176,130 +184,150 @@ class _ChatViewState extends State<_ChatView> {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
 
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: theme.colorScheme.background,
-        border: Border(
-          bottom: BorderSide(
-            color: theme.colorScheme.border,
-            width: 0.5,
+    return Scaffold(
+      key: _scaffoldKey,
+      drawer: const Drawer(child: ChatSessionDrawer()),
+      body: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          backgroundColor: theme.colorScheme.background,
+          border: Border(
+            bottom: BorderSide(color: theme.colorScheme.border, width: 0.5),
           ),
-        ),
-        middle: Text(
-          'AI Assistant',
-          style: TextStyle(
-            color: theme.colorScheme.foreground,
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
+          leading: CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+            child: Icon(
+              lucide.LucideIcons.menu,
+              size: 24,
+              color: theme.colorScheme.foreground,
+            ),
           ),
-        ),
-        trailing: BlocBuilder<ChatBloc, ChatState>(
-          builder: (context, state) {
-            if (state.messages.isEmpty) return const SizedBox.shrink();
+          middle: Text(
+            'AI Assistant',
+            style: TextStyle(
+              color: theme.colorScheme.foreground,
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          trailing: BlocBuilder<ChatBloc, ChatState>(
+            builder: (context, state) {
+              if (state.messages.isEmpty) return const SizedBox.shrink();
 
-            return CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                showCupertinoDialog(
-                  context: context,
-                  builder: (ctx) => CupertinoAlertDialog(
-                    title: const Text('Clear Chat'),
-                    content: const Text(
-                      'Are you sure you want to clear all messages?',
+              return CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  showCupertinoDialog(
+                    context: context,
+                    builder: (ctx) => CupertinoAlertDialog(
+                      title: const Text('Clear Chat'),
+                      content: const Text(
+                        'Are you sure you want to clear all messages?',
+                      ),
+                      actions: [
+                        CupertinoDialogAction(
+                          isDefaultAction: true,
+                          onPressed: () => Navigator.pop(ctx),
+                          child: const Text('Cancel'),
+                        ),
+                        CupertinoDialogAction(
+                          isDestructiveAction: true,
+                          onPressed: () {
+                            context.read<ChatBloc>().add(
+                              const ChatEvent.clearMessages(),
+                            );
+                            Navigator.pop(ctx);
+                          },
+                          child: const Text('Clear'),
+                        ),
+                      ],
                     ),
-                    actions: [
-                      CupertinoDialogAction(
-                        isDefaultAction: true,
-                        onPressed: () => Navigator.pop(ctx),
-                        child: const Text('Cancel'),
-                      ),
-                      CupertinoDialogAction(
-                        isDestructiveAction: true,
-                        onPressed: () {
-                          context.read<ChatBloc>().add(const ChatEvent.clearMessages());
-                          Navigator.pop(ctx);
-                        },
-                        child: const Text('Clear'),
-                      ),
-                    ],
+                  );
+                },
+                child: Text(
+                  'Clear',
+                  style: TextStyle(
+                    color: theme.colorScheme.destructive,
+                    fontSize: 15,
                   ),
-                );
-              },
-              child: Text(
-                'Clear',
-                style: TextStyle(
-                  color: theme.colorScheme.destructive,
-                  fontSize: 15,
+                ),
+              );
+            },
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: BlocConsumer<ChatBloc, ChatState>(
+                  listener: (context, state) {
+                    if (state.status == ChatStatus.success ||
+                        state.status == ChatStatus.sending) {
+                      _scrollToBottom();
+                    }
+
+                    if (state.status == ChatStatus.error &&
+                        state.errorMessage.isNotEmpty) {
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (ctx) => CupertinoAlertDialog(
+                          title: const Text('Error'),
+                          content: Text(state.errorMessage),
+                          actions: [
+                            CupertinoDialogAction(
+                              onPressed: () {
+                                context.read<ChatBloc>().add(
+                                  const ChatEvent.clearError(),
+                                );
+                                Navigator.pop(ctx);
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state.messages.isEmpty) {
+                      return _buildEmptyState(theme);
+                    }
+
+                    return ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.only(top: 16, bottom: 16),
+                      itemCount:
+                          state.messages.length +
+                          (state.status == ChatStatus.executingTools ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (state.status == ChatStatus.executingTools &&
+                            index == state.messages.length) {
+                          return _buildToolExecutionIndicator(theme);
+                        }
+
+                        final message = state.messages[index];
+                        return MessageBubble(message: message);
+                      },
+                    );
+                  },
                 ),
               ),
-            );
-          },
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: BlocConsumer<ChatBloc, ChatState>(
-                listener: (context, state) {
-                  if (state.status == ChatStatus.success ||
-                      state.status == ChatStatus.sending) {
-                    _scrollToBottom();
-                  }
-
-                  if (state.status == ChatStatus.error &&
-                      state.errorMessage.isNotEmpty) {
-                    showCupertinoDialog(
-                      context: context,
-                      builder: (ctx) => CupertinoAlertDialog(
-                        title: const Text('Error'),
-                        content: Text(state.errorMessage),
-                        actions: [
-                          CupertinoDialogAction(
-                            onPressed: () {
-                              context.read<ChatBloc>().add(const ChatEvent.clearError());
-                              Navigator.pop(ctx);
-                            },
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                },
+              BlocBuilder<ChatBloc, ChatState>(
                 builder: (context, state) {
-                  if (state.messages.isEmpty) {
-                    return _buildEmptyState(theme);
-                  }
-
-                  return ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.only(top: 16, bottom: 16),
-                    itemCount: state.messages.length + (state.status == ChatStatus.executingTools ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      // Show loading indicator if executing tools and at last position
-                      if (state.status == ChatStatus.executingTools && index == state.messages.length) {
-                        return _buildToolExecutionIndicator(theme);
-                      }
-
-                      final message = state.messages[index];
-                      return MessageBubble(message: message);
+                  return ChatInput(
+                    onSend: (message) {
+                      context.read<ChatBloc>().add(
+                        ChatEvent.sendMessage(message),
+                      );
                     },
+                    isLoading: state.status == ChatStatus.sending,
                   );
                 },
               ),
-            ),
-            BlocBuilder<ChatBloc, ChatState>(
-              builder: (context, state) {
-                return ChatInput(
-                  onSend: (message) {
-                    context.read<ChatBloc>().add(ChatEvent.sendMessage(message));
-                  },
-                  isLoading: state.status == ChatStatus.sending,
-                );
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -369,16 +397,11 @@ class _ChatViewState extends State<_ChatView> {
             context.read<ChatBloc>().add(ChatEvent.sendMessage(suggestion));
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 10,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               color: theme.colorScheme.muted,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: theme.colorScheme.border,
-              ),
+              border: Border.all(color: theme.colorScheme.border),
             ),
             child: Text(
               suggestion,

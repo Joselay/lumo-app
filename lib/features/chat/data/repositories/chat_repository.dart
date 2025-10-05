@@ -247,6 +247,32 @@ class ChatRepository {
       return false;
     }
   }
+
+  Future<ChatSession?> renameChatSession(String sessionId, String newTitle) async {
+    try {
+      return await _chatApi.renameChatSession(sessionId, {'title': newTitle});
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'Failed to rename chat session',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return null;
+    }
+  }
+
+  Future<ChatSession?> archiveChatSession(String sessionId) async {
+    try {
+      return await _chatApi.archiveChatSession(sessionId);
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'Failed to archive chat session',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return null;
+    }
+  }
 }
 
 class ChatResult {

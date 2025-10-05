@@ -19,4 +19,13 @@ abstract class ChatApi {
 
   @DELETE('/chat/sessions/{sessionId}/delete/')
   Future<void> deleteChatSession(@Path('sessionId') String sessionId);
+
+  @PATCH('/chat/sessions/{sessionId}/rename/')
+  Future<ChatSession> renameChatSession(
+    @Path('sessionId') String sessionId,
+    @Body() Map<String, String> body,
+  );
+
+  @PATCH('/chat/sessions/{sessionId}/archive/')
+  Future<ChatSession> archiveChatSession(@Path('sessionId') String sessionId);
 }

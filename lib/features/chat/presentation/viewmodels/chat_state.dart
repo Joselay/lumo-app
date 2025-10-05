@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../data/models/chat_models.dart';
 import '../../domain/entities/message.dart';
 
 part 'chat_state.freezed.dart';
@@ -13,5 +14,7 @@ abstract class ChatState with _$ChatState {
     @Default('') String errorMessage,
     @Default('') String streamingContent,
     String? sessionId,
+    @Default([]) List<ChatSession> sessions,
+    @Default(false) bool isLoadingSessions,
   }) = _ChatState;
 }
