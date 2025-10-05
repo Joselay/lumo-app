@@ -47,6 +47,7 @@ class ChatSessionDrawer extends StatelessWidget {
                 },
               ),
             ),
+            _buildProfileButton(context, theme),
           ],
         ),
       ),
@@ -641,6 +642,225 @@ class ChatSessionDrawer extends StatelessWidget {
             child: const Text('Delete'),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildProfileButton(BuildContext context, ShadThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: theme.colorScheme.border, width: 0.5),
+        ),
+      ),
+      child: GestureDetector(
+        onTap: () => _showProfileDrawer(context, theme),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                CupertinoIcons.person_fill,
+                size: 20,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Profile',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: theme.colorScheme.foreground,
+                ),
+              ),
+            ),
+            Icon(
+              lucide.LucideIcons.chevronUp,
+              size: 20,
+              color: theme.colorScheme.mutedForeground,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showProfileDrawer(BuildContext context, ShadThemeData theme) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.6,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.background,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 12, bottom: 8),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.mutedForeground.withValues(
+                    alpha: 0.3,
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Text(
+                      'Profile',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.foreground,
+                      ),
+                    ),
+                    const Spacer(),
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Icon(
+                        lucide.LucideIcons.x,
+                        size: 24,
+                        color: theme.colorScheme.mutedForeground,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.1,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          CupertinoIcons.person_fill,
+                          size: 50,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'User Name',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.foreground,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'user@example.com',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: theme.colorScheme.mutedForeground,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      _buildProfileMenuItem(
+                        theme,
+                        lucide.LucideIcons.user,
+                        'Edit Profile',
+                        () {},
+                      ),
+                      _buildProfileMenuItem(
+                        theme,
+                        lucide.LucideIcons.settings,
+                        'Settings',
+                        () {},
+                      ),
+                      _buildProfileMenuItem(
+                        theme,
+                        lucide.LucideIcons.shield,
+                        'Privacy',
+                        () {},
+                      ),
+                      _buildProfileMenuItem(
+                        theme,
+                        lucide.LucideIcons.helpCircle,
+                        'Help & Support',
+                        () {},
+                      ),
+                      const SizedBox(height: 16),
+                      ShadButton.destructive(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          // TODO: Implement logout
+                        },
+                        width: double.infinity,
+                        child: const Text('Logout'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileMenuItem(
+    ShadThemeData theme,
+    IconData icon,
+    String title,
+    VoidCallback onTap,
+  ) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        border: Border.all(color: theme.colorScheme.border),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: CupertinoButton(
+        padding: const EdgeInsets.all(16),
+        onPressed: onTap,
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: theme.colorScheme.foreground),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: theme.colorScheme.foreground,
+                ),
+              ),
+            ),
+            Icon(
+              lucide.LucideIcons.chevronRight,
+              size: 20,
+              color: theme.colorScheme.mutedForeground,
+            ),
+          ],
+        ),
       ),
     );
   }

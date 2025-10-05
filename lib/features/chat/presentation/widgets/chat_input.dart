@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -109,11 +108,9 @@ class _ChatInputState extends State<ChatInput> {
                     ? SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            theme.colorScheme.primaryForeground,
-                          ),
+                        child: CupertinoActivityIndicator(
+                          radius: 8,
+                          color: theme.colorScheme.primaryForeground,
                         ),
                       )
                     : Icon(

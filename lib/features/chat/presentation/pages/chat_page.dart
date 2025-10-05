@@ -329,7 +329,9 @@ class _ChatViewState extends State<_ChatView> {
                         ChatEvent.sendMessage(message),
                       );
                     },
-                    isLoading: state.status == ChatStatus.sending,
+                    isLoading: state.status == ChatStatus.sending ||
+                        state.status == ChatStatus.streaming ||
+                        state.status == ChatStatus.executingTools,
                   );
                 },
               ),
