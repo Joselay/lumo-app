@@ -38,6 +38,7 @@ class LumoApp extends StatelessWidget {
         return Directionality(
           textDirection: TextDirection.ltr,
           child: CupertinoApp.router(
+            debugShowCheckedModeBanner: false,
             theme: CupertinoTheme.of(context),
             routerConfig: appRouter,
             localizationsDelegates: const [
