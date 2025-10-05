@@ -480,9 +480,8 @@ class _ChatViewState extends State<_ChatView>
                   ? Duration.zero
                   : const Duration(milliseconds: 250),
               curve: Curves.easeInOut,
-              left: drawerWidth + (_isDrawerOpen ? _dragOffset : _dragOffset),
-              right:
-                  -(drawerWidth + (_isDrawerOpen ? _dragOffset : _dragOffset)),
+              left: chatPosition,
+              right: -chatPosition,
               top: 0,
               bottom: 0,
               child: GestureDetector(
