@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lumo_app/core/utils/app_logger.dart';
+import '../../data/models/chat_models.dart';
 import '../../data/repositories/chat_repository.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/usecases/send_message.dart' as use_case;
@@ -67,6 +68,40 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       )) {
         if (streamEvent is ChatStreamSessionId) {
           currentSessionId = streamEvent.sessionId;
+
+          final isNewSession =
+              state.sessionId == null &&
+              !state.sessions.any((s) => s.id == currentSessionId);
+
+          if (isNewSession) {
+            try {
+              final sessionDetail = await repository.getChatSession(
+                currentSessionId,
+              );
+              if (sessionDetail != null) {
+                final newSession = ChatSession(
+                  id: sessionDetail.id,
+                  title: sessionDetail.title,
+                  createdAt: sessionDetail.createdAt,
+                  updatedAt: sessionDetail.updatedAt,
+                  isActive: sessionDetail.isActive,
+                  messagesCount: sessionDetail.messages.length,
+                  lastMessage: sessionDetail.messages.isNotEmpty
+                      ? sessionDetail.messages.last
+                      : null,
+                );
+
+                emit(
+                  state.copyWith(
+                    sessions: [newSession, ...state.sessions],
+                    sessionId: currentSessionId,
+                  ),
+                );
+              }
+            } catch (e) {
+              AppLogger.error('Failed to fetch new session', error: e);
+            }
+          }
         } else if (streamEvent is ChatStreamToolStart) {
           emit(
             state.copyWith(
@@ -95,14 +130,45 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             ),
           );
         } else if (streamEvent is ChatStreamDone) {
+          final finalSessionId =
+              streamEvent.sessionId ?? currentSessionId ?? state.sessionId;
+
+          List<ChatSession> updatedSessions = state.sessions;
+          if (finalSessionId != null) {
+            try {
+              final sessionDetail = await repository.getChatSession(
+                finalSessionId,
+              );
+              if (sessionDetail != null) {
+                final updatedSession = ChatSession(
+                  id: sessionDetail.id,
+                  title: sessionDetail.title,
+                  createdAt: sessionDetail.createdAt,
+                  updatedAt: sessionDetail.updatedAt,
+                  isActive: sessionDetail.isActive,
+                  messagesCount: sessionDetail.messages.length,
+                  lastMessage: sessionDetail.messages.isNotEmpty
+                      ? sessionDetail.messages.last
+                      : null,
+                );
+
+                updatedSessions = state.sessions.map((s) {
+                  return s.id == finalSessionId ? updatedSession : s;
+                }).toList();
+              }
+            } catch (e) {
+              AppLogger.error('Failed to update session', error: e);
+            }
+          }
+
           emit(
             state.copyWith(
               status: ChatStatus.success,
               messages: [...updatedMessages, streamEvent.message],
               streamingContent: '',
               errorMessage: '',
-              sessionId:
-                  streamEvent.sessionId ?? currentSessionId ?? state.sessionId,
+              sessionId: finalSessionId,
+              sessions: updatedSessions,
             ),
           );
         } else if (streamEvent is ChatStreamError) {
@@ -399,6 +465,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     CreateNewSession event,
     Emitter<ChatState> emit,
   ) async {
-    emit(const ChatState());
+    emit(
+      state.copyWith(
+        messages: [],
+        sessionId: null,
+        status: ChatStatus.initial,
+        errorMessage: '',
+        streamingContent: '',
+      ),
+    );
   }
 }
