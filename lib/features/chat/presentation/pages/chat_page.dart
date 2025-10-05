@@ -474,30 +474,27 @@ class _ChatViewState extends State<_ChatView>
               child: ChatSessionDrawer(onSessionSelected: _closeDrawer),
             ),
           ),
-          if (_isDrawerOpen || _dragOffset > 0)
-            AnimatedPositioned(
-              duration: _isDragging
-                  ? Duration.zero
-                  : const Duration(milliseconds: 250),
-              curve: Curves.easeInOut,
-              left: chatPosition,
-              right: -chatPosition,
-              top: 0,
-              bottom: 0,
-              child: GestureDetector(
-                onTap: _closeDrawer,
+          AnimatedPositioned(
+            duration: _isDragging
+                ? Duration.zero
+                : const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            left: chatPosition,
+            right: -chatPosition,
+            top: 0,
+            bottom: 0,
+            child: GestureDetector(
+              onTap: _closeDrawer,
+              child: IgnorePointer(
+                ignoring: chatPosition <= 0,
                 child: Container(
                   color: Colors.black.withValues(
-                    alpha: _isDragging
-                        ? ((_dragOffset.abs() / drawerWidth) * 0.3).clamp(
-                            0.0,
-                            0.3,
-                          )
-                        : (_isDrawerOpen ? 0.3 : 0.0),
+                    alpha: ((chatPosition / drawerWidth) * 0.3).clamp(0.0, 0.3),
                   ),
                 ),
               ),
             ),
+          ),
         ],
       ),
     );
