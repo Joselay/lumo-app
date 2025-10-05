@@ -271,7 +271,9 @@ class _ChatViewState extends State<_ChatView> {
                 child: BlocConsumer<ChatBloc, ChatState>(
                   listener: (context, state) {
                     if (state.status == ChatStatus.success ||
-                        state.status == ChatStatus.sending) {
+                        state.status == ChatStatus.sending ||
+                        state.status == ChatStatus.streaming ||
+                        state.status == ChatStatus.executingTools) {
                       _scrollToBottom();
                     }
 
