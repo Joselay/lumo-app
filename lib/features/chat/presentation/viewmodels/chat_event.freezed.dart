@@ -55,7 +55,7 @@ extension ChatEventPatterns on ChatEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SendMessage value)?  sendMessage,TResult Function( ClearMessages value)?  clearMessages,TResult Function( ClearError value)?  clearError,TResult Function( LoadSessions value)?  loadSessions,TResult Function( LoadSession value)?  loadSession,TResult Function( DeleteSession value)?  deleteSession,TResult Function( RenameSession value)?  renameSession,TResult Function( ArchiveSession value)?  archiveSession,TResult Function( UnarchiveSession value)?  unarchiveSession,TResult Function( LoadArchivedSessions value)?  loadArchivedSessions,TResult Function( CreateNewSession value)?  createNewSession,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( SendMessage value)?  sendMessage,TResult Function( ClearMessages value)?  clearMessages,TResult Function( ClearError value)?  clearError,TResult Function( LoadSessions value)?  loadSessions,TResult Function( LoadSession value)?  loadSession,TResult Function( DeleteSession value)?  deleteSession,TResult Function( DeleteAllSessions value)?  deleteAllSessions,TResult Function( RenameSession value)?  renameSession,TResult Function( ArchiveSession value)?  archiveSession,TResult Function( UnarchiveSession value)?  unarchiveSession,TResult Function( LoadArchivedSessions value)?  loadArchivedSessions,TResult Function( CreateNewSession value)?  createNewSession,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case SendMessage() when sendMessage != null:
@@ -64,7 +64,8 @@ return clearMessages(_that);case ClearError() when clearError != null:
 return clearError(_that);case LoadSessions() when loadSessions != null:
 return loadSessions(_that);case LoadSession() when loadSession != null:
 return loadSession(_that);case DeleteSession() when deleteSession != null:
-return deleteSession(_that);case RenameSession() when renameSession != null:
+return deleteSession(_that);case DeleteAllSessions() when deleteAllSessions != null:
+return deleteAllSessions(_that);case RenameSession() when renameSession != null:
 return renameSession(_that);case ArchiveSession() when archiveSession != null:
 return archiveSession(_that);case UnarchiveSession() when unarchiveSession != null:
 return unarchiveSession(_that);case LoadArchivedSessions() when loadArchivedSessions != null:
@@ -87,7 +88,7 @@ return createNewSession(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SendMessage value)  sendMessage,required TResult Function( ClearMessages value)  clearMessages,required TResult Function( ClearError value)  clearError,required TResult Function( LoadSessions value)  loadSessions,required TResult Function( LoadSession value)  loadSession,required TResult Function( DeleteSession value)  deleteSession,required TResult Function( RenameSession value)  renameSession,required TResult Function( ArchiveSession value)  archiveSession,required TResult Function( UnarchiveSession value)  unarchiveSession,required TResult Function( LoadArchivedSessions value)  loadArchivedSessions,required TResult Function( CreateNewSession value)  createNewSession,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( SendMessage value)  sendMessage,required TResult Function( ClearMessages value)  clearMessages,required TResult Function( ClearError value)  clearError,required TResult Function( LoadSessions value)  loadSessions,required TResult Function( LoadSession value)  loadSession,required TResult Function( DeleteSession value)  deleteSession,required TResult Function( DeleteAllSessions value)  deleteAllSessions,required TResult Function( RenameSession value)  renameSession,required TResult Function( ArchiveSession value)  archiveSession,required TResult Function( UnarchiveSession value)  unarchiveSession,required TResult Function( LoadArchivedSessions value)  loadArchivedSessions,required TResult Function( CreateNewSession value)  createNewSession,}){
 final _that = this;
 switch (_that) {
 case SendMessage():
@@ -96,7 +97,8 @@ return clearMessages(_that);case ClearError():
 return clearError(_that);case LoadSessions():
 return loadSessions(_that);case LoadSession():
 return loadSession(_that);case DeleteSession():
-return deleteSession(_that);case RenameSession():
+return deleteSession(_that);case DeleteAllSessions():
+return deleteAllSessions(_that);case RenameSession():
 return renameSession(_that);case ArchiveSession():
 return archiveSession(_that);case UnarchiveSession():
 return unarchiveSession(_that);case LoadArchivedSessions():
@@ -118,7 +120,7 @@ return createNewSession(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SendMessage value)?  sendMessage,TResult? Function( ClearMessages value)?  clearMessages,TResult? Function( ClearError value)?  clearError,TResult? Function( LoadSessions value)?  loadSessions,TResult? Function( LoadSession value)?  loadSession,TResult? Function( DeleteSession value)?  deleteSession,TResult? Function( RenameSession value)?  renameSession,TResult? Function( ArchiveSession value)?  archiveSession,TResult? Function( UnarchiveSession value)?  unarchiveSession,TResult? Function( LoadArchivedSessions value)?  loadArchivedSessions,TResult? Function( CreateNewSession value)?  createNewSession,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( SendMessage value)?  sendMessage,TResult? Function( ClearMessages value)?  clearMessages,TResult? Function( ClearError value)?  clearError,TResult? Function( LoadSessions value)?  loadSessions,TResult? Function( LoadSession value)?  loadSession,TResult? Function( DeleteSession value)?  deleteSession,TResult? Function( DeleteAllSessions value)?  deleteAllSessions,TResult? Function( RenameSession value)?  renameSession,TResult? Function( ArchiveSession value)?  archiveSession,TResult? Function( UnarchiveSession value)?  unarchiveSession,TResult? Function( LoadArchivedSessions value)?  loadArchivedSessions,TResult? Function( CreateNewSession value)?  createNewSession,}){
 final _that = this;
 switch (_that) {
 case SendMessage() when sendMessage != null:
@@ -127,7 +129,8 @@ return clearMessages(_that);case ClearError() when clearError != null:
 return clearError(_that);case LoadSessions() when loadSessions != null:
 return loadSessions(_that);case LoadSession() when loadSession != null:
 return loadSession(_that);case DeleteSession() when deleteSession != null:
-return deleteSession(_that);case RenameSession() when renameSession != null:
+return deleteSession(_that);case DeleteAllSessions() when deleteAllSessions != null:
+return deleteAllSessions(_that);case RenameSession() when renameSession != null:
 return renameSession(_that);case ArchiveSession() when archiveSession != null:
 return archiveSession(_that);case UnarchiveSession() when unarchiveSession != null:
 return unarchiveSession(_that);case LoadArchivedSessions() when loadArchivedSessions != null:
@@ -149,7 +152,7 @@ return createNewSession(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String content)?  sendMessage,TResult Function()?  clearMessages,TResult Function()?  clearError,TResult Function()?  loadSessions,TResult Function( String sessionId)?  loadSession,TResult Function( String sessionId)?  deleteSession,TResult Function( String sessionId,  String newTitle)?  renameSession,TResult Function( String sessionId)?  archiveSession,TResult Function( String sessionId)?  unarchiveSession,TResult Function()?  loadArchivedSessions,TResult Function()?  createNewSession,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String content)?  sendMessage,TResult Function()?  clearMessages,TResult Function()?  clearError,TResult Function()?  loadSessions,TResult Function( String sessionId)?  loadSession,TResult Function( String sessionId)?  deleteSession,TResult Function()?  deleteAllSessions,TResult Function( String sessionId,  String newTitle)?  renameSession,TResult Function( String sessionId)?  archiveSession,TResult Function( String sessionId)?  unarchiveSession,TResult Function()?  loadArchivedSessions,TResult Function()?  createNewSession,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case SendMessage() when sendMessage != null:
 return sendMessage(_that.content);case ClearMessages() when clearMessages != null:
@@ -157,7 +160,8 @@ return clearMessages();case ClearError() when clearError != null:
 return clearError();case LoadSessions() when loadSessions != null:
 return loadSessions();case LoadSession() when loadSession != null:
 return loadSession(_that.sessionId);case DeleteSession() when deleteSession != null:
-return deleteSession(_that.sessionId);case RenameSession() when renameSession != null:
+return deleteSession(_that.sessionId);case DeleteAllSessions() when deleteAllSessions != null:
+return deleteAllSessions();case RenameSession() when renameSession != null:
 return renameSession(_that.sessionId,_that.newTitle);case ArchiveSession() when archiveSession != null:
 return archiveSession(_that.sessionId);case UnarchiveSession() when unarchiveSession != null:
 return unarchiveSession(_that.sessionId);case LoadArchivedSessions() when loadArchivedSessions != null:
@@ -180,7 +184,7 @@ return createNewSession();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String content)  sendMessage,required TResult Function()  clearMessages,required TResult Function()  clearError,required TResult Function()  loadSessions,required TResult Function( String sessionId)  loadSession,required TResult Function( String sessionId)  deleteSession,required TResult Function( String sessionId,  String newTitle)  renameSession,required TResult Function( String sessionId)  archiveSession,required TResult Function( String sessionId)  unarchiveSession,required TResult Function()  loadArchivedSessions,required TResult Function()  createNewSession,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String content)  sendMessage,required TResult Function()  clearMessages,required TResult Function()  clearError,required TResult Function()  loadSessions,required TResult Function( String sessionId)  loadSession,required TResult Function( String sessionId)  deleteSession,required TResult Function()  deleteAllSessions,required TResult Function( String sessionId,  String newTitle)  renameSession,required TResult Function( String sessionId)  archiveSession,required TResult Function( String sessionId)  unarchiveSession,required TResult Function()  loadArchivedSessions,required TResult Function()  createNewSession,}) {final _that = this;
 switch (_that) {
 case SendMessage():
 return sendMessage(_that.content);case ClearMessages():
@@ -188,7 +192,8 @@ return clearMessages();case ClearError():
 return clearError();case LoadSessions():
 return loadSessions();case LoadSession():
 return loadSession(_that.sessionId);case DeleteSession():
-return deleteSession(_that.sessionId);case RenameSession():
+return deleteSession(_that.sessionId);case DeleteAllSessions():
+return deleteAllSessions();case RenameSession():
 return renameSession(_that.sessionId,_that.newTitle);case ArchiveSession():
 return archiveSession(_that.sessionId);case UnarchiveSession():
 return unarchiveSession(_that.sessionId);case LoadArchivedSessions():
@@ -210,7 +215,7 @@ return createNewSession();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String content)?  sendMessage,TResult? Function()?  clearMessages,TResult? Function()?  clearError,TResult? Function()?  loadSessions,TResult? Function( String sessionId)?  loadSession,TResult? Function( String sessionId)?  deleteSession,TResult? Function( String sessionId,  String newTitle)?  renameSession,TResult? Function( String sessionId)?  archiveSession,TResult? Function( String sessionId)?  unarchiveSession,TResult? Function()?  loadArchivedSessions,TResult? Function()?  createNewSession,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String content)?  sendMessage,TResult? Function()?  clearMessages,TResult? Function()?  clearError,TResult? Function()?  loadSessions,TResult? Function( String sessionId)?  loadSession,TResult? Function( String sessionId)?  deleteSession,TResult? Function()?  deleteAllSessions,TResult? Function( String sessionId,  String newTitle)?  renameSession,TResult? Function( String sessionId)?  archiveSession,TResult? Function( String sessionId)?  unarchiveSession,TResult? Function()?  loadArchivedSessions,TResult? Function()?  createNewSession,}) {final _that = this;
 switch (_that) {
 case SendMessage() when sendMessage != null:
 return sendMessage(_that.content);case ClearMessages() when clearMessages != null:
@@ -218,7 +223,8 @@ return clearMessages();case ClearError() when clearError != null:
 return clearError();case LoadSessions() when loadSessions != null:
 return loadSessions();case LoadSession() when loadSession != null:
 return loadSession(_that.sessionId);case DeleteSession() when deleteSession != null:
-return deleteSession(_that.sessionId);case RenameSession() when renameSession != null:
+return deleteSession(_that.sessionId);case DeleteAllSessions() when deleteAllSessions != null:
+return deleteAllSessions();case RenameSession() when renameSession != null:
 return renameSession(_that.sessionId,_that.newTitle);case ArchiveSession() when archiveSession != null:
 return archiveSession(_that.sessionId);case UnarchiveSession() when unarchiveSession != null:
 return unarchiveSession(_that.sessionId);case LoadArchivedSessions() when loadArchivedSessions != null:
@@ -524,6 +530,38 @@ as String,
 
 
 }
+
+/// @nodoc
+
+
+class DeleteAllSessions implements ChatEvent {
+  const DeleteAllSessions();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeleteAllSessions);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ChatEvent.deleteAllSessions()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 

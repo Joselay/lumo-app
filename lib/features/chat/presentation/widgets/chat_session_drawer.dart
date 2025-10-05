@@ -29,8 +29,6 @@ class ChatSessionDrawer extends StatelessWidget {
         child: Column(
           children: [
             _buildHeader(context, theme),
-            const SizedBox(height: 8),
-            _buildNewChatButton(context, theme),
             const SizedBox(height: 16),
             Expanded(
               child: BlocBuilder<ChatBloc, ChatState>(
@@ -70,31 +68,6 @@ class ChatSessionDrawer extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.foreground,
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNewChatButton(BuildContext context, ShadThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: ShadButton(
-        onPressed: () {
-          context.read<ChatBloc>().add(const ChatEvent.createNewSession());
-          Navigator.of(context).pop();
-        },
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              lucide.LucideIcons.plus,
-              size: 18,
-              color: theme.colorScheme.primaryForeground,
-            ),
-            const SizedBox(width: 8),
-            const Text('New Chat'),
-          ],
         ),
       ),
     );
@@ -175,6 +148,35 @@ class ChatSessionDrawer extends StatelessWidget {
           ...state.archivedSessions.map((session) {
             return _buildSessionItem(context, theme, session, false, true);
           }),
+        ],
+
+        if (state.sessions.isNotEmpty || state.archivedSessions.isNotEmpty) ...[
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: ShadButton.outline(
+              onPressed: () => _showDeleteAllConfirmation(context, theme),
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    lucide.LucideIcons.trash2,
+                    size: 16,
+                    color: theme.colorScheme.destructive,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Delete All Conversations',
+                    style: TextStyle(
+                      color: theme.colorScheme.destructive,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
         ],
       ],
     );
@@ -639,6 +641,39 @@ class ChatSessionDrawer extends StatelessWidget {
               chatBloc.add(ChatEvent.deleteSession(session.id));
             },
             child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteAllConfirmation(
+    BuildContext context,
+    ShadThemeData theme,
+  ) {
+    final chatBloc = context.read<ChatBloc>();
+
+    showCupertinoDialog(
+      context: context,
+      useRootNavigator: false,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text('Delete All Conversations'),
+        content: const Text(
+          'Are you sure you want to delete all conversations? This action cannot be undone.',
+        ),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(ctx);
+              chatBloc.add(const ChatEvent.deleteAllSessions());
+            },
+            child: const Text('Delete All'),
           ),
         ],
       ),

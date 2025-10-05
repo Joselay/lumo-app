@@ -10,6 +10,7 @@ abstract class ChatEvent with _$ChatEvent {
   const factory ChatEvent.loadSessions() = LoadSessions;
   const factory ChatEvent.loadSession(String sessionId) = LoadSession;
   const factory ChatEvent.deleteSession(String sessionId) = DeleteSession;
+  const factory ChatEvent.deleteAllSessions() = DeleteAllSessions;
   const factory ChatEvent.renameSession(String sessionId, String newTitle) = RenameSession;
   const factory ChatEvent.archiveSession(String sessionId) = ArchiveSession;
   const factory ChatEvent.unarchiveSession(String sessionId) = UnarchiveSession;

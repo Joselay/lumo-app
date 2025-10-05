@@ -34,4 +34,7 @@ abstract class ChatApi {
 
   @GET('/chat/sessions/archived/')
   Future<List<ChatSession>> getArchivedSessions();
+
+  @DELETE('/chat/sessions/delete-all/')
+  Future<void> deleteAllSessions();
 }

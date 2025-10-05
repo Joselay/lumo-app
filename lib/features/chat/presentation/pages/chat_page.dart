@@ -225,31 +225,37 @@ class _ChatViewState extends State<_ChatView> {
               ),
             ],
           ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  context.read<ChatBloc>().add(const ChatEvent.createNewSession());
-                },
-                child: Icon(
-                  lucide.LucideIcons.badgePlus,
-                  size: 22,
-                  color: theme.colorScheme.foreground,
-                ),
-              ),
-              const SizedBox(width: 8),
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () => _showChatMenu(context, theme),
-                child: Icon(
-                  lucide.LucideIcons.moreHorizontal,
-                  size: 22,
-                  color: theme.colorScheme.foreground,
-                ),
-              ),
-            ],
+          trailing: BlocBuilder<ChatBloc, ChatState>(
+            builder: (context, state) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      context.read<ChatBloc>().add(const ChatEvent.createNewSession());
+                    },
+                    child: Icon(
+                      lucide.LucideIcons.badgePlus,
+                      size: 22,
+                      color: theme.colorScheme.foreground,
+                    ),
+                  ),
+                  if (state.messages.isNotEmpty) ...[
+                    const SizedBox(width: 8),
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => _showChatMenu(context, theme),
+                      child: Icon(
+                        lucide.LucideIcons.moreHorizontal,
+                        size: 22,
+                        color: theme.colorScheme.foreground,
+                      ),
+                    ),
+                  ],
+                ],
+              );
+            },
           ),
         ),
         child: SafeArea(

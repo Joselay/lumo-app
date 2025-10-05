@@ -19,6 +19,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<LoadSessions>(_onLoadSessions);
     on<LoadSession>(_onLoadSession);
     on<DeleteSession>(_onDeleteSession);
+    on<DeleteAllSessions>(_onDeleteAllSessions);
     on<RenameSession>(_onRenameSession);
     on<ArchiveSession>(_onArchiveSession);
     on<UnarchiveSession>(_onUnarchiveSession);
@@ -241,6 +242,34 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     } catch (e, stackTrace) {
       AppLogger.error(
         'Failed to delete session',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  Future<void> _onDeleteAllSessions(
+    DeleteAllSessions event,
+    Emitter<ChatState> emit,
+  ) async {
+    try {
+      final success = await repository.deleteAllSessions();
+      if (success) {
+        emit(
+          state.copyWith(
+            sessions: [],
+            archivedSessions: [],
+            messages: [],
+            sessionId: null,
+            status: ChatStatus.initial,
+            errorMessage: '',
+            streamingContent: '',
+          ),
+        );
+      }
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'Failed to delete all sessions',
         error: e,
         stackTrace: stackTrace,
       );

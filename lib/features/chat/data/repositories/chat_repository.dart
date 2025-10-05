@@ -299,6 +299,20 @@ class ChatRepository {
       return [];
     }
   }
+
+  Future<bool> deleteAllSessions() async {
+    try {
+      await _chatApi.deleteAllSessions();
+      return true;
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'Failed to delete all sessions',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return false;
+    }
+  }
 }
 
 class ChatResult {
