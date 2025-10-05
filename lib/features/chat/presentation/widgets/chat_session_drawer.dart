@@ -8,15 +8,15 @@ import '../viewmodels/chat_event.dart';
 import '../viewmodels/chat_state.dart';
 
 class ChatSessionDrawer extends StatelessWidget {
-  const ChatSessionDrawer({super.key});
+  final VoidCallback? onSessionSelected;
+
+  const ChatSessionDrawer({super.key, this.onSessionSelected});
 
   @override
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
-    final mediaQuery = MediaQuery.of(context);
 
     return Container(
-      width: mediaQuery.size.width * 0.85,
       height: double.infinity,
       decoration: BoxDecoration(
         color: theme.colorScheme.background,
@@ -167,9 +167,7 @@ class ChatSessionDrawer extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     'Delete All Conversations',
-                    style: TextStyle(
-                      color: theme.colorScheme.destructive,
-                    ),
+                    style: TextStyle(color: theme.colorScheme.destructive),
                   ),
                 ],
               ),
@@ -191,7 +189,7 @@ class ChatSessionDrawer extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.read<ChatBloc>().add(ChatEvent.loadSession(session.id));
-        Navigator.of(context).pop();
+        onSessionSelected?.call();
       },
       onLongPress: () =>
           _showSessionActions(context, theme, session, isArchived),
@@ -609,10 +607,7 @@ class ChatSessionDrawer extends StatelessWidget {
     );
   }
 
-  void _showDeleteAllConfirmation(
-    BuildContext context,
-    ShadThemeData theme,
-  ) {
+  void _showDeleteAllConfirmation(BuildContext context, ShadThemeData theme) {
     final chatBloc = context.read<ChatBloc>();
 
     showCupertinoDialog(

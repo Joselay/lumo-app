@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart'
-    show Scaffold, GlobalKey, ScaffoldState, Drawer, Colors, Material;
+import 'package:flutter/material.dart' show Colors, Material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
@@ -151,9 +150,12 @@ class _ChatView extends StatefulWidget {
   State<_ChatView> createState() => _ChatViewState();
 }
 
-class _ChatViewState extends State<_ChatView> {
+class _ChatViewState extends State<_ChatView>
+    with SingleTickerProviderStateMixin {
   final _scrollController = ScrollController();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _isDrawerOpen = false;
+  double _dragOffset = 0.0;
+  bool _isDragging = false;
 
   @override
   void initState() {
@@ -166,6 +168,64 @@ class _ChatViewState extends State<_ChatView> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _toggleDrawer() {
+    setState(() {
+      _isDrawerOpen = !_isDrawerOpen;
+      _dragOffset = 0.0;
+    });
+  }
+
+  void _closeDrawer() {
+    if (_isDrawerOpen) {
+      setState(() {
+        _isDrawerOpen = false;
+        _dragOffset = 0.0;
+      });
+    }
+  }
+
+  void _onHorizontalDragStart(DragStartDetails details) {
+    setState(() {
+      _isDragging = true;
+    });
+  }
+
+  void _onHorizontalDragUpdate(DragUpdateDetails details, double drawerWidth) {
+    setState(() {
+      if (_isDrawerOpen) {
+        _dragOffset = (_dragOffset + details.delta.dx).clamp(-drawerWidth, 0.0);
+      } else {
+        if (details.globalPosition.dx < 50 || _dragOffset > 0) {
+          _dragOffset = (_dragOffset + details.delta.dx).clamp(
+            0.0,
+            drawerWidth,
+          );
+        }
+      }
+    });
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details, double drawerWidth) {
+    setState(() {
+      _isDragging = false;
+
+      final velocity = details.primaryVelocity ?? 0;
+      final threshold = drawerWidth * 0.3;
+
+      if (_isDrawerOpen) {
+        if (_dragOffset.abs() > threshold || velocity < -300) {
+          _isDrawerOpen = false;
+        }
+      } else {
+        if (_dragOffset > threshold || velocity > 300) {
+          _isDrawerOpen = true;
+        }
+      }
+
+      _dragOffset = 0.0;
+    });
   }
 
   void _scrollToBottom() {
@@ -186,183 +246,247 @@ class _ChatViewState extends State<_ChatView> {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     final chatBloc = context.read<ChatBloc>();
+    final mediaQuery = MediaQuery.of(context);
+    final drawerWidth = mediaQuery.size.width * 0.75;
 
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: Drawer(
-        child: BlocProvider.value(
-          value: chatBloc,
-          child: const ChatSessionDrawer(),
-        ),
-      ),
-      body: CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          backgroundColor: theme.colorScheme.background,
-          border: Border(
-            bottom: BorderSide(color: theme.colorScheme.border, width: 0.5),
-          ),
-          leading: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  _scaffoldKey.currentState?.openDrawer();
-                },
-                child: Icon(
-                  lucide.LucideIcons.menu,
-                  size: 24,
-                  color: theme.colorScheme.foreground,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Lumo',
-                style: TextStyle(
-                  color: theme.colorScheme.foreground,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          trailing: BlocBuilder<ChatBloc, ChatState>(
-            builder: (context, state) {
-              return Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      context.read<ChatBloc>().add(
-                        const ChatEvent.createNewSession(),
-                      );
-                    },
-                    child: Icon(
-                      lucide.LucideIcons.badgePlus,
-                      size: 22,
-                      color: theme.colorScheme.foreground,
-                    ),
+    final drawerPosition = _isDrawerOpen
+        ? _dragOffset
+        : -drawerWidth + _dragOffset;
+    final chatPosition = _isDrawerOpen
+        ? drawerWidth + _dragOffset
+        : _dragOffset;
+
+    return GestureDetector(
+      onHorizontalDragStart: _onHorizontalDragStart,
+      onHorizontalDragUpdate: (details) =>
+          _onHorizontalDragUpdate(details, drawerWidth),
+      onHorizontalDragEnd: (details) =>
+          _onHorizontalDragEnd(details, drawerWidth),
+      child: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: _isDragging
+                ? Duration.zero
+                : const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            left: chatPosition,
+            right: -chatPosition,
+            top: 0,
+            bottom: 0,
+            child: CupertinoPageScaffold(
+              navigationBar: CupertinoNavigationBar(
+                backgroundColor: theme.colorScheme.background,
+                border: Border(
+                  bottom: BorderSide(
+                    color: theme.colorScheme.border,
+                    width: 0.5,
                   ),
-                  if (state.messages.isNotEmpty) ...[
-                    const SizedBox(width: 8),
+                ),
+                leading: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                     CupertinoButton(
                       padding: EdgeInsets.zero,
-                      onPressed: () => _showChatMenu(context, theme),
+                      onPressed: _toggleDrawer,
                       child: Icon(
-                        lucide.LucideIcons.moreHorizontal,
-                        size: 22,
+                        lucide.LucideIcons.menu,
+                        size: 24,
                         color: theme.colorScheme.foreground,
                       ),
                     ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Lumo',
+                      style: TextStyle(
+                        color: theme.colorScheme.foreground,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ],
-                ],
-              );
-            },
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: BlocConsumer<ChatBloc, ChatState>(
-                  listener: (context, state) {
-                    if (state.status == ChatStatus.success ||
-                        state.status == ChatStatus.sending ||
-                        state.status == ChatStatus.streaming ||
-                        state.status == ChatStatus.executingTools) {
-                      _scrollToBottom();
-                    }
-
-                    if (state.status == ChatStatus.error &&
-                        state.errorMessage.isNotEmpty) {
-                      showCupertinoDialog(
-                        context: context,
-                        builder: (ctx) => CupertinoAlertDialog(
-                          title: const Text('Error'),
-                          content: Text(state.errorMessage),
-                          actions: [
-                            CupertinoDialogAction(
-                              onPressed: () {
-                                context.read<ChatBloc>().add(
-                                  const ChatEvent.clearError(),
-                                );
-                                Navigator.pop(ctx);
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
+                ),
+                trailing: BlocBuilder<ChatBloc, ChatState>(
                   builder: (context, state) {
-                    if (state.messages.isEmpty) {
-                      return _buildEmptyState(theme);
-                    }
-
-                    return ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.only(top: 16, bottom: 16),
-                      itemCount:
-                          state.messages.length +
-                          (state.status == ChatStatus.sending ||
-                                  state.status == ChatStatus.executingTools
-                              ? 1
-                              : 0),
-                      itemBuilder: (context, index) {
-                        if ((state.status == ChatStatus.sending ||
-                                state.status == ChatStatus.executingTools) &&
-                            index == state.messages.length) {
-                          return _buildLoadingIndicator(
-                            theme,
-                            state.status == ChatStatus.executingTools,
-                          );
-                        }
-
-                        final message = state.messages[index];
-                        final isLastMessage =
-                            index == state.messages.length - 1;
-                        final isStreaming =
-                            isLastMessage &&
-                            (state.status == ChatStatus.sending ||
-                                state.status == ChatStatus.streaming ||
-                                state.status == ChatStatus.executingTools);
-                        return MessageBubble(
-                          message: message,
-                          isStreaming: isStreaming,
-                        );
-                      },
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            context.read<ChatBloc>().add(
+                              const ChatEvent.createNewSession(),
+                            );
+                          },
+                          child: Icon(
+                            lucide.LucideIcons.badgePlus,
+                            size: 22,
+                            color: theme.colorScheme.foreground,
+                          ),
+                        ),
+                        if (state.messages.isNotEmpty) ...[
+                          const SizedBox(width: 8),
+                          CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () => _showChatMenu(context, theme),
+                            child: Icon(
+                              lucide.LucideIcons.moreHorizontal,
+                              size: 22,
+                              color: theme.colorScheme.foreground,
+                            ),
+                          ),
+                        ],
+                      ],
                     );
                   },
                 ),
               ),
-              BlocBuilder<ChatBloc, ChatState>(
-                builder: (context, state) {
-                  if (state.messages.isEmpty) {
-                    return _buildSuggestionPrompts(theme);
-                  }
-                  return const SizedBox.shrink();
-                },
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: BlocConsumer<ChatBloc, ChatState>(
+                        listener: (context, state) {
+                          if (state.status == ChatStatus.success ||
+                              state.status == ChatStatus.sending ||
+                              state.status == ChatStatus.streaming ||
+                              state.status == ChatStatus.executingTools) {
+                            _scrollToBottom();
+                          }
+
+                          if (state.status == ChatStatus.error &&
+                              state.errorMessage.isNotEmpty) {
+                            showCupertinoDialog(
+                              context: context,
+                              builder: (ctx) => CupertinoAlertDialog(
+                                title: const Text('Error'),
+                                content: Text(state.errorMessage),
+                                actions: [
+                                  CupertinoDialogAction(
+                                    onPressed: () {
+                                      context.read<ChatBloc>().add(
+                                        const ChatEvent.clearError(),
+                                      );
+                                      Navigator.pop(ctx);
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                        builder: (context, state) {
+                          if (state.messages.isEmpty) {
+                            return _buildEmptyState(theme);
+                          }
+
+                          return ListView.builder(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.only(top: 16, bottom: 16),
+                            itemCount:
+                                state.messages.length +
+                                (state.status == ChatStatus.sending ||
+                                        state.status ==
+                                            ChatStatus.executingTools
+                                    ? 1
+                                    : 0),
+                            itemBuilder: (context, index) {
+                              if ((state.status == ChatStatus.sending ||
+                                      state.status ==
+                                          ChatStatus.executingTools) &&
+                                  index == state.messages.length) {
+                                return _buildLoadingIndicator(
+                                  theme,
+                                  state.status == ChatStatus.executingTools,
+                                );
+                              }
+
+                              final message = state.messages[index];
+                              final isLastMessage =
+                                  index == state.messages.length - 1;
+                              final isStreaming =
+                                  isLastMessage &&
+                                  (state.status == ChatStatus.sending ||
+                                      state.status == ChatStatus.streaming ||
+                                      state.status ==
+                                          ChatStatus.executingTools);
+                              return MessageBubble(
+                                message: message,
+                                isStreaming: isStreaming,
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    BlocBuilder<ChatBloc, ChatState>(
+                      builder: (context, state) {
+                        if (state.messages.isEmpty) {
+                          return _buildSuggestionPrompts(theme);
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                    BlocBuilder<ChatBloc, ChatState>(
+                      builder: (context, state) {
+                        return ChatInput(
+                          onSend: (message) {
+                            context.read<ChatBloc>().add(
+                              ChatEvent.sendMessage(message),
+                            );
+                          },
+                          isLoading:
+                              state.status == ChatStatus.sending ||
+                              state.status == ChatStatus.streaming ||
+                              state.status == ChatStatus.executingTools,
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-              BlocBuilder<ChatBloc, ChatState>(
-                builder: (context, state) {
-                  return ChatInput(
-                    onSend: (message) {
-                      context.read<ChatBloc>().add(
-                        ChatEvent.sendMessage(message),
-                      );
-                    },
-                    isLoading:
-                        state.status == ChatStatus.sending ||
-                        state.status == ChatStatus.streaming ||
-                        state.status == ChatStatus.executingTools,
-                  );
-                },
-              ),
-            ],
+            ),
           ),
-        ),
+          AnimatedPositioned(
+            duration: _isDragging
+                ? Duration.zero
+                : const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
+            left: drawerPosition,
+            top: 0,
+            bottom: 0,
+            width: drawerWidth,
+            child: BlocProvider.value(
+              value: chatBloc,
+              child: ChatSessionDrawer(onSessionSelected: _closeDrawer),
+            ),
+          ),
+          if (_isDrawerOpen || _dragOffset > 0)
+            AnimatedPositioned(
+              duration: _isDragging
+                  ? Duration.zero
+                  : const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              left: drawerWidth + (_isDrawerOpen ? _dragOffset : _dragOffset),
+              right:
+                  -(drawerWidth + (_isDrawerOpen ? _dragOffset : _dragOffset)),
+              top: 0,
+              bottom: 0,
+              child: GestureDetector(
+                onTap: _closeDrawer,
+                child: Container(
+                  color: Colors.black.withValues(
+                    alpha: _isDragging
+                        ? ((_dragOffset.abs() / drawerWidth) * 0.3).clamp(
+                            0.0,
+                            0.3,
+                          )
+                        : (_isDrawerOpen ? 0.3 : 0.0),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
