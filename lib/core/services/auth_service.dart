@@ -1,5 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
 import '../data/api_client.dart';
+import '../../features/auth/data/datasources/auth_api.dart';
 
 class AuthService {
   static const String _accessTokenKey = 'access_token';
@@ -61,5 +63,29 @@ class AuthService {
       return {'userId': userId, 'email': email};
     }
     return null;
+  }
+
+  static Future<bool> refreshAccessToken() async {
+    try {
+      final refreshToken = await getRefreshToken();
+      if (refreshToken == null || refreshToken.isEmpty) {
+        return false;
+      }
+
+      final dio = Dio(ApiClient.instance.options.copyWith());
+      final authApi = AuthApi(dio);
+
+      final response = await authApi.refreshToken({'refresh': refreshToken});
+
+      await saveAuthTokens(
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+      );
+
+      return true;
+    } catch (e) {
+      await clearAuthData();
+      return false;
+    }
   }
 }

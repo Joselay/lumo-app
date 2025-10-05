@@ -99,3 +99,17 @@ Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
       'refresh_token': instance.refreshToken,
       'customer_profile': instance.customerProfile,
     };
+
+RefreshTokenResponse _$RefreshTokenResponseFromJson(
+  Map<String, dynamic> json,
+) => RefreshTokenResponse(
+  accessToken: json['access'] as String,
+  refreshToken: json['refresh'] as String,
+);
+
+Map<String, dynamic> _$RefreshTokenResponseToJson(
+  RefreshTokenResponse instance,
+) => <String, dynamic>{
+  'access': instance.accessToken,
+  'refresh': instance.refreshToken,
+};

@@ -132,3 +132,21 @@ class LoginResponse {
 
   Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
 }
+
+@JsonSerializable()
+class RefreshTokenResponse {
+  @JsonKey(name: 'access')
+  final String accessToken;
+  @JsonKey(name: 'refresh')
+  final String refreshToken;
+
+  const RefreshTokenResponse({
+    required this.accessToken,
+    required this.refreshToken,
+  });
+
+  factory RefreshTokenResponse.fromJson(Map<String, dynamic> json) =>
+      _$RefreshTokenResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RefreshTokenResponseToJson(this);
+}

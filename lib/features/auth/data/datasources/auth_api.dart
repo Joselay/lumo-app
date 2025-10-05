@@ -18,5 +18,5 @@ abstract class AuthApi {
   Future<void> logout(@Body() Map<String, String> refreshToken);
 
   @POST('/auth/token/refresh/')
-  Future<void> refreshToken(@Body() Map<String, String> refreshToken);
+  Future<RefreshTokenResponse> refreshToken(@Body() Map<String, String> refreshToken);
 }
