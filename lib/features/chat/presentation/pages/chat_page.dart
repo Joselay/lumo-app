@@ -303,15 +303,30 @@ class _ChatViewState extends State<_ChatView> {
                       padding: const EdgeInsets.only(top: 16, bottom: 16),
                       itemCount:
                           state.messages.length +
-                          (state.status == ChatStatus.executingTools ? 1 : 0),
+                          (state.status == ChatStatus.sending ||
+                                  state.status == ChatStatus.executingTools
+                              ? 1
+                              : 0),
                       itemBuilder: (context, index) {
-                        if (state.status == ChatStatus.executingTools &&
+                        if ((state.status == ChatStatus.sending ||
+                                state.status == ChatStatus.executingTools) &&
                             index == state.messages.length) {
-                          return _buildToolExecutionIndicator(theme);
+                          return _buildLoadingIndicator(
+                            theme,
+                            state.status == ChatStatus.executingTools,
+                          );
                         }
 
                         final message = state.messages[index];
-                        return MessageBubble(message: message);
+                        final isLastMessage = index == state.messages.length - 1;
+                        final isStreaming = isLastMessage &&
+                            (state.status == ChatStatus.sending ||
+                                state.status == ChatStatus.streaming ||
+                                state.status == ChatStatus.executingTools);
+                        return MessageBubble(
+                          message: message,
+                          isStreaming: isStreaming,
+                        );
                       },
                     );
                   },
@@ -443,55 +458,24 @@ class _ChatViewState extends State<_ChatView> {
     );
   }
 
-  Widget _buildToolExecutionIndicator(ShadThemeData theme) {
+  Widget _buildLoadingIndicator(ShadThemeData theme, bool isSearching) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.secondary.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              lucide.LucideIcons.bot,
-              size: 20,
-              color: theme.colorScheme.secondary,
-            ),
-          ),
-          const SizedBox(width: 12),
           Flexible(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.muted,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CupertinoActivityIndicator(
-                      radius: 8,
-                      color: theme.colorScheme.foreground,
-                    ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: _PingAnimation(
+                    theme: theme,
                   ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'Searching...',
-                    style: TextStyle(
-                      color: theme.colorScheme.foreground,
-                      fontSize: 15,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
@@ -734,6 +718,103 @@ class _ChatViewState extends State<_ChatView> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _PingAnimation extends StatefulWidget {
+  final ShadThemeData theme;
+
+  const _PingAnimation({
+    required this.theme,
+  });
+
+  @override
+  State<_PingAnimation> createState() => _PingAnimationState();
+}
+
+class _PingAnimationState extends State<_PingAnimation>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat();
+    _animation = Tween<double>(begin: 0.4, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return Opacity(
+              opacity: _animation.value,
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: widget.theme.colorScheme.mutedForeground,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(width: 4),
+        AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return Opacity(
+              opacity: 1.0 - (_animation.value - 0.4) / 0.6 * 0.3,
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: widget.theme.colorScheme.mutedForeground,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(width: 4),
+        AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            return Opacity(
+              opacity: 1.0 - (_animation.value - 0.4) / 0.6 * 0.6,
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: widget.theme.colorScheme.mutedForeground,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }

@@ -7,10 +7,12 @@ import '../../domain/entities/message.dart';
 
 class MessageBubble extends StatelessWidget {
   final Message message;
+  final bool isStreaming;
 
   const MessageBubble({
     super.key,
     required this.message,
+    this.isStreaming = false,
   });
 
   @override
@@ -109,7 +111,7 @@ class MessageBubble extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (!isUser) ...[
+                if (!isUser && !isStreaming) ...[
                   const SizedBox(height: 4),
                   Padding(
                     padding: const EdgeInsets.only(left: 16),
