@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -24,10 +25,6 @@ class MessageBubble extends StatelessWidget {
             isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!isUser) ...[
-            _buildAvatar(theme, isUser),
-            const SizedBox(width: 12),
-          ],
           Flexible(
             child: Column(
               crossAxisAlignment:
@@ -36,9 +33,7 @@ class MessageBubble extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isUser
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.muted,
+                    color: isUser ? theme.colorScheme.primary : null,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -114,42 +109,34 @@ class MessageBubble extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  _formatTime(message.timestamp),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: theme.colorScheme.mutedForeground,
+                if (!isUser) ...[
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: GestureDetector(
+                      onTap: () {
+                        Clipboard.setData(ClipboardData(text: message.content));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Copied to clipboard'),
+                            duration: const Duration(seconds: 2),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: theme.colorScheme.primary,
+                          ),
+                        );
+                      },
+                      child: Icon(
+                        lucide.LucideIcons.copy,
+                        size: 14,
+                        color: theme.colorScheme.mutedForeground,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
-          if (isUser) ...[
-            const SizedBox(width: 12),
-            _buildAvatar(theme, isUser),
-          ],
         ],
-      ),
-    );
-  }
-
-  Widget _buildAvatar(ShadThemeData theme, bool isUser) {
-    return Container(
-      width: 36,
-      height: 36,
-      decoration: BoxDecoration(
-        color: isUser
-            ? theme.colorScheme.primary.withValues(alpha: 0.2)
-            : theme.colorScheme.secondary.withValues(alpha: 0.2),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        isUser ? lucide.LucideIcons.user : lucide.LucideIcons.bot,
-        size: 20,
-        color: isUser
-            ? theme.colorScheme.primary
-            : theme.colorScheme.secondary,
       ),
     );
   }
@@ -199,12 +186,6 @@ class MessageBubble extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _formatTime(DateTime time) {
-    final hour = time.hour.toString().padLeft(2, '0');
-    final minute = time.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
   }
 
   String _formatToolName(String name) {
