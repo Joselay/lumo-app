@@ -1,6 +1,7 @@
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import '../models/booking_models.dart';
+import '../models/concession_models.dart';
 
 part 'bookings_api.g.dart';
 
@@ -34,4 +35,8 @@ abstract class BookingsApi {
   /// Cancel a booking
   @POST('/bookings/{id}/cancel/')
   Future<Booking> cancelBooking(@Path('id') String id);
+
+  /// Get list of available concessions
+  @GET('/bookings/concessions/')
+  Future<List<ConcessionModel>> getConcessions();
 }

@@ -82,7 +82,7 @@ class _LegendItem extends StatelessWidget {
           width: 20,
           height: 20,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             border: Border.all(
               color: color,
               width: 1,

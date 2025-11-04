@@ -12,6 +12,7 @@ import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/bookings/presentation/pages/seat_selection_page.dart';
+import '../../features/bookings/presentation/pages/concessions_page.dart';
 import '../presentation/pages/main_shell_page.dart';
 import '../presentation/widgets/coming_soon_page.dart';
 
@@ -74,6 +75,18 @@ final GoRouter appRouter = GoRouter(
                   builder: (BuildContext context, GoRouterState state) {
                     final showtime = state.extra as Showtime;
                     return SeatSelectionPage(showtime: showtime);
+                  },
+                ),
+                GoRoute(
+                  path: 'concessions',
+                  name: 'concessions',
+                  builder: (BuildContext context, GoRouterState state) {
+                    final extra = state.extra as Map<String, dynamic>;
+                    return ConcessionsPage(
+                      showtime: extra['showtime'] as Showtime,
+                      selectedSeatIds: List<String>.from(extra['selectedSeatIds']),
+                      seatsTotal: extra['seatsTotal'] as double,
+                    );
                   },
                 ),
               ],

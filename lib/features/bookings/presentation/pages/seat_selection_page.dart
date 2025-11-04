@@ -60,7 +60,7 @@ class _SeatSelectionView extends StatelessWidget {
           );
         }
 
-        // Navigate to booking confirmation on successful reservation
+        // Navigate to concessions page on successful reservation
         if (state.status == SeatSelectionStatus.reserved &&
             state.reservationResult != null) {
           ToastUtils.showSuccess(
@@ -69,9 +69,15 @@ class _SeatSelectionView extends StatelessWidget {
             description: state.reservationResult!.message,
           );
 
-          // TODO: Navigate to booking confirmation page
-          // For now, just go back
-          context.pop();
+          // Navigate to concessions page
+          context.pushNamed(
+            'concessions',
+            extra: {
+              'showtime': showtime,
+              'selectedSeatIds': state.selectedSeatIds,
+              'seatsTotal': state.totalPrice,
+            },
+          );
         }
       },
       child: CupertinoPageScaffold(
@@ -307,7 +313,7 @@ class _BottomActionBar extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: CupertinoColors.black.withOpacity(0.1),
+            color: CupertinoColors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),

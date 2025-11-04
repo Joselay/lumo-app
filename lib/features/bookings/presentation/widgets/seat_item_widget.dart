@@ -58,7 +58,7 @@ class SeatItemWidget extends StatelessWidget {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: seatColor.withOpacity(isSelected ? 1.0 : 0.3),
+          color: seatColor.withValues(alpha: isSelected ? 1.0 : 0.3),
           border: Border.all(
             color: borderColor,
             width: isSelected ? 2 : 1,
