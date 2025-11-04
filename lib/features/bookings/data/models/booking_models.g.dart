@@ -122,18 +122,27 @@ Map<String, dynamic> _$ReserveSeatsResponseToJson(
 
 Booking _$BookingFromJson(Map<String, dynamic> json) => Booking(
   id: json['id'] as String,
-  showtime: json['showtime'] as String,
-  customer: json['customer'] as String,
+  showtime: json['showtime'],
+  customer: json['customer'],
   seatNumbers: (json['seat_numbers'] as List<dynamic>)
       .map((e) => e as String)
       .toList(),
-  totalAmount: (json['total_amount'] as num).toDouble(),
-  discountAmount: (json['discount_amount'] as num?)?.toDouble(),
+  totalAmount: _parseDecimal(json['total_amount']),
+  discountAmount: _parseDecimalNullable(json['discount_amount']),
   loyaltyPointsUsed: (json['loyalty_points_used'] as num?)?.toInt(),
+  numberOfSeats: (json['number_of_seats'] as num?)?.toInt(),
+  basePricePerSeat: _parseDecimalNullable(json['base_price_per_seat']),
+  concessionsTotal: _parseDecimalNullable(json['concessions_total']),
+  concessions: json['concessions'] as List<dynamic>?,
+  isActive: json['is_active'] as bool?,
+  canCancel: json['can_cancel'] as bool?,
+  specialRequests: json['special_requests'] as String?,
   status: json['status'] as String,
   bookingReference: json['booking_reference'] as String,
   createdAt: json['created_at'] as String,
   updatedAt: json['updated_at'] as String?,
+  confirmedAt: json['confirmed_at'] as String?,
+  cancelledAt: json['cancelled_at'] as String?,
 );
 
 Map<String, dynamic> _$BookingToJson(Booking instance) => <String, dynamic>{
@@ -144,8 +153,17 @@ Map<String, dynamic> _$BookingToJson(Booking instance) => <String, dynamic>{
   'total_amount': instance.totalAmount,
   'discount_amount': instance.discountAmount,
   'loyalty_points_used': instance.loyaltyPointsUsed,
+  'number_of_seats': instance.numberOfSeats,
+  'base_price_per_seat': instance.basePricePerSeat,
+  'concessions_total': instance.concessionsTotal,
+  'concessions': instance.concessions,
+  'is_active': instance.isActive,
+  'can_cancel': instance.canCancel,
+  'special_requests': instance.specialRequests,
   'status': instance.status,
   'booking_reference': instance.bookingReference,
   'created_at': instance.createdAt,
   'updated_at': instance.updatedAt,
+  'confirmed_at': instance.confirmedAt,
+  'cancelled_at': instance.cancelledAt,
 };

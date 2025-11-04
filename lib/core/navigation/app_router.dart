@@ -13,6 +13,7 @@ import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/bookings/presentation/pages/seat_selection_page.dart';
 import '../../features/bookings/presentation/pages/concessions_page.dart';
+import '../../features/bookings/domain/entities/booking.dart';
 import '../presentation/pages/main_shell_page.dart';
 import '../presentation/widgets/coming_soon_page.dart';
 
@@ -84,7 +85,7 @@ final GoRouter appRouter = GoRouter(
                     final extra = state.extra as Map<String, dynamic>;
                     return ConcessionsPage(
                       showtime: extra['showtime'] as Showtime,
-                      selectedSeatIds: List<String>.from(extra['selectedSeatIds']),
+                      reservationResult: extra['reservationResult'] as ReservationResult,
                       seatsTotal: extra['seatsTotal'] as double,
                     );
                   },

@@ -74,7 +74,7 @@ class _SeatSelectionView extends StatelessWidget {
             'concessions',
             extra: {
               'showtime': showtime,
-              'selectedSeatIds': state.selectedSeatIds,
+              'reservationResult': state.reservationResult,
               'seatsTotal': state.totalPrice,
             },
           );

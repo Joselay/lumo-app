@@ -2,6 +2,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import '../models/booking_models.dart';
 import '../models/concession_models.dart';
+import '../models/payment_models.dart';
 
 part 'bookings_api.g.dart';
 
@@ -21,7 +22,7 @@ abstract class BookingsApi {
   );
 
   /// Create a booking (confirms the reservation)
-  @POST('/bookings/')
+  @POST('/bookings/create/')
   Future<Booking> createBooking(@Body() Map<String, dynamic> bookingData);
 
   /// Get list of customer bookings
@@ -39,4 +40,16 @@ abstract class BookingsApi {
   /// Get list of available concessions
   @GET('/bookings/concessions/')
   Future<List<ConcessionModel>> getConcessions();
+
+  /// Get Stripe publishable key configuration
+  @GET('/bookings/payments/config/stripe/')
+  Future<StripeConfigResponse> getStripeConfig();
+
+  /// Create a payment intent for a booking
+  @POST('/bookings/payments/create/')
+  Future<PaymentResponse> createPayment(@Body() PaymentCreateRequest request);
+
+  /// Get list of customer payments
+  @GET('/bookings/payments/')
+  Future<List<PaymentResponse>> getPayments();
 }

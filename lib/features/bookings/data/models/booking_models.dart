@@ -164,20 +164,53 @@ class ReserveSeatsResponse {
   double get totalAmount => double.tryParse(totalPrice) ?? 0.0;
 }
 
+// Helper functions to parse decimal strings from Django backend
+double _parseDecimal(dynamic value) {
+  if (value == null) return 0.0;
+  if (value is num) return value.toDouble();
+  if (value is String) return double.tryParse(value) ?? 0.0;
+  return 0.0;
+}
+
+double? _parseDecimalNullable(dynamic value) {
+  if (value == null) return null;
+  if (value is num) return value.toDouble();
+  if (value is String) return double.tryParse(value);
+  return null;
+}
+
 /// Represents a booking
 @JsonSerializable()
 class Booking {
   final String id;
-  final String showtime;
-  final String customer;
+  // Backend returns showtime as a nested object or string ID depending on endpoint
+  @JsonKey(name: 'showtime')
+  final dynamic showtime;
+  // Backend returns customer as a nested object or string ID depending on endpoint
+  @JsonKey(name: 'customer')
+  final dynamic customer;
   @JsonKey(name: 'seat_numbers')
   final List<String> seatNumbers;
-  @JsonKey(name: 'total_amount')
+  @JsonKey(name: 'total_amount', fromJson: _parseDecimal)
   final double totalAmount;
-  @JsonKey(name: 'discount_amount')
+  @JsonKey(name: 'discount_amount', fromJson: _parseDecimalNullable)
   final double? discountAmount;
   @JsonKey(name: 'loyalty_points_used')
   final int? loyaltyPointsUsed;
+  @JsonKey(name: 'number_of_seats')
+  final int? numberOfSeats;
+  @JsonKey(name: 'base_price_per_seat', fromJson: _parseDecimalNullable)
+  final double? basePricePerSeat;
+  @JsonKey(name: 'concessions_total', fromJson: _parseDecimalNullable)
+  final double? concessionsTotal;
+  @JsonKey(name: 'concessions')
+  final List<dynamic>? concessions;
+  @JsonKey(name: 'is_active')
+  final bool? isActive;
+  @JsonKey(name: 'can_cancel')
+  final bool? canCancel;
+  @JsonKey(name: 'special_requests')
+  final String? specialRequests;
   final String status;
   @JsonKey(name: 'booking_reference')
   final String bookingReference;
@@ -185,6 +218,10 @@ class Booking {
   final String createdAt;
   @JsonKey(name: 'updated_at')
   final String? updatedAt;
+  @JsonKey(name: 'confirmed_at')
+  final String? confirmedAt;
+  @JsonKey(name: 'cancelled_at')
+  final String? cancelledAt;
 
   const Booking({
     required this.id,
@@ -194,10 +231,19 @@ class Booking {
     required this.totalAmount,
     this.discountAmount,
     this.loyaltyPointsUsed,
+    this.numberOfSeats,
+    this.basePricePerSeat,
+    this.concessionsTotal,
+    this.concessions,
+    this.isActive,
+    this.canCancel,
+    this.specialRequests,
     required this.status,
     required this.bookingReference,
     required this.createdAt,
     this.updatedAt,
+    this.confirmedAt,
+    this.cancelledAt,
   });
 
   factory Booking.fromJson(Map<String, dynamic> json) =>

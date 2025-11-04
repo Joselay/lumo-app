@@ -1,19 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import '../../../movies/domain/entities/movie.dart';
+import '../../domain/entities/booking.dart';
 import '../../domain/entities/concession.dart';
 import '../../data/datasources/bookings_api.dart';
 import '../../../../core/data/api_client.dart';
+import 'payment_page.dart';
 
 class ConcessionsPage extends StatefulWidget {
   final Showtime showtime;
-  final List<String> selectedSeatIds;
+  final ReservationResult reservationResult;
   final double seatsTotal;
 
   const ConcessionsPage({
     super.key,
     required this.showtime,
-    required this.selectedSeatIds,
+    required this.reservationResult,
     required this.seatsTotal,
   });
 
@@ -71,24 +73,115 @@ class _ConcessionsPageState extends State<ConcessionsPage> {
 
   double get _grandTotal => widget.seatsTotal + _concessionsTotal;
 
-  void _proceedToPayment() {
-    // TODO: Navigate to payment screen with selected concessions
-    // For now, just show a dialog
+  Future<void> _proceedToPayment() async {
+    // Validate reservation data exists
+    if (widget.reservationResult.reservations.isEmpty) {
+      if (mounted) {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text('Error'),
+            content: const Text('No seat reservations found. Please select seats again.'),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text('OK'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      }
+      return;
+    }
+
+    // Show loading dialog
     showCupertinoDialog(
       context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: const Text('Coming Soon'),
-        content: const Text(
-          'Payment integration will be implemented next. Your selected items will be included in the booking.',
-        ),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CupertinoActivityIndicator(radius: 20),
       ),
     );
+
+    try {
+      // Create booking with selected seats and concessions
+      final api = BookingsApi(ApiClient.instance);
+
+      // Prepare concessions data
+      final concessionsData = _selectedConcessions.entries
+          .map((entry) => {
+                'concession_id': entry.key,
+                'quantity': entry.value,
+              })
+          .toList();
+
+      // Get reservation IDs and seat numbers
+      final reservationIds = widget.reservationResult.reservations
+          .map((r) => r.id)
+          .toList();
+      final seatNumbers = widget.reservationResult.reservations
+          .map((r) => r.seatIdentifier)
+          .toList();
+
+      // Debug: Log booking data
+      print('Creating booking with data:');
+      print('  Showtime: ${widget.showtime.id}');
+      print('  Number of seats: ${widget.reservationResult.reservations.length}');
+      print('  Seat numbers: $seatNumbers');
+      print('  Reservation IDs: $reservationIds');
+      print('  Concessions: ${concessionsData.length}');
+
+      // Create booking with correct field names
+      final bookingData = {
+        'showtime': widget.showtime.id,
+        'number_of_seats': widget.reservationResult.reservations.length,
+        'seat_numbers': seatNumbers,
+        'seat_reservation_ids': reservationIds,
+        'concessions': concessionsData,
+      };
+
+      print('Booking data JSON: $bookingData');
+
+      final booking = await api.createBooking(bookingData);
+
+      // Close loading dialog using root navigator
+      if (mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+
+        if (!mounted) return;
+
+        // Navigate to payment page
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (context) => PaymentPage(
+              bookingId: booking.id,
+              bookingReference: booking.bookingReference,
+              amount: booking.totalAmount,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog using root navigator
+      if (mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+
+        // Show error dialog
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text('Booking Error'),
+            content: Text('Failed to create booking: $e'),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text('OK'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -143,7 +236,7 @@ class _ConcessionsPageState extends State<ConcessionsPage> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${widget.selectedSeatIds.length} seats selected • \$${widget.seatsTotal.toStringAsFixed(2)}',
+                    '${widget.reservationResult.reservations.length} seats selected • \$${widget.seatsTotal.toStringAsFixed(2)}',
                     style: TextStyle(
                       fontSize: 14,
                       color: CupertinoColors.secondaryLabel.resolveFrom(context),
