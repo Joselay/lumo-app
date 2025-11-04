@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart' as lucide;
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:intl/intl.dart';
@@ -388,18 +389,24 @@ class _ShowtimeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: CupertinoColors.systemGrey6
-            .resolveFrom(context)
-            .withOpacity(0.3),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: CupertinoColors.systemGrey5.resolveFrom(context),
-          width: 1,
+    return GestureDetector(
+      onTap: () {
+        if (showtime.availableSeats > 0) {
+          context.pushNamed('seat-selection', extra: showtime);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: CupertinoColors.systemGrey6
+              .resolveFrom(context)
+              .withOpacity(0.3),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: CupertinoColors.systemGrey5.resolveFrom(context),
+            width: 1,
+          ),
         ),
-      ),
       child: Row(
         children: [
           Expanded(
@@ -511,6 +518,7 @@ class _ShowtimeCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }

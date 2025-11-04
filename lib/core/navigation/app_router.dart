@@ -11,6 +11,7 @@ import '../../features/movies/domain/entities/movie.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/bookings/presentation/pages/seat_selection_page.dart';
 import '../presentation/pages/main_shell_page.dart';
 import '../presentation/widgets/coming_soon_page.dart';
 
@@ -65,6 +66,14 @@ final GoRouter appRouter = GoRouter(
                   builder: (BuildContext context, GoRouterState state) {
                     final movie = state.extra as Movie;
                     return MovieDetailsPage(movie: movie);
+                  },
+                ),
+                GoRoute(
+                  path: 'seat-selection',
+                  name: 'seat-selection',
+                  builder: (BuildContext context, GoRouterState state) {
+                    final showtime = state.extra as Showtime;
+                    return SeatSelectionPage(showtime: showtime);
                   },
                 ),
               ],
